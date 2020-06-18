@@ -7,11 +7,11 @@ known dangerous filename like nc.exe, run antivirus, use tripwire or other tools
 changes to system files. 
 ### Suspicius registry entries
 Look for regisry keys that start known backdoors like:
-	- HKEY_USERS\.DEFAULT\Software\ORL\WINVNC3
-	- HKEY_LOCAL_MACHINE\SOFTWARE\Net Solutions\NetBus Server
+ - HKEY_USERS\.DEFAULT\Software\ORL\WINVNC3
+ - HKEY_LOCAL_MACHINE\SOFTWARE\Net Solutions\NetBus Server
 **use reg delete to remove**
 **Backdor favourite autostart (extensibility points (ASEPs))**
-	- **HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run**
+ - **HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run**
 ### Suspicius Processes
 Malicius porocess whit CPU utilization, end process or kill to stop. Check scheduler queue: shctasks, task sheduler.
 ### Suspicius Ports
