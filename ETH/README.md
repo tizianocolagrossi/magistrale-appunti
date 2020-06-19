@@ -46,22 +46,6 @@ Non APT attacks are against targets of opportunity. APT -> Long-term goals, used
 - NIDS, NIPS
 - Security informations, Event managements (SIEM)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Eth Windows
 ## Reasons for windows Securoty problems
 First of all: Backward Compatibility. Is very important at buisnesses, enabled by default and causes many security problems. Than we have a proliferation of features and so we have an average of 70 MS securoity bllettin per year.
@@ -159,5 +143,22 @@ Malicius porocess whit CPU utilization, end process or kill to stop. Check sched
 Use **netstat -aon** to vew network connections.
 ### Windows security features
 Windows firewall, automated updates
+
+# Remote connectivity and VoIP
+- Dial-up hack
+- Voicemail Hacking
+- Virtual private network haking
+- Coice over IP attacks
+mani companies still use dial-up connections (connecting to old server). Dial up hacking is similar to other hacking (footprint, scan, enumerate, exploit), automated by tools: wardialer or demo dialer. Phone number footprinting: identify blocks of phone to load into a wardialer.  
+**Bruteforce Voicemail Hacking**, is similar to dial-up hacking metods. Required components. Tools Voicemail box hacker 3.0, VrACK 0.51. **Countermeasures** deploy a lockout on failed attempts; log observe voicemail connections.  
+### VPN hacking
+VPN has replaced dial-up as the remote access mechanism. **GOOGLE HACKING** Using filetipe:pcf to find profile setting files for Cisco VPN client -> download and import -> connect and attack. Password stored in PCF file can be used for password reuse attack (tools cain etc). IPsec -> 1 sniff IKE (tools -> **IKEprobe**), 2 initiate connection. **Countermeasures**: discontinue IKE Aggressive mode use; use token-based authentication scheme.
+### SIP scanning
+The transport of voice on top of an ip network (Signaling protocols: H.323 and SIP), SIP scanning: discover SIP proxies and other devices tools **SiVuS, SIPVicious**. Countermeasures: network segmentation between VoIP network and user access segment. 
+
+
+
+
+
 
 
