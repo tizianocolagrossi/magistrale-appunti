@@ -18,15 +18,15 @@
 ## Client Commands
 command | info
 ---|---
-- authenticate | reads and sends user name and password to server
-- list [messages \| topics] | get list of messages, read or unread, ordered by topics
-- get [message#] | receive and display a message on user console
-- status [message#] | display the status of a specific message
-- reply [message#] | append a new message to a thread (in a topic)
-- create [topic] | create a new topic (user will be the owner)
-- append [topic \| thread] | appends a new message to a new thread in topic
-- subscribe [topic] | insert the user in the list of recipients for this topics
-- delete [topic] | delete a topic and all messages **only if owner of topic** 
+authenticate | reads and sends user name and password to server
+list \[messages \| topics\] | get list of messages, read or unread, ordered by topics
+get [message#] | receive and display a message on user console
+status [message#] | display the status of a specific message
+reply [message#] | append a new message to a thread (in a topic)
+create [topic] | create a new topic (user will be the owner)
+append [topic \| thread] | appends a new message to a new thread in topic
+subscribe [topic] | insert the user in the list of recipients for this topics
+delete [topic] | delete a topic and all messages **only if owner of topic** 
 
 # Evaluation Scorecard
 - the code works
