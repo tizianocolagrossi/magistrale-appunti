@@ -25,7 +25,15 @@
  ## list messages 
  The server send all the messages of the topics to which the user is subscribed.  
  REQUEST
- > GET /messages/:userid-or-token  
+ > GET /messages
+
+HEADER REQUEST 
+```yaml
+{
+    "userid-or-token": "userid-or-token"
+}   
+```
+
  ---
 RESPONSE
 ```yaml
@@ -60,7 +68,7 @@ RESPONSE
 ## list [messages | topics] 
  The server send all the messages of the topics to which the user is subscribed.  
  REQUEST
- > GET /topicmessages/:topic  
+ > GET /:topic/messages
  ---
 RESPONSE
 ```yaml
@@ -88,7 +96,14 @@ RESPONSE
 ## list topics
 The server send all existing topics in the whiteboard app
 REQUEST  
-> GET /topics/:userid-or-token  
+> GET /topics
+
+HEADER REQUEST 
+```yaml
+{
+    "userid-or-token": "userid-or-token"
+}   
+```
 
 RESPONSE
 ```yaml
@@ -130,7 +145,7 @@ RESPONSE
 ##  status [message#]
 Server send the status af a given message (sent/published)  
 REQUEST  
-> GET /message/status/:id  
+> GET /message/:id/status  
 
 RESPONSE
 ```yaml
@@ -144,7 +159,7 @@ RESPONSE
 
 Reply to a message to a thread.  
 REQUEST 
-> POST /newthread/:topic/:id    
+> POST /:topic/threads/:id    
 
 where topic is the **:topic** name and **:id** is the message id is the id of the message to which the user must reply.  
 BODY REQUEST 
@@ -178,7 +193,7 @@ RESPONSE
 ## append [topic | thread]
 Create a new thread in a topic  
 REQUEST  
-> POST /newthread/:topic  
+> POST /:topic/threads  
 
 BODY REQUEST 
 ```yaml
@@ -200,7 +215,14 @@ RESPONSE
 ## subscribe [topic]
 Subscribe a user to a topic  
 REQUEST  
-> POST /subscribe/:topic/:userid-or-token   
+> POST /:topic/subscribe
+
+HEADER REQUEST 
+```yaml
+{
+    "userid-or-token": "userid-or-token"
+}   
+```
 
 RESPONSE
 ```yaml
