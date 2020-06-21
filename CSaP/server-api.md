@@ -97,11 +97,11 @@ RESPONSE
     "lenght": 2
     "data": [
         {
-            "topic":"unixconfig",
+            "topic": "unixconfig",
             "subsribed": true
         },
         {
-            "topic":"cyberpunk",
+            "topic": "cyberpunk",
             "subsribed": true
         }
         
