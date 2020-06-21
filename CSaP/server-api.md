@@ -127,7 +127,7 @@ RESPONSE
 ## get [message#]
 The server send the message required by user  
 REQUEST  
-> GET /message/:id 
+> GET /messages/:id 
 
 RESPONSE
 ```yaml
@@ -145,7 +145,7 @@ RESPONSE
 ##  status [message#]
 Server send the status af a given message (sent/published)  
 REQUEST  
-> GET /message/:id/status  
+> GET /messages/:id/status  
 
 RESPONSE
 ```yaml
