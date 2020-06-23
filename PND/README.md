@@ -67,10 +67,10 @@ Rules for compressing
 
 ## IPv6 address type
 
-- Unicast (2000::/3)
-- Link-Local (FF80::/10)
+- Unicast (2000::/3) -> (3FFF::)
+- Link-Local (FF80::/10) -> (FEBF::)
 - Loopback ::1/128
-- Multicast Assigned (FF00::/8)
+- Multicast Assigned (FF00::/8) 
 
 ## Multicast info (FF00::/8)
 |1111 1111| [Flag (4 bits)]  [Scope (4 bits)] |...|||||||
