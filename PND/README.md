@@ -68,7 +68,7 @@ Rules for compressing
 ## IPv6 address type
 
 - Unicast (2000::/3)
-- Link-Local (dbo::/10)
+- Link-Local (FF80::/10)
 - Loopback ::1/128
 - Multicast Assigned (FF00::/8)
 
