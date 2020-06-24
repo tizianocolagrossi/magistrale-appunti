@@ -253,6 +253,34 @@ Iptables chain:
  >iptables -A forward -s 0/0 -i eth0 -d 192.168.1.58 -o eth1 -p TCP -m state --state ESTABLESHED -j ACCEPTED
 
  # NAT (Network address translation)
+## NAT command
+### DNAT
+iptables -t nat -A PREROUTING -p tcp -d 80.182.53.192 -dport 80 -j DNAT -to-destination 10.0.0.2:80  
+iptables -t nat -A PREROUTING -p tcp -d 80.182.53.192 -dport 110 -j DNAT -to-destination 10.0.0.3:110  
+iptables -t filter -P FORWARD ACCEPT  
+echo 1 > /proc/sys/net/ipv4/ip_forward  
+#### la sintassi  DNAT
+iptables -t nat -A POSTROUTING -o (interfaccia sulla extranet) -s (intranet/mask) --source-address
+
+### MASQUERADE 
+iptables -t nat -A POSTROUTING -o ppp0 -j MASQUERADE    
+iptables -t filter -P FORWARD ACCEPT  
+echo 1 > /proc/sys/net/ipv4/ip_forward  
+
+### sourceNAT
+#### la sitassi SNAT
+iptables -t nat -A POSTROUTING -p (protocol {tcp | udp })  
+- -s (source address)
+- –sport <source porta>
+- -d (destination)
+- –dport <dest port>
+- -j SNAT
+- –to-source (source address modificato)
+> iptables -t nat -A POSTROUTING -o ppp0 -j SNAT -to-source 150.92.48.25  
+    
+### port redirect
+> iptables -t nat -A PREROUTING -d 192.168.1.1 destination-port 80 -j REDIRECT -to-port 10000  
+
 ## Routed vs Transaparent firewall modes.  
 In **routed** mode, a firewall is a hop in the routing process. It **is** a router responsible of is own internal networks.  
 In **transparent** mode, a firewall works with data at Layer 2 (Data link layer (MAC)) and is not seen as a router hop to connected devices (it can be implemented by bridged NICs).
