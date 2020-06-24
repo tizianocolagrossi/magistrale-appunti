@@ -82,6 +82,13 @@ Scope is  a 4-bits field used to define the range of the multicast packet.
 - 8 Organization-Local scope
 - E Global Scope
 
+Flag  
+- 0 - Permanent, well-known multicast address assigned by IANA.
+- Includes both assigned and solicited-node multicast addresses.
+- 1 - Non-permanently-assigned, “dynamically" assigned multicast address.
+- An example might be FF18::CAFE:1234, used for a multicast application
+with organizational scope.
+
 __IPv6 does not have broadcast address__
 
 ### Global Unicast Address
