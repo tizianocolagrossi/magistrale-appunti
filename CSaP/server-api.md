@@ -98,13 +98,6 @@ The server send all existing topics in the whiteboard app
 REQUEST  
 > GET /topics
 
-HEADER REQUEST 
-```yaml
-{
-    "userid-or-token": "userid-or-token"
-}   
-```
-
 RESPONSE
 ```yaml
 {
