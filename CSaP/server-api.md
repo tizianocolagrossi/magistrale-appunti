@@ -193,6 +193,7 @@ BODY REQUEST
 {
     "data": {
             "from": "eurus"
+            "title": "title test"
             "text": "this is a new test thread"       
         }
 }   
