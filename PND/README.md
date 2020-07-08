@@ -352,7 +352,7 @@ It looks best to introduce security in the:
 - Network layer.
 
 bacause:
-implemented at->|pysical layer|datalink|network|transport|application
+implemented at->|pysical layer|datalink|network(ipsec)|transport(opnvpn)|application
 ---|---|---|---|---|---
 Confidentiality             |on cable                       |on link(virtual cable) |between hosts/sites|between apps/hosts/sites|between users/apps
 Integrity                   |on cable                       |on link                |between hosts/sites|between apps/hosts/sites|between users/apps
@@ -362,7 +362,7 @@ Traffic analisys protection |on cable                       |on link            
 Access control              |physical access                |physical access        |to host/site|user/host/site|only data access secured
 Trasparency                 |full transparecy               |full                   |user and SW possible|user and SW possible|only user trasparency
 Flexibility                 |hard to add new sites          |hard to add new sites  |may need SW or HW mod|HW or SW mod|SW mod
-Symplicity                  |excellent                      |excellent              |**OK** site to site **NO OK** host to site|**OK** site to site **NO OK** host to site|depends on application
+Symplicity                  |excellent                      |excellent              |**OK** site to site **NO OK** host to site|**OK** site to site **OK** host to site|depends on application
 
 So best VPN on **Transport** or **Network** layer.
 ## SSL tunneling
@@ -527,8 +527,10 @@ Host a1 could make an MITM using the redirect Message ICMPv6 to set a new route 
 ### You have to setup a network with 30 hosts and allow all of such hosts to reach the Internet. Moreover, 2 of them have to also be reachable from the Internet. You only have one public IP address assigned from your ISP. Explain the type of mechanisms you would use to properly configure your network.
 I should split the network in at least two subnetwork. One of this is the DMZ where I will position the two host that has to be reachable from the internet. The router/firewall must secure this two subnetwork and must accept traffic from outside only if the destination are the two host in the DMZ. In the orther subnetwork are the internal host that has only to reach the outside. In the DMZ I also will place an proxy to reach internet. The router has to Nat all the network and must do port forwarding dor the pc in the DMZ.
 
+split network to at least 2 subnetwork > 1 to DMZ (put here the host reachable from the outside and a proxy to control traffic html outside and reverse proxy to controll trafic to 2 host reachab;e) > roter/firewall secure the 2 subnetwork, all natted and the 2 reachable with port forwarding.
+
 ### Explain the most important differences on having a VPN that protects data at transport-level and one that protects data at network-level.
-TODO
+The critical part in a VPN in Network layer is the trasparency, because is not so easy to grant this protection in a alredy established network. In son that much flexible and trasparent. In network level there are two level of addresses and the virtual address packet is encrypted. Instead in trasport level vpn is used SSL/TLS it provide a secure channel (completely flexible)
 
 ### Describe pros and cons of transparent proxies.
 To end user transparent proxy is a MITM. So no need to configure the host to use it. It can be used for caching, so for an optimization of the requast to internet. It can filtering the traffic and it can do DDoS protection. HTTPS make the traffic indecipherable to anyone who intercept, but typically DNS traffic are not enrypted so it can at least see werw thw traffic is going. Some trasparent proxy  like SQUID can handle HTTPS traffic in different ways, in some scenario, network adminitrator set up HTTPS interception on transparent proxy. The proxy act like a MITM whit its own HTTPS certificate authorities. 
@@ -549,7 +551,8 @@ MAC 6byte, IPv4 4byte, IPv6 16bytes. The MAC is provided by the NIC manufactorer
 NAT mechanism provide some kind of security because the host natted are hidden and not reachable from the outside, you can make teh host reacable using port forwarding.
 
 ### Enumerate and briefly describe the type of VPN implementations you know. Highlight pros and cons.
-TODO
+IPsec and OpenVpn. Ip sec is good for site to site buto not forn host to site instead OpenVpn is good for site to site and also for host to site.
+In theory IPsec shuld be more fast than OpenVpn but it depends from the configuration and how offload we have.
 
 ### Enumerate the types of outcomes you can have when a network IDS evaluates a sample. 
 It can have 4 outcomes, false positive, true positive, false negative, true negative. 
@@ -576,7 +579,7 @@ VPN in the DMZ because we assume the DMS less secure than the internal network a
 Besause for signature-base IDS we must known how the exploit work, besause so we can recognise pattern in the traffic in our network
 
 ### Why it is important to have a methodology for performing security assessments? Mention at least one known methodoloy.
-TODO
+Ome metodologies is OSSTMM. It provide a STANDARDIZE appoach to conduct a pentest and it's important becouse with a methodologi we have a consisten and repetable test.
 
 ### Explain how a proxy that uses HTTP CONNECT works.
 The proxy enstablish an triple handshake to create a connection to the server rewuired from the HTTP connect and then forward the traffic to that host.
