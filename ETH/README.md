@@ -152,14 +152,63 @@ Windows firewall, automated updates
 # Remote connectivity and VoIP
 - Dial-up hack
 - Voicemail Hacking
+- PBX (Private Branch Exchange) Hacking
 - Virtual private network haking
 - Coice over IP attacks
-mani companies still use dial-up connections (connecting to old server). Dial up hacking is similar to other hacking (footprint, scan, enumerate, exploit), automated by tools: wardialer or demo dialer. Phone number footprinting: identify blocks of phone to load into a wardialer.  
-**Bruteforce Voicemail Hacking**, is similar to dial-up hacking metods. Required components. Tools Voicemail box hacker 3.0, VrACK 0.51. **Countermeasures** deploy a lockout on failed attempts; log observe voicemail connections.  
-### VPN hacking
-VPN has replaced dial-up as the remote access mechanism. **GOOGLE HACKING** Using filetipe:pcf to find profile setting files for Cisco VPN client -> download and import -> connect and attack. Password stored in PCF file can be used for password reuse attack (tools cain etc). IPsec -> 1 sniff IKE (tools -> **IKEprobe**), 2 initiate connection. **Countermeasures**: discontinue IKE Aggressive mode use; use token-based authentication scheme.
+many companies still use dial-up connections (connecting to old server). Dial up hacking is similar to other hacking (footprint, scan, enumerate, exploit), automated by tools: wardialer or demo dialer. Phone number 
+
+footprinting: identify blocks of phone to load into a wardialer.  
+
+**Bruteforce Voicemail Hacking**, is similar to dial-up hacking metods. Required components. Tools Voicemail box hacker 3.0, VrACK 0.51. 
+
+**Countermeasures** deploy a lockout on failed attempts; log observe voicemail connections.  
+
+## Voicemail Hacking
+Brute-force Voicemail Hacking. In similar fashion to dial-up hacking methods. Required components: phone number to access voicemail; target voicemail box (3~5 digits); educated guess about voicemail box password (typically only numbers)
+
+**TOOLS**: Voicemail Box Hacker 3.0 and VrACK 0.51 (for old/less-secure system), ASPECT scripting language.
+
+**COUNTERMEASURES**: deploy a lockout on failed attempts; log/observe voicemail connections
+
+## VPN hacking
+VPN has replaced dial-up as the remote access mechanism. 
+
+**GOOGLE HACKING** Using **filetipe:pcf** to find profile setting files for Cisco VPN client
+1. download and import
+1. connect and attack. 
+
+Password stored in PCF file can be used for password reuse attack (tools cain etc). 
+
+**COUNTERMEASURES**: user awareness; sanitize sensitive information on websites; use Google Alerts service
+
+### Probing IPsec
+Check if service’s corresponding port is available (UDP 500). Perform IPsec VPN identification and gateway fingerprinting. Identify the IKE Phase 1 mode and remote server hardware.
+
+**TOOLS**: Nmap, NTA Monitor, IKEProber
+
+### Attacking IKE Aggressive Mode
+IKE Phase 1-Aggressive mode does not provide a secure channel (Eavesdropping attacks to authentication information).
+1. identify whether target server supports aggressive mode (tool: IKEProbe)
+1. initiate connection and capture authentication messages (tool: IKECrack, Cain)
+
+ **COUNTERMEASURES**: discontinue IKE Aggressive mode use; use token-based authentication scheme.
+
+### VoIP Attacks
+- **VoIP Enumeration** provide detail and owerview of the setup: VoIP gateway/server, IP-PBK system, client software(softphone)/VoIP phone and user extension [command to do this: svmap.py <IP-RANGE-TO-SCAN>(search phone/PBX) and svwar.py -e<RANGE-EXTENSION> <IP-TO_SCAN> -m INVITE (search extension)]. 
+
+- **With DOS** we can attack a sigle phone or multiple phone. To perform this attack we just must send a large colume of fake call (SIP INVITE) to the victim or flooding the phone with unwanted traffic (COMMAND: inviteflood <INTERFACE> <USER(EXTENSION)> <TARGET-DOMAIN> <IP-TARGET> <NUM_OP_PACKET>, and the phone continusly ring now).
+
+- **Interceprion attacks**: sniff VoIP datastream with wireshark or make an arpSpoofing attack with dsniff to capture the RTP stream. Than we must recognize the codec of the datasream and than convert datastream to popular file types (TOOLS: scapy or vomit) 
+
+**COUNTERMEASURE** for this attacks are to segmenting the network between voice and  data VLANs, authentication and enryption for all SIP communication, deploy IPS or IDS 
+
+
 ### SIP scanning
 The transport of voice on top of an ip network (Signaling protocols: H.323 and SIP), SIP scanning: discover SIP proxies and other devices tools **SiVuS, SIPVicious**. Countermeasures: network segmentation between VoIP network and user access segment. 
+
+
+
+
 
 # Wireless tech and hacking
 
