@@ -1,4 +1,9 @@
 # Scanning and Enumeration
+
+Scanning vs. enumeration
+- Level of intrusiveness
+- Enumeration: active connections to systems and directed queries
+
 - ARP host discover in the same subnet -> Arp-scan, **NMAP**, CAIN(windows only)
 - ICMP remote host/router -> ping, **NMAP**, Hping3, superscan
 - TCP/UDP host discovery -> **NMAP**, superscan, Hping3   
