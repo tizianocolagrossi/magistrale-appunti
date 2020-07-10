@@ -10,7 +10,7 @@ nmap not only send an ICMP ECHO REQUEST it also perform an ARP ping. (attenction
 - Banner grabbing 
 
 ## DNS enumeration
-> snlookup, ls -d, <domain name>; or dig  
+> nslookup, ls -d, <domain name>; or dig  
 + norecurse, examines only the local dns data. ANSWER: 0 <- EXAMPLE. If i run again the command ANSWER:1. So we can see if someone has queried the site. And we also know the ip af a domain.
 
 # APT (Advanced Persisten Threats)
@@ -156,29 +156,7 @@ VPN has replaced dial-up as the remote access mechanism. **GOOGLE HACKING** Usin
 ### SIP scanning
 The transport of voice on top of an ip network (Signaling protocols: H.323 and SIP), SIP scanning: discover SIP proxies and other devices tools **SiVuS, SIPVicious**. Countermeasures: network segmentation between VoIP network and user access segment. 
 
-# Wireless hacking
-
-### Case of study in Wireless Hacking WEP
-We have a store with the point-of-sale system connectet trought a WEP encryption wifi system (Wired Equivalent Privacy). A hacker at the parking near the store turn on the laptop with a directional antenna and the NIC in promicuous mode. **Airckrack-ng** suite of tool for hack wifi networks.
-- **airodump-ng** -> to sniff 802.11 frames including WEP inizialization vectors (IVs), loks for SSID of interest and its MAC address.
-- **aireplay-ng** -> to spoof as a client co capture ARP and reply it to collect enough IVs.
-- **aircrack-ng** -> to krack WEP key prom the capture file. Disable promiscuous mode and connect to the network of the store.  
-#### Background on IEEE 802.11 wireless lan
-ISM(Industrial, Scentific, Medical) unlicensed bands. 2.4v GHz->802.11 b/g/n channels 1-14 (non overlapping channels 1,6,11), 5Ghz->802.11 a/n channels 36-165 (all non overlapping).
-#### Session establishment
-Most common mode just uses an access point. Ad Hoc devices connected peer-to-peer (like ethernet crossover cable). **PROBES** Client send a probe request for the SSID it is looking for, it repeat this request for each channel for a response from the SSID (**probe response**). Afterthe response client sends **authentication request**. If system use open authentication the AP accept any connection. The alternate system, **shared-key authentication**, is almost never used (used only in WEP). The WPA security mechanism have no effect on authentication, they take effect later. **ASSOCIATION** client send **association request** and AP sends an **associationresponse**.
-#### Security mechanism
-**MAC filtering** or **Hidden network** (omit SSID from beacons). CLient can send a **broadcast probe requests** and do not specify the SSID (APs can be configured to ignore them)
-## WPA vs. WPA2
-802.11i specifies encryption standards.
-- WPA implements only part of 802.11i -> TKIP (Temporal Key Integrity Protocol)
-- WPA2 instead impelemts both -> TKIP and AES (Advanced encryption standards)
-
-#### WPA personal VS. WPA enterprise
-On **WPA personal** we have one password for all the users. Password storen in the wireless client and if the password is changed on AP we must change manually form all the devices connected at the AP and **Wireless access cannot be individually managed**. Instead in **WPA enterprise** when users try to connect to Wi-Fi, they need to present their enterprise login credentials. Users never deal with the actual encrytpion keys. Attacker cannot get the network key from clients and offers **individual control** over the connection.
-
-#### WPA-PSK VS. 802.1x
-**WPA-PSK** uses pre-shared key. **WPA-Enterprise 802.1x** uses 802.1x and a RADIUS server, EAP (Extesible Authentication Protocol), which bau be one of: EAP-TTLS, PEAP, EAP-FAST. Both WPA-PSK and WPA-Enterprise use Four way handshake to establish: Pairwise transient key (used for unicast communications), Group tempral key (used for multicast and broadcat communications). Three Encryption Options: **WEP** -> use RC4 and easily exploitable. **TKIP** -> quick replacement for WEP (runs on old hardware), still use RC4 but no major vulnerabilities are known. **AES-CCMP** -> (Advanced Encryption Standard with Ciper Block Chainig Message Authentication Protocol) most secure reccomended.
+# Wireless tech and hacking
 
 ## **Equipment for attack**
 - NIC that support promicuous mode -> (Alfa AWUS050NH, Ralink RT2270F chipset)
@@ -187,38 +165,117 @@ On **WPA personal** we have one password for all the users. Password storen in t
     - Omnidirectional
     - Directional
 - And more...
-#### Identifying Wireless Network Defenses
-- SSID can be forund from mainly these packets (Beacons, Probe request, Probe responses, Association and Reassociation Requests)
-    - IF SSID broadcasting is off, just deauthenticate all to force reassociation.
-- MAC address control
-    - Sniff for users search for the mac of one user and spoof
-    - >macchanger -m xx:xx:xx:xx:xx:xx [interface]
 
-#### Attacks
-To **crack WEP** you need to capture enough data -> 60000 IVs to crack 104-bit key.  
-**WPA** no major weaknesses until 2017, however, if you use a weak pre shared key, it can be found with a dictionay attack. But PSK is hashed 4096 times, can be up 63 characters long, and include the SSID.
-#### Password brute force
-**WPA-PSK** PSK shared among all the user of a wireless network. Four way handshake between client and AP: using PSK and SSID to derive encryption keys.
- - PSK, 8-64 char, hashed 4096 timeswith SSID (trilions of guesses)  
-Capture four-way handshake to crack PSK offline ( wait or deauth clients of ). **Brute forcing**-> aircrack-ng | coWPAtty (use SSID specific raimbowtables) | pyrit offload hashing to GPU whit multiple cores.
-#### LEAP 
+## Background on IEEE 802.11 wireless lan
+ISM(Industrial, Scentific, Medical) unlicensed bands. 2.4v GHz->802.11 b/g/n channels 1-14 (non overlapping channels 1,6,11), 5Ghz->802.11 a/n channels 36-165 (all non overlapping).
+
+## Session establishment
+Most common mode just uses an access point. Ad Hoc devices connected peer-to-peer (like ethernet crossover cable). 
+
+**PROBES** Client send a probe request for the SSID it is looking for, it repeat this request for each channel for a response from the SSID (**probe response**). Afterthe response client sends **authentication request**. 
+
+If system use open authentication the AP accept any connection. The alternate system, **shared-key authentication**, is almost never used (used only in WEP). The WPA security mechanism have no effect on authentication, they take effect later. 
+
+**ASSOCIATION** client send **association request** and AP sends an **associationresponse**.
+
+### Security mechanism
+**MAC filtering** or **Hidden network** (omit SSID from beacons). CLient can send a **broadcast probe requests** and do not specify the SSID (APs can be configured to ignore them)
+
+
+## WEP
+WEP is the first standard IEEE 802.11 for secure the trasmission in wi-fi network. His vulnerability is due to Inizialization Vectors (IV) 24bit. It uses the RC4 as algorithm and two keys 64 or 128 bit (actual 40 and 104 bit 24 if IV).
+
+### Methods of authentication for WEP
+- **Open System authentication**, the WLAN client does not provide its credentials to the Access Point during authentication. Any client can authenticate with the Access Point and then attempt to associate. In effect, no authentication occurs. Subsequently, WEP keys can be used for encrypting data frames. At this point, the client must have the correct keys.
+- **Shared Key authentication**, the WEP key is used for authentication in a four-step challenge-response handshake:
+    1. The client sends an authentication request to the Access Point.
+    1. The Access Point replies with a clear-text challenge.
+    1. The client encrypts the challenge-text using the configured WEP key and sends it back in another authentication request.
+    1. The Access Point decrypts the response. If this matches the challenge text, the Access Point sends back a positive reply.
+After the authentication and association, the pre-shared WEP key is also used for encrypting the data frames using RC4.
+
+At first glance, Shared Key authentication seem more secure than Open System authentication, since the OpenSysAuth offers no real authentication. However, it is quite the reverse. It is possible to derive the keystream used for the handshake by capturing the challenge frames in Shared Key authentication. Therefore, data can be more easily intercepted and decrypted with Shared Key authentication than with Open System authentication. 
+
+When we have enough IVs (5000 for 40bit and 60000 for 104) we will end with two packet with same IV, caused by the short lenght of IV. If this happens we can try to use **airckrack-ng** wich uses statistical attacks to determine key stream. It will be able to determine the key.
+
+### weak of WEP
+Because **RC4** is a **stream cipher**, the **same traffic key must never be used twice**. The purpose of an IV, which is transmitted as plain text, is to prevent any repetition, but a **24-bit IV is not long enough to ensure this on a busy network**. The way the IV was used also opened WEP to a related key attack. For a 24-bit IV, there is a 50% probability the same IV will repeat after 5,000 packets.
+
+### ATTACK WEP 
+1. card in monitor mode
+1. airodump-ng wlan0 (to searck a network with wep)
+1. airodump-ng --bssid xx:xx:xx:xx:xx:xx --channel xx --write test-ap-dump wlan0 (to sniff and store the traffic of that network in the file test-ap-dump)
+1. airckrack-ng test-ap-dump-01.cap
+1. wait 
+
+#### COUNTERMEASURE WEP DON'T USE WEP EVER
+
+## WPA vs. WPA2
+802.11i specifies encryption standards.
+- WPA implements only part of 802.11i -> TKIP (Temporal Key Integrity Protocol)
+- WPA2 instead impelemts both -> TKIP and AES (Advanced encryption standards)
+
+## WPA
+
+### WPA-personal aka WPA-PSK
+Designed after WEP to address all issues that made WEP very easy to crack. The main issue with WEP is the short IV, wich is sent in plain text. In WPA however each packet is encrypted using unique temporary key. So doesen't matter how much traffic we sniff, because they do not contain any useful information that can help to crack the key same for WPA2. **the only difference between WPA and WPA2 is that WPA2 uses an algorithm calles CCMP for encrytpion.
+On **WPA personal or WPA-PSK** we have one password for all the users. Password storen in the wireless client and if the password is changed on AP we must change manually form all the devices connected at the AP and **Wireless access cannot be individually managed**.
+
+The only packets that contains information that can help us to determine the key are the handshake packets. These are the four packets sent when a new device or a new client connects to the targhet network. Using **airckrack-ng** we can use a wordlist, testing each password in the wordlist using the handshake.
+
+### ATTACK WPA-PSK
+1. capturing the handshake 
+    - airodump-ng --bssid xx:xx:xx:xx:xx:xx --channel xx --write test-handshake wlan0
+
+1. if we dont find any handshake we can cause them with deauth attack
+    - aireplay-ng --deauth 4 -a xx:xx:xx:xx:xx:xx<AP MAC> -c xx:xx:xx:xx:xx:xx<MAC CLIENT DEAUTH> wlan0
+
+1. crack the key with dictionary
+    - aircrack-ng test-handshake-01.cap -w wordlist
+
+
+### WPA-Enterprise
+Also referred to as WPA-802.1X mode, this is **designed for enterprise networks** and requires a RADIUS authentication server. This requires a more complicated setup, but provides additional security (e.g. protection against dictionary attacks on short passwords). Various kinds of the Extensible Authentication Protocol (EAP) are used for authentication. WPA-Enterprise mode is available with both WPA and WPA2. When users try to connect to Wi-Fi, they need to present their enterprise login credentials. Users never deal with the actual encryption keys. Attackers cannot get the network key from clients and offers individualized control over access to a Wi-Fi network.
+
+#### WPA-PSK VS. 802.1x (Enterprise)
+**WPA-PSK** uses pre-shared key. **WPA-Enterprise 802.1x** uses 802.1x and a RADIUS server, EAP (Extesible Authentication Protocol), which may be one of: EAP-TTLS, PEAP, EAP-FAST. Both WPA-PSK and WPA-Enterprise use Four way handshake to establish: Pairwise transient key (used for unicast communications), Group tempral key (used for multicast and broadcat communications). 
+
+Three Encryption Options: 
+1. **WEP** -> use RC4 and easily exploitable. 
+1. **TKIP** -> quick replacement for WEP (runs on old hardware), still use RC4 but no major vulnerabilities are known. 
+1. **AES-CCMP** -> (Advanced Encryption Standard with Ciper Block Chainig Message Authentication Protocol) most secure reccomended.
+
+### ATTAKING WPA ENTERPRISE
+This means to attack EAP (Extensible Authentication Protocol). Tecniques depends on the specific EAP type used (LEAP or EAP-TTLS and PEAP). First must detect the type of EAP with wireshark.
+
+####  1 LEAP 
 Leap is a proprietary protocol from Cisco Systems developed in 2000 to address the security weakness common in WEP. Is an 102.1x schema using a RADIUS server.
 **Is fundamentally weak because it provides ZERO RESISTANCE to offline  dictionary attack**. It solely rely on MS-CHAPv2 to protect the user credential usedfor wireless LAN authentications. **But MS-CHAPv2 is notoriously weak** because it does not use salt in NT hashes, use a weak 2 byte DES key and sends usernames in clear text. Because of this offline dictionary and bruteforce attack can be made much more efficient.
 
-#### Authentiation attacks WPA enterprise
-- Identifying 802.1x EAP types
-    - Capture EAP handshake
-    - Wireshark shows EAP type
-    - Unencrypted username in RADIUS server EAP handshake
-- LEAP (lightweight EAP)
-    - asleep -> offline brute-force attack eith LEAP handshake and wordlist
-- EAP-TTLS and PEAP
-    - a TLS tunnel between an unauthenticated client and a RADIUS server (AP relays and has no visibility)
-    - less secure inner authentication protocol (often in clear text)
-    - AP impersonation and man-in-the-middle attack
-    - **hostapd** turn your NIC into an AP
-    - **asleep** offline bruteforcein inner authentication protocol 
-    - Countermeasure (check the box to validate server certificate on all clients)
+**TOOL**: **asleep** offline brute-force attack with LEAP handshake and wordlist
+
+**COUNTERMEASURE**: LEAP is secure if the passwords are long and complex but avoid using LEAP just like WEP
+
+#### 2 EAP-TTLS and PEAP
+EAP-TTLS and PEAP both use a TLS tunnel to protect a less secure inner authenticated protocol (MS-CHAPv2, EAP-GTC (one-time passwords), Cleartext).
+**attacking TLS** (no known way to defeat the encryption), but AP impersonation can work.
+- Trick target into connecting to MITM instead of server
+- Misconfigured clients won't validate the identity of the RADIUS server so it can be spoofed
+- FreeRADIUS-WPE: accepts any connections and outputs data to a log.
+
+**SUMMARY**: Act as a terminating end of the TLS tunnel, if the client is misconfigured not to check the identity of RADIUS server -> access inner auth protocol
+
+**TOOL**: hostapd (Turn your card into an AP), asleep (offline brute-force on inner authentication protocol)
+
+**COUNTERMEASURE**: "Validate the Server Certificate" on all wireless clients
+
+### Identifying Wireless Network Defenses
+- SSID can be forund from mainly these packets (Beacons, Probe request, Probe responses, Association and Reassociation Requests)
+    - IF SSID broadcasting is off, just deauthenticate all to force reassociation.
+- MAC address control (Each MAC must be entered into the list of approved addresses)
+    - Sniff for users search for the mac of one user and spoof
+    - >macchanger -m xx:xx:xx:xx:xx:xx [interface]
+
 
 ## Summary wireless hacking
 - WEP
@@ -237,7 +294,8 @@ Leap is a proprietary protocol from Cisco Systems developed in 2000 to address t
         - subject to AP impersonations and MITM attacks
         - **always have client check server chertificate**
 
- # Questions of past exams
+
+# Questions of past exams
 
  ## Describe at least one technique to determine which services are running or listening on a remote host. Discuss pro and cons, and which tools you may use in practice.
  For determine which service are running on a remote host we can need to scan the port that are listening in that system. There are many tools for do this, for example there are 'nmap' and 'nc' (netcat). Nmap can search for alive hosts, listening ports, os detection and more. Nmap if not configured well can be very noisy on the network even it support many types of scan techniques. For example with 'nmap -sS -sV <host>' we can look for listening services that are running on the host and their version. Or we can just listening the traffic generated in a network to look for standard port and some useful information. Obviously in the first case from the fact that we generate traffic, we can be blocked from some IPS that can recognize our scan if we are not careful to configure the type of scan that we want use. Instead with a passive sniffing we are more stealth but we can not found as many information that we can do with nmap. 
