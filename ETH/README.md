@@ -257,6 +257,9 @@ XSS can lead to an arbitrary execution of javascript code into the victim browse
 ## Discuss the differences between scanning and enumeration. Describe at least one enumeration technique.
 When we scan we search for alive host, for listening services that running or listening and for detecting the os. we can do it with nmap and many other tools. Using ARP or ICMP or TCP/UDP host discovery for see if an host is alive. For detecting the services instead we make port scan, TCP connect(SYN, SYN-ACK, ACK), TCP SYN scan (SYN, SYN-ACK or RST-ACK) and many more methods. Instead enumerating is when we lookup for service fingherprint, we search for vulnerabilities, banner grabbing, and enumerating common service nework. For example we can do both using nmap. **'nmap -sL 100.100.1.1-254'** search for alive host in the specified range, **'nmap -sS -sV host.ip'** this command do an syn scan (-sS) and search for version of processes running into the remote machine (-sV).
 
+##  imagine there has been an APT attack on a Windows machine. Which files would you look at, in search of interesting information for digital forensics, to understand what happened? Tell the default locations of the files, what information they contain and which tools you can use for your analysis.
+SAME BOTTOM 
+
 ## The Administrator account of a Windows server has been compromised. Host software cannot be re-installed for business reasons. With these assumptions, how do you plan and implement post-exploit activities for the host recovery. In particular, list the areas of the system on which to intervene, to restore the host’s security. Discuss in detail at least one of these areas of intervention, listing the activities to be carried out, the tools, the line commands to be used, etc.
 If you want to clean it without reinstall all you must cover four areas: files, registry keys, processes, network ports.   
 Search in the system for some dangerous filename such as 'nc.exe', run antivirus, use some tools that identify some changes to the filesystem and system files.   
@@ -288,3 +291,20 @@ WPA enterprise use a RADIUS server to authenticate the users that wont connect t
 Is fundamentally weak because it provides ZERO RESISTANCE to offline  dictionary attack. It solely rely on MS-CHAPv2 to protect the user credential used for wireless LAN authentications. But MS-CHAPv2 is notoriously weak because it does not use salt in NT hashes he use a weak 2 byte DES key and sends usernames in clear text. Because of this offline dictionary and bruteforce attack can be much efficient. One countermeasure to this is to not use leap. whit EAP-TTLS and PEAP we can attempt an MITM attack. If we can do it a TLS tunnel between an unauthenticated client and a RADIUS server is now useless because we can now decrypt the traffic from the client and the RASIUS server. Often the inner authentication protocol is less secure (often in clear text) and we can try to crack the inner layer protocol. The tool for doing this are hostapd for turn our NIC into an AP and after we capture the traffic from the client to the server we can use asleep for make offline bruteforce in inner authentication protocol. The only countermeasure for this is validate the server certificate.
 
 IF uses LEAP -> vulnerable to offline attack -> hash not salted (MS-CHAPv2 weak 2byte des username in clear text) -> dictionary bruteforce attack -> then crack inner layer protocol (usually weak)-> tool hostapd(turn nic in AP) asleep(offline crack) -> Countermeasure validate certificate AP
+
+## VOIP Attacks. Describe VOIP Enumeration, Denial of Service and other attacks vs VOIP. Which tools are used? Write console commands. Which countermeasures?
+**VoIP Enumeration** provide detail and owerview of the setup: VoIP gateway/server, IP-PBK system, client software(softphone)/VoIP phone and user extension [command to do this: svmap.py <IP-RANGE-TO-SCAN>(search phone/PBX) and svwar.py -e<RANGE-EXTENSION> <IP-TO_SCAN> -m INVITE (search extension)]. 
+
+**With DOS** we can attack a sigle phone or multiple phone. To perform this attack we just must send a large colume of fake call (SIP INVITE) to the victim or flooding the phone with unwanted traffic (COMMAND: inviteflood <INTERFACE> <USER(EXTENSION)> <TARGET-DOMAIN> <IP-TARGET> <NUM_OP_PACKET>, and the phone continusly ring now).
+
+**Interceprion attacks**: sniff VoIP datastream with wireshark or make an arpSpoofing attack with dsniff to capture the RTP stream. Than we must recognize the codec of the datasream and than convert datastream to popular file types (TOOLS: scapy or vomit) 
+
+**COUNTERMEASURE** for this attacks are to segmenting the network between voice and  data VLANs, authentication and enryption for all SIP communication, deploy IPS or IDS 
+
+## Can linux security tools be ported to Android? Which tools? Write console commands
+
+Yes this can be done because android is based on linux but you must have access to root privilege to get access to kernel and the phone must have hardware compatible with the software. Rooting you ohone can be done in multiple ways but you need ADB and android SDK. There was some tool to automate this for example Z4root ROOTx Super One Clock, GingerBreak. There are even some distro of kali (Kali Nessus) optimized pr android devices.
+
+## What is a Blind SQLi? Make a concrete example.
+Blind SQL is when se can inject some query in a database, but we cannot see the result. The solution is to manipulate the time that the database elaborate the result. For example if our query is true sleep for 5 second, so we can see if our query is true of not and than enumarate the entry with commands SUBTRING, if and SLEEP or BENCKMARK. EX query injected SELECT(IF((SELECT SUBSTR(col, 1, 1) FROM test WHERE id = 1)='a', SLEEP(5), 0);
+and so we can check all the value for the single letter in the substring and than we can reconstruct the string.
