@@ -248,7 +248,7 @@ Three Encryption Options:
 ### ATTAKING WPA ENTERPRISE
 This means to attack EAP (Extensible Authentication Protocol). Tecniques depends on the specific EAP type used (LEAP or EAP-TTLS and PEAP). First must detect the type of EAP with wireshark.
 
-####  1 LEAP 
+###  1 LEAP 
 Leap is a proprietary protocol from Cisco Systems developed in 2000 to address the security weakness common in WEP. Is an 102.1x schema using a RADIUS server.
 **Is fundamentally weak because it provides ZERO RESISTANCE to offline  dictionary attack**. It solely rely on MS-CHAPv2 to protect the user credential usedfor wireless LAN authentications. **But MS-CHAPv2 is notoriously weak** because it does not use salt in NT hashes, use a weak 2 byte DES key and sends usernames in clear text. Because of this offline dictionary and bruteforce attack can be made much more efficient.
 
@@ -256,7 +256,7 @@ Leap is a proprietary protocol from Cisco Systems developed in 2000 to address t
 
 **COUNTERMEASURE**: LEAP is secure if the passwords are long and complex but avoid using LEAP just like WEP
 
-#### 2 EAP-TTLS and PEAP
+### 2 EAP-TTLS and PEAP
 EAP-TTLS and PEAP both use a TLS tunnel to protect a less secure inner authenticated protocol (MS-CHAPv2, EAP-GTC (one-time passwords), Cleartext).
 **attacking TLS** (no known way to defeat the encryption), but AP impersonation can work.
 - Trick target into connecting to MITM instead of server
