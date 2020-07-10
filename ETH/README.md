@@ -203,13 +203,6 @@ IKE Phase 1-Aggressive mode does not provide a secure channel (Eavesdropping att
 **COUNTERMEASURE** for this attacks are to segmenting the network between voice and  data VLANs, authentication and enryption for all SIP communication, deploy IPS or IDS 
 
 
-### SIP scanning
-The transport of voice on top of an ip network (Signaling protocols: H.323 and SIP), SIP scanning: discover SIP proxies and other devices tools **SiVuS, SIPVicious**. Countermeasures: network segmentation between VoIP network and user access segment. 
-
-
-
-
-
 # Wireless tech and hacking
 
 ## **Equipment for attack**
