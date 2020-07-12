@@ -1,3 +1,37 @@
+# Footprinting
+- Determine the scope of your activities
+- Get proper authorization
+- Publicly available information
+- WHOIS & DNS enumeration
+- DNS interrogation
+- Network reconnaissance
+
+## What to footprint ? 
+- **Internet**: domain names, network blocks and subnets, IP addresses, TCP/UDP services, CPU arch, access control, IDS, system enumeration, DNS hostnames
+- **Intranet**: network protocols, internal domain names, network blocks, IP addresses, TCP/UDP services, CPU arch, access control, IDS, system enumeration
+- **Remote access**: phone numbers, remote system type, authentication mechanisms, VPN
+- **Extranet**: domain names, connection source and destination, type of connection, access control
+
+based on three step:
+1. Determine the scope of your activities (Entire organization or subsidiaries?)
+1. Get proper authorization (Get-out-of-jail-free card)
+1. Publicly available information
+1. WHOIS and DNS Enumeration (DOmain names, IP addr, port number stored WHOIS/DNS server)
+1. DNS interrogation
+1. Network Reconnaissance
+
+## DNS interrogation
+Obtain revealing info about the organization by querying DNS servers (domain name <-> IP addresses)
+```nslookup, ls -d, <domain name>```; or dig  
++ norecurse, examines only the local dns data. ANSWER: 0 <- EXAMPLE. If i run again the command ANSWER:1. So we can see if someone has queried the site. And we also know the ip af a domain
+
+**DNS SECURITY COUNTERMEASURE**: Restrict zone transfer to only authorized servers, Configure a firewall to deny unauthorized inbound connections to TCP port 53(DNS), Configure not to provide internal DNS info
+
+## Network Reconnaissance
+Recreate network topology and access path diagram with ```traceroute, tracert, NeoTrace```     
+
+**COUNTERMESAURE**: IDS ```snort,bro```, Configure border routers to limit ICMP and UDP traffic to specific systems
+
 # Scanning and Enumeration
 - ARP host discover in the same subnet -> Arp-scan, **NMAP**, CAIN(windows only)
 - ICMP remote host/router -> ping, **NMAP**, Hping3, superscan
@@ -12,10 +46,6 @@ nmap not only send an ICMP ECHO REQUEST it also perform an ARP ping. (attenction
 Scanning vs. enumeration
 - Level of intrusiveness
 - Enumeration: active connections to systems and directed queries
-
-## DNS enumeration
-```nslookup, ls -d, <domain name>```; or dig  
-+ norecurse, examines only the local dns data. ANSWER: 0 <- EXAMPLE. If i run again the command ANSWER:1. So we can see if someone has queried the site. And we also know the ip af a domain.
 
 # APT (Advanced Persisten Threats)
 Example 
