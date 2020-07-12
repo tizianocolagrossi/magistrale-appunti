@@ -32,20 +32,104 @@ Recreate network topology and access path diagram with ```traceroute, tracert, N
 
 **COUNTERMESAURE**: IDS ```snort,bro```, Configure border routers to limit ICMP and UDP traffic to specific systems
 
-# Scanning and Enumeration
-- ARP host discover in the same subnet -> Arp-scan, **NMAP**, CAIN(windows only)
-- ICMP remote host/router -> ping, **NMAP**, Hping3, superscan
-- TCP/UDP host discovery -> **NMAP**, superscan, Hping3   
-So basically just use **nmap**.
+# Scanning 
+1. Determine if the system is alive 
+1. Wich services are running/listening 
+1. Detecting OS.
+
+## Determine alive system
+With network ping sweeps: 
+- using **ARP** (on the same subnet) ```Arp-scan``` or ```nmap -PR -sn``` or ```CAIN```
+- using **ICMP**  ```ping``` or ```nmap -PE|PP|PM ```
+- using **tcp/udp** ```superscan``` or ```nmap```
+
+nmap not only send an ICMP ECHO REQUEST it also perform an ARP ping. (attenction to IPS).
+other command nmap:
+
 ```nmap -sL 100.100.1.1-254 # search host alive *nmbotto de casino fa eh rumore*```.  
 ```nmap -sS -sV <ip> # find services and version  ``` 
-nmap not only send an ICMP ECHO REQUEST it also perform an ARP ping. (attenction to IPS).
 
-- Banner grabbing 
+**PING SWEEP COUNTERMEASURES**: IDS, FIrewall  
+**PREVENTION**: ACL in firewall: limit ICMP traffic into your networks or systems, Allow only ECHO_REPLY, HOST UNREACHABLE, TIME EXCEEDED into specific hosts in DMZ; allow only ISP’s specific IP addresses
 
-Scanning vs. enumeration
+## Determining Which Services Are Running or Listening
+Port scanning. Scan types:
+- ```nmap -sT ``` TCP connect scan (3-way handshake), 
+- ```nmap -sS ``` TCP SYN scan (half-open scan,SYN then SYN/ACK or RST/ACK), 
+- ```nmap -sF ``` TCP FIN scan (RST if closed port), 
+- ```nmap -sX ``` TCP Xmas Tree scan (FIN/URG/PUSH), 
+- ```nmap -sN ``` TCP null scan, 
+- ```nmap -sA ``` TCP ACK scan, 
+- ```nmap -sW ``` TCP Windows scan, 
+- ```nmap -sU ``` UDP scan (ICMP port unreachable msg, if closed port)
+- ```nmap -f  ``` **fragment packets to pass firewall/IDS**
+
+**COUNTERMEASURES**:
+ - **DETECTION**: snort, scanlogs, Firewalls(detect SYN scans but ignore FIN scans)
+ - **PREVENTION**: Disabling all unnecessary services/ports
+ 
+## Detecting The Operating System
+basically make guess from avaiable ports:
+- **Windows**: ports 135, 139, 445 (139 only for Windows 95/98); 3389 for RDP (Remote Desktop Protocol)
+- **UNIX**: TCP 22 (SSH), TCP 111 (RPC portmapper=port 135), TCP 512-514 (Berkeley Remote services, rlogin), TCP 2049 (NFS, Network File System), 3277x (RPC, Remote Procedure Call in Solaris)
+- ```nmap –O ```
+**COUNTERMEASURES**:
+ - **DETECTION**: snort, scanlogs,
+ - **PREVENTION**: secure proxy or firewall, Active Defence
+
+# Enumeration
+- Service fingerprinting
+- Vulnerability scanners
+- Banner grabbing
+- Enumerating common network services
+
+## Scanning vs. Enumeration
 - Level of intrusiveness
 - Enumeration: active connections to systems and directed queries
+
+**Enumerated Info**
+- User account names
+- Misconfigured shared files
+- **Older software versions with known vulnerabilities**
+
+**Manual vs. automatic**: Stealth vs. efficiency
+
+**Nmap version scanning**
+- nmap-services (mapping ports to services)
+- nmap-service-probe (known service responses -> known protocol and version)
+
+## Basic Banner Grabbing
+**Manual**  
+- ```telnet www.example.com 80```
+- Generic to work on many common applications on standard ports, e.g. HTTP (80), SMTP (25), FTP (21)
+
+**Automatic**
+- ```netcat``` or ```nc```
+- Redirect an input file of requests to nc
+
+## NetBIOS Name Service, UDP 137
+Microsoft's name service, DNS-like NET VIEW can list the domains, or the computers in each domain: ```net view /domain```. Normally NBNS only works on the local network segment but it is possible to route NBNS over TCP/IP, allowing enumeration from a remote system. Tools for doing that **NMBscan in Kali Linux**.
+
+```nbtscan-1.0.33.exe -f 192.168.1.0/24```
+
+## SNMP, UDP 161
+Simple Network Management Protocol **(Security Not My Problem)**. SNMP is intended for network management and monitoring It provides inside information on net devices, software and systems. Administrators use SNMP to remotely manage routers and other network devices. SNMP has a minimal security system called SNMP Community Strings, community strings act like passwords. The MIB (Management Information Bases) contains a SNMP device's data in a tree-structured form, like the Windows Registry. **Vendors add data to the MIB, Microsoft stores Windows user account names in the MIB**.
+
+### Data Available Via SNMP Enumeration
+- Running services
+- Share name
+- Share paths
+- Comments on shares
+- Usernames
+- Domain name
+
+**SMTP** enum tools, ```snmputil``` from the Windows NT Resource , ```snmpget``` or ```snmpwalk``` for Linux (netsnmp suite)
+
+**SNMP Enumeration Countermeasures** 
+- Remove or disable unneeded SNMP agents
+- Change the community strings to non-default values
+- Block access to TCP and UDP ports 161 (SNMP GET/SET) at the net perimeter devices
+- Restrict access to SNMP agents to the appropriate management console IP address
 
 # APT (Advanced Persisten Threats)
 Example 
