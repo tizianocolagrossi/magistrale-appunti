@@ -619,6 +619,50 @@ You can create a custom file to be executed when a U3 drive is plugged in. Unive
 - Sniffing bus data. Generally unprotected -> Man-in-the-middle attack. intercept, replay
 
 - search for an UART interfaces (Default passwords, admin ports, unintentional backdoor, debug interfaces…)
+
+
+# nice WEB attack 
+
+## SQLi: second order inject
+ 1. To perform the attack a user with a malicious name isregistered: $user = ”admin’#”;
+ 1. $user is correctly sanitized when it is inserted in the DB.
+ 1. Later on, the attacker asks to change the password of its malicious user, so the web app fetches info about the user from the db and uses them to perform another query:``` $q = ”UPDATE users SET pass=’”.$_POST[’newPass’].”’ WHERE user=’”.$row[’user’].”’”;```
+ 1. if the data coming from the database is not properly sanitized, the query will be:``` $q = ”UPDATE users SET pass=’password’ WHERE user=’admin’#’”; ```
+ 
+## SQLi: piggy-backed
+Target: execute an arbitrary number of distinct queries.
+
+**QUERY**: ```$q = ”SELECT id FROM users WHERE user=’”.$user.”’ AND pass=’”.$pass.”’”;```  
+**injected parameters**: ```$user = ”’; DROP TABLE users −− ”;```
+**query executed**: ```$q = ”SELECT id FROM users WHERE user=’’; DROP TABLE users – ”’ AND pass=””;```
+
+**both queries are executed!**
+
+How to know how tables and columns are named? **INFORMATION_SCHEMA!**. Information schema are metadata about the objects within a database Can be used to gather data about any tables from the available databases.
+
+INFORMATION_SCHEMA.TABLES
+ - TABLE_SCHEMA: DB to which the table belongs
+ - TABLE_NAME: Name of the table
+ - TABLE_ROWS: Number of rows in the table
+
+INFORMATION_SCHEMA.COLUMNS
+- TABLE_NAME: Name of the table containing this column
+- COLUMN_NAME: Name of the column
+- COLUMN_TYPE: Type of the columns
+- TABLE_NAME: Name of the table
+
+### SQLi countermeasures
+- Programmers must take care of input sanitization
+- Programmers often rely on “automagic” methods (e.g., in PHP,magic_quotes_gpc escapes calling addslashes() )
+- Best practice: use mysql_real_escape_string()
+- Parametrized query (if the language supports it) cursor.execute("INSERT INTO table VALUES (%s, %s, %s)", var1, var2, var3)
+
+## Buffer overflow
+| BUFFER | VARs | saved %ebx | return address |  
+|   nopsled   |  shellcode   | pnt middle nop |
+
+**COUNTERMEASURES**: programming use fixed lenght read (strncpy etc), canary.
+
 # Questions of past exams
 
  ## Describe at least one technique to determine which services are running or listening on a remote host. Discuss pro and cons, and which tools you may use in practice.
