@@ -534,6 +534,91 @@ EAP-TTLS and PEAP both use a TLS tunnel to protect a less secure inner authentic
         - **always have client check server chertificate**
 
 
+# Hacking Hardware
+## Bump Key
+- Every key pin falls to its lowest point
+- The key is hit with a screwdriver to create mechanical shocks
+- The key pins move up and briefly pass through the shear line
+- The lock can be opened at the instant the key pins align on the shear line
+
+### Results of Bump Key Use
+- A experienced bumper can open the lock as quickly as a person with the correct key
+- Bumping does not damage the lock (Unless it is done many times, or clumsily)
+- Bumping leaves no evidence behind
+- Open Doors, Racks, PC cases, Laptop cable locks,...
+**COUNTERMEASURES**: Some locks (like Medeco) are designed to make bumping difficult (angled pins), Don't rely solely on locks: use two-factor authentication.
+
+## Cloning Access Cards
+1. Magnetic stripe cards
+1. RFID (Radio Frequency Identification) cards (Often called proximity cards)
+
+### Magstripe Cards
+ISO Standards specify three tracks of data, There are various standards, but usually no encryption is used. **Magstripe Card Reader/Writer**, USB connector, About $35.00.
+
+### Cloning Access Cards (Magnetic stripe)
+- Contain three tracks of data, e.g., ID number, serial number, name, address, etc.
+- **No security measures to protect data**
+- **Not clear encoding**
+
+**Tools**: Magnetic-Stripe Card Explorer (software)
+- Read multiple cards of the same type to detect the different bits
+- Write, determine what checksum is used and then recalculate a new one
+
+### Hacking RFID Cards
+RFID cards use radio signals instead of magnetism, are now required in passports. Data can be read at a distance, and is usually unencrypted.
+**MiFare Classic** Mifare is most widely deployed brand of secure RFID chips (Radboud University Nijmegen researchers found weaknesses in MiFare proprietary encryption in 2008)
+
+#### RFID
+Most cards access RFID on two different spectrums:
+- 135 kHz or 13.56 MHz.
+
+Many RFID cards are unprotectedbut recently, more RFID cards employ cryptography. Hardware tools are available at Openpcd.org for the reader and for common RFID cards
+
+**More advanced tools**:
+- Proxmark3 + on-board FPGA for the decoding of different RFID protocols
+- Universal Software waves Radio Peripheral (USRP) to intercept the RFID traffic, send and receive raw signals (capture and replay)
+
+**COUNTERMEASURES** Before: Card vendor want to lower their costs RFID technology as inexpensive as possible.
+
+**Now**: Fully cryptographic to prevent cloning, replay, etc.
+- Private key stored on the card
+- Challenge-response algorithm
+  - RFID Card receive challenge when energized.
+  - RFID send reply based on local private key to reader
+  - Reader validates the response before access
+- Some use open algorithms, others are proprietary
+
+## U3 Drives
+Software on a Flash Drive. Carry your data and your applications in your pocket! It’s like a tiny laptop! **YES BUT**
+
+Run your applications on anyone’s machine. Take all data away with you.
+
+The U3 drive appears as two devices in My Computer
+- A “Removable Disk”
+- A hidden CD drive named “U3” that contains software that automatically runs on computers that have Autorun enabled
+
+we can 'install' software in this cd **U3 PocketKnife**:
+- Steal passwords
+- Product keys
+- Steal files
+- Kill antivirus software
+- Turn off the Firewall
+- And more…
+
+**JUST LIKE A RUBBER DUCKY TODAY**
+
+You can create a custom file to be executed when a U3 drive is plugged in. Universal_Customizer.exe write ISO containing Fgdump script into flash disk. The custom U3 launcher runs PocketKnife. So all those things are stolen and put on the flash drive.
+
+**DEFENSE**: Disable autorun, Bans USB Thumb Drives, Glue USB ports shut.
+
+## Reverse Engineering Hardware
+- Mapping the device. 
+  - Identify Integrated Circuit (IC) chips
+  - Available external interfaces: HDMI, USB, JTAG, etc.
+  - Identifying important pins
+- Sniffing bus data. Generally unprotected -> Man-in-the-middle attack. intercept, replay
+
+- search for an UART interfaces (Default passwords, admin ports, unintentional backdoor, debug interfaces…)
 # Questions of past exams
 
  ## Describe at least one technique to determine which services are running or listening on a remote host. Discuss pro and cons, and which tools you may use in practice.
