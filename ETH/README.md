@@ -1,9 +1,4 @@
 # Scanning and Enumeration
-
-Scanning vs. enumeration
-- Level of intrusiveness
-- Enumeration: active connections to systems and directed queries
-
 - ARP host discover in the same subnet -> Arp-scan, **NMAP**, CAIN(windows only)
 - ICMP remote host/router -> ping, **NMAP**, Hping3, superscan
 - TCP/UDP host discovery -> **NMAP**, superscan, Hping3   
@@ -13,6 +8,10 @@ So basically just use **nmap**.
 nmap not only send an ICMP ECHO REQUEST it also perform an ARP ping. (attenction to IPS).
 
 - Banner grabbing 
+
+Scanning vs. enumeration
+- Level of intrusiveness
+- Enumeration: active connections to systems and directed queries
 
 ## DNS enumeration
 ```nslookup, ls -d, <domain name>```; or dig  
