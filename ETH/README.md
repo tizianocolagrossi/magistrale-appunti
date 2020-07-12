@@ -131,6 +131,8 @@ Simple Network Management Protocol **(Security Not My Problem)**. SNMP is intend
 - Block access to TCP and UDP ports 161 (SNMP GET/SET) at the net perimeter devices
 - Restrict access to SNMP agents to the appropriate management console IP address
 
+
+
 # APT (Advanced Persisten Threats)
 Example 
 - Operation Aurora
@@ -164,6 +166,75 @@ Non APT attacks are against targets of opportunity. APT -> Long-term goals, used
 - NIDS, NIPS
 - Security informations, Event managements (SIEM)
 
+## Historical APT Campaigns
+
+### Operation Aurura 2009
+**Targets**: U.S. Technology and Defense Industries ( 32 companies lost data over a period as long as six months)
+- Google
+- Juniper
+- Adobe
+
+### Method Spear-Phishing and RAT
+1. Email with a link to a Taiwanese website with malicious JavaScript
+  - Exploited Internet Explorer vunerability
+  - Undetected by antivirus
+1. Trojan Downloaders placed on victim computers
+1. Installed a Backdoor Trojan Remote Administration Tool (RAT)
+ - Accessed through SSL
+
+**China?** Spear-phishing and downloader linked to Taiwan. Backdoor Command & Control servers were traced to two schools in China. No proof that Chinese government or industry sponsored or supported the attacks
+
+### Anonymous
+From 2011, a loosely affiliated group or collection of groups, to expose sensitive info to public or interrupt services (DOS)
+
+**hacking techniques** SQL injection, cross-site scripting, web service vulnerability exploits, social engineering (targeted spear-phishing, imitating employees like help desk personnel).
+
+**Targets**: Government agencies at all levels, Sony, Bay Area Rapid Transit (BART), Mastercard & Visa.
+**Goals**: Demonstrate that people can strike back at powerful organizations, Expose corruption, Primary goal: expose information (Not to use it for competitive or financial gain).
+
+### Ghost Attack
+GhostRAT used in the "Ghostnet" attacks 2008-2010. Targeted the Dalai Lama (Tibetan Government-in-Exile in India, London and New York City) and other Tibetan enterprises
+
+#### Summary of Gh0st Attack
+- Phishing email
+- Backdoor placed when malicious link clicked
+- Backdoor hides itself to survive a reboot
+- Connection to C&C
+- Check internal domain, create accounts, use Terminal Server to hop to other hosts (Event Logs)
+- Add/modify some files (diff \System32)
+- Look for documents and zip for exfiltration
+- Create a 2nd backdoor using netcat
+- Create user account and execute FTP (Windows Security Event Log)
+- Schedule a new job to clean logs everyday
+
+## Order of Volatility (survive to reboot)
+1. memory
+1. page swap
+1. running process information
+1. network data such listening port or existing connectionsto other system
+1. System Registry
+1. System or application log files
+1. forensic images of disk
+1. bakup media
+
+## Forensic Tools copied to CD-ROM
+- AccessDataFTK Imager
+- Sysinternals autoruns
+- Sysinternals process explorer
+- Sysinternals process monitor
+- CurrPorts
+
+**Memory Dump Analysis**, crucial for APT analysis because many APT methods use process injection or obfuscation, analyzing RAM data guarantees that the data are unencrypted.
+**FTK Imager**: select the Capture Memory option, select an external mass-storage device as the output folder.
+
+**Pagefile/Swapfile Analysis** **TOOLS**: Using Volatility Framework Tool (open source) to analyze memory:
+- Processes
+- Network connections
+- DLLS from suspicious process
+- Use strings on the DLL
+
+
+
 # Eth Windows
 ## Reasons for windows Securoty problems
 First of all: Backward Compatibility. Is very important at buisnesses, enabled by default and causes many security problems. Than we have a proliferation of features and so we have an average of 70 MS securoity bllettin per year.
@@ -177,10 +248,17 @@ First of all: Backward Compatibility. Is very important at buisnesses, enabled b
 **Protect these areas**
 
 ### Authentication spoofing attacks
-Traditional services to attack are: SMB (Server Message Block 445/tcp,139/tcp), MSRPC (Microsoft Remote Procedure Call 135/tcp), Terminal services 3389/tcp, SQL 1443/tcp,1434/udp, share point and web services 80,443.  
+Traditional services to attack are: 
+- SMB (Server Message Block 445/tcp,139/tcp), 
+- MSRPC (Microsoft Remote Procedure Call 135/tcp), 
+- Terminal services 3389/tcp, SQL 1443/tcp,1434/udp, 
+- share point and web services 80,443.  
 **how**  
-- Bruteforce-> we all know... (**HYDRA**). Countermeasures: firewall, disable SMB, enforce password, account lockout threshold, enable **audit** account logon failures, **Use all of them**.
+- Bruteforce-> we all know... (**HYDRA**) ```-l Username -L Username list -p Pass -P Pass list -t Limit concurrent conn -V Verbose -f Stop on correct login -s Port```. 
+
+**Countermeasures**: firewall, disable SMB, enforce password, account lockout threshold, enable **audit** account logon failures, **Use all of them**.
 - Sniffing on network password exchange. You can sniff LM hash (lan manager easy to crack), Kerberosh pkt. All with **CAIN**.
+
 
 **Three authentication protocols:**
 - LM (lan manager with hash **BRUTTO**)
@@ -215,6 +293,7 @@ Apply patch quickly, audit, log and monitor traffic.
 
 ### Device driver exploit.
 METASPLOIT but more fun (hight prov mode by driver).
+
 
 ## Authenticated attacks
 Privilege escalation (SISTEM is MORE powerful os ADMIN account). Preventing Privilege escalation Keep Win machines patched. **Extracting and cracking passwords** after obltained win machines -> penetrate deeper into the network-> paswordssss (post exploitation disable firewall).
