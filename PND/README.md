@@ -110,7 +110,7 @@ Benefits of ipv6
 - Larger address space
 - Stateless autocunfiguration
 - End-to-end reachability whitout nat 
-- Better monìbility support
+- Better mobility support
 - Peer-to-peer networking  (easier for VoIP or QoS)
 
 # IPv6 Address notation
@@ -125,10 +125,25 @@ Rules for compressing
 
 ## IPv6 address type
 
+- 2001:DB8::/32 - (GUA) RFC 2839 and RFC 6890 range of addresses for documentation
 - Unicast (2000::/3) -> (3FFF::)
 - Link-Local (FF80::/10) -> (FEBF::)
 - Loopback ::1/128
 - Multicast Assigned (FF00::/8) 
+
+## Link-Local
+- Used to communicate with other devices on the link
+- Only have to be unique on the link
+- An IPv6 device must have at least a link-local address
+- Not included in the IPv6 routing table.
+
+Link-local addresses can be created, Automatically(FE80+EUI-64 or Random 64 bits) or Static (manual) configuration – Common practice for routers.
+
+### EUI64
+MAC ADDRESS 00:11:22:33:44:55  
+INTERFACEID 0021:22FF:FE33:4455 (the 0000 00**1**0 0000 0000 reversed ) 
+
+**Used as a source IPv6 address before a device gets one dynamically**
 
 ## Multicast info (FF00::/8)
 |1111 1111| [Flag (4 bits)]  [Scope (4 bits)] |...|||||||
@@ -157,11 +172,76 @@ Global Routing Prefix - Subnet prefix - Interface Id
 
 ## SLAAC
 
-Stateless Address Auto Configuration
+Stateless Address Auto Configuration  
+ICMPv6 Neighbor Discover defines 5 different packet types:
+- Router Solicitation Message
+- Router Advertisement Message
+**Used with dynamic address allocation**
 
-ICMPv6 Discover Protocol
+- Neighbor Solicitation Message
+- Neighbor Advertisement Message
+**Used with address resolution (IPv4 ARP)**
 
-# TODO 
+- Redirect Message
+**Similar to ICMPv4 redirect message Router-to-Device messaging**
+
+- Option 1: SLAAC – No DHCPv6
+- Option 2: SLAAC + Stateless DHCPv6 for DNS address
+- Option 3: All addressing except default gateway use DHCPv6
+
+### SLAAC Option 1 – RA Message
+**ROUTER MESSAGE**
+- To: FF02::1 (All-IPv6 devices)
+- From: FE80::1 (Link-local address)
+- Prefix: 2001:DB8:CAFE:1::
+- Prefix-length: /64
+
+**ACTION IN THE HOST**
+- Prefix: 2001:DB8:CAFE:1::
+- Prefix-length: /64
+- Default Gateway: FE80::1
+- Global Unicast Address: 2001:DB8:CAFE:1: + Interface ID  
+**DHCP NOT USED**
+
+But SLAAC is stateless, no entity (DHCPv6 server) maintaining a state address-to-device mappings. **How can we guarantee the address is unique?** Duplicate Address Detection (DAD):
+- SEND Neighbor Solicitation
+- Neighbor Advertisement is recived? 
+    - NO unique address
+    - YES duplicate address
+    
+### Option 2: SLAAC + Stateless DHCPv6 for DNS address
+**O Flag = 1, M Flag = 0**  
+**ROUTER MESSAGE**
+- idem to up and v
+- Other Configuration Flag: 1
+idem but at the end host search for DHCP server in the network for DNS addresses
+
+### Option 3: All addressing except default gateway use DHCPv6
+**O Flag = 0, M Flag = 1**  
+**ROUTER MESSAGE**
+- idem to up and v
+- Other Configuration Flag: 1
+
+**ACTION IN THE HOST**
+- Default Gateway: FE80::1
+- Global Unicast Address:DHCP  
+host search for DHCP server in the network for configuration
+
+# DHCPv6 Prefix Delegation Process
+
+## in IPv4 
+ISP only has to deliver a public IPv4 address for Home router interface. DHCPv4 and RFC 1918 private address space is used for home network. NAT is used for translation.
+
+## in IPV6
+1. First, HOME’s ISP facing interface needs an IPv6 address
+1. Similar to any IPv6 client it may dynamically get an address using:
+    - SLAAC
+    - Stateless DHCPv6
+    - Stateful DHCPv6
+1. For the Home lan he send a DHCPv6-PD REQUEST
+1. It receive a DHCPv6-PD REPLY
+    - Here is a separate IPv6 prefix for you to give out to your LAN. 2001:DB8:CAFE:9:: (DNS, domain name)
+1. It send RA with this informations
 
 # IPv6 vs IPv4
 
@@ -178,9 +258,31 @@ Common value:
 - 17 = UDP
 - 58 = ICMPv6
 
-IPv6 doesn't have checksum header, and doesn't have the padding because is fixed at 40 byte.
+IPv6 **doesn't have checksum header**, and doesn't have the padding because is fixed at 40 byte.
 
 options added after the first header  setting the next header to indicate the presence of an extension header with some more option and info. So the options are computed only by the destination instead hop by hop  as in IPv4.
+
+## IPv6 Extension header
+ **Next Header** identifies: 
+1. The protocol carried in the data portion of the packet
+1. The presence of an extension header
+
+**Extension headers** are optional and follow the main IPv6 header. It provide flexibility and features to the main IPv6 header for future enhancements without having to redesign the entire protocol. Allows the main IPv6 header to have a fixed size for more efficient processing. 
+
+**OPTIONS**
+Next Header Value (Decimal) | Extension Header Name | Extension Header Description
+:---:|---|---
+0 | Hop-by-Hop Options | Used to carry optional information, which must be examined by every router along the path of the packet
+43 | Routing | Allows the source of the packet to specify the path to the destination
+44 | Fragment | Used to fragment IPv6 packets
+50 | Encapsulating Security Payload (ESP) | Used to provide authentication, integrity, and encryption.
+51 | Authentication Header (AH) | Used to provide authentication and integrity.
+60 |  Destination Options | Used to carry optional information that only needs to be examined by a packet’s destination node(s).
+
+**IPv4 options vs. IPv6 extensions**
+
+- IPv4 options : processed in each router slow down packets
+- IPv6 extensions (except Hop-by-Hop) are processed only by the destination.
 
 # Link-Local attacks
 - network sniffing
