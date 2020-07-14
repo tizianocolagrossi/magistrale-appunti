@@ -1,4 +1,26 @@
 # PND's notes 2020
+
+## Ethernet vs IP addresses
+Ethernet has **physical** addresses. You can not(ish) change the MAC address of your NICs, an Ethernet address **tells WHO** you are, but does not tell
+anything on WHERE you are.
+
+IP has **logical** addresses, you can change IP address of your NIC. It is like your home address: it changes if you go somewhere. IP addresses are used to identify and reach networks and
+hosts.
+
+if you want to say something to somebody, if both of you are in the same room, you can simply call his/her name and he/she will answer (Directly connected -> Many protocols for each layer Local address), but If you are NOT in the same room, you have to know where he/she is, before sending the message AND the message has to LEAVE the room through the door (Remote address). **How to know if one IP is the same network than you? Subnet mask**. Subnet mask **defines boundary between network portion and the host portion** of the IP address.
+
+There are three types of IP addresses:
+- Unicast (one to one)
+- Broadcast (one to all)
+- Multicast (one to many) (Class D) 224.0.0.0 to 239.255.255.255 for IPv4
+
+### routable and non-routable ip
+Routable addresses need to be unique on the Internet. Non-routable address ranges are defined in RFC1918. The Internet Assigned Numbers Authority (IANA) has reserved the following three blocks of the IP address space for private internets:
+- 10.0.0.0        -   10.255.255.255  (10/8 prefix)
+- 172.16.0.0      -   172.31.255.255  (172.16/12 prefix)
+- 192.168.0.0     -   192.168.255.255 (192.168/16 prefix)
+
+
 ## Layering concepts
 
 communication between host  -> organized in task -> each assigned to a __layer__.
