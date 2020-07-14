@@ -20,24 +20,44 @@ Routable addresses need to be unique on the Internet. Non-routable address range
 - 172.16.0.0      -   172.31.255.255  (172.16/12 prefix)
 - 192.168.0.0     -   192.168.255.255 (192.168/16 prefix)
 
+### COMMAND BASE FOR IPv4
+``` ip link show #Show interfaces ```  
+``` ip link set eth0 (up|down) #Bringing interface up/down ```  
+``` ip link set eth0 address 00:11:22:33:44:55 #Set MAC address ```  
+``` ip address show [dev eth0] #Show IP address ```  
+``` ip address (add|del) 10.0.0.1/8 dev eth0 #Add/remove IP address ```  
+``` ip address flush [dev eth0] #Flush any IP address (remove the assigned address/es) ```  
+``` ip route (list|flush) #List/flush routing table ```  
+``` ip route (add|del) 100.0.0.0/8 via 10.0.0.1 set next hop ```  
+``` ip route (add|del) default via 10.0.0.1 #set default route ```  
+``` ip route (add|del) 10.0.0.0/24 dev eth0 #direct forwarding ```  
+``` ip neigh show [dev eth0] #show ARP chace ```  
+``` ip neigh flush dev eth0 #flush ARP chace ```  
+``` ip neigh (add|del|change|replace) to 10.0.0.2 lladdr 00:11:22:33:44:55 dev eth0 nud “state_name0 #Add/del/change/replace ARP cache entry ```  
+state_name: permanent, stale, noarp, reachable”
+
+
+
 
 ## Layering concepts
 
 communication between host  -> organized in task -> each assigned to a __layer__.
 
 Each layer
-- offers a service to layer __above__
-- exploits the services of layer __below__
+- offers a service to layer **above**
+- exploits the services of layer **below**
 
-The task involves the excange of messages that follow a set of rules know as __protocol__.
+The task involves the excange of messages that follow a set of rules know as **protocol**.
 
 ## Encapsulation Decapsulation
+
+Each layer adds some protocol information and provides data to the layer below. Each protocol in the destination reads the appropriate protocol information and forwards the data to the layer above.
 
 ### Layered Architectures
 - ISO/OSI (7 layers)
 - TCI/IP (4 layers)
 
-common idea: __packet switched network__
+common idea: **packet switched network**
 
 Each layer has a type of address:
 - application layer : www.cybersecurity.uniroma1.it
@@ -45,10 +65,21 @@ Each layer has a type of address:
 - internet layer: IP addressthat identify a nic
 - datalink layer: MAC address also identify a nic
 
+### Layer ideal representation
+- **Transport**: the illusion of direct end-to-end connection between processes in arbitrary systems.
+- **Network**: transferring data between arbitrary nodes.
+- **Data Link** ransferring data between directly connected systems (via direct cable or shared medium).
+
+Each layer has a type of address:
+- **Application layer**: Internet name, eg. **www.sapienza.it**
+- **Transport layer**: **Port number**, in the range [0..65535]
+- **Internet layer**: **IP address** that identifies a network card
+- **Datalink layer**: **MAC address**, also identifies a network cards
+
 ### ports
 
-source -> __randomly chosen by os!!__
-destination -> __determines the required service__
+source -> **randomly chosen by os!!**
+destination -> **determines the required service**
 
 ### TCP / UDP
 |connection | connectionless|
@@ -67,6 +98,11 @@ destination -> __determines the required service__
 |Http|Rip|
 |Imap||
 |Ssl||
+
+# How to prevent packet capture
+- Dynamic address inspection: Implemented in switches: Dynamic Address Resolution nspection (DAI) validates ARP packets.IP-to-MAC address binding inspection, drop invalid packets.
+- DHCP snooping: Implemented in switches: distinguishes between trusted and untrusted ports and uses a database of IP-to-MAC. Ports that show rogue activity can also be automatically placed in a disabled state.
+
 
 # IPV6 Addressing
 
