@@ -302,7 +302,7 @@ Sniffer must be along the path or al least in the same network.
 we all know what is it. **POSSIBLE MITM**
 
 ## IPv6 Neighbor Discovery
-similar to arp onli in IPv6. **POSSIBLE MITM**
+similar to arp only in IPv6. **POSSIBLE MITM**
 
 ## ICMPv6 redirect
 similar to ICMPv4. Inform  an originating host of the IP address of an router that is on the **local-link** but is closer to the destination. **POSSIBLE MITM**
@@ -325,48 +325,31 @@ In the and, with control of DNS and IPv6, the attacker can:
 - Since DHCP tresponse include DNS servers and default gateway entries, the **attacker can pretend to be anyone**;
 - All the MITM are now possible;
 
-# Proxies
-
-## Benefits of forwarding proxy
-- Authentication, Authorization, Auditing, whitelisting, blacklistings...
-- Caching
-    - Problems:
-        - how long is it possible to to keep a document in cache and still be shure that is up-to-date ?
-        - how to decide if the document are worth caching and for how long ?
-    - Solutions:
-        - HEADS http request (very inefficent);
-        - *if-modified-since* request header;
-
-forwarding other non-HTTP request ?
-- HTTP tunneling;
-- HTTP CONNECT;
-- The proxy enstablishes the TCP connection and becomes the middle point; 
-
-### HTTP CCONNECT
-allow to use of any protocol that use TCP. IDEA: The proxy simply recives the destination host the clients want to connect to and enstablishes a connection on its behalf. Then, when the connection is enstablished, the proxy server continues to proxy the TCP stream **unmodified** to and from the client. Clearly the proxy can perform Authentication before accepting to foreward the data stream.
-
-Proxy can be used to filter content (COntent-filtering Proxy). After user authentication HTTP proxy control the content that can may be relayed (virus malware, facebook...).
-
-## Reverse proxy
-- Forward proxy operates on behalf on the client;
-- Reverse proxy operates on behalf on the server;
-
-- Typical functions:
-    - Load balancing;
-    - Chace static content;
-    - Compresson;
-    - Accessing several servers into the same URL space;
-    - Securing of the internal servers;
-    - Application level controls;
-    - TLS acceleration;
-
-### Internal server protection
-The reverse proxy receives the requests form the clients and then issues new, prim and proper requests to the real server. No direct connection with the outside also means defense against DOS. Can support HTTPS with server that only support HTTP. Can add AAA to services that not have them (Example an IoT device behind a firewall that must be accessible form the outside).
-
 # Firewalllzzzzz
 
 - Stateless firewall: Bad idea. Very complex to write rules.
 - Stateful firewall: Can keep tracks of enstablished connections.
+
+## Common firewall weaknesses
+- No content inspection causes the problems (Software weakness (e.g. buffer overflow, and SQL injection exploits)) or Protocol weakness (WEP in 802.11)
+- No defense against DOS and insider attacks
+- Firewall failure has to be prevented (Firewall cluster for redundancy)
+
+But Next Generation firewalls (NG-Firewalls) try to include additional features not only traffic filtering, but also:
+- Intrusion Detection System
+- VPN gateway
+- Deep Packet Inspection
+- Traffic shaping
+
+## What is a DMZ
+DMZ (demilitarized zone). 
+
+Computer host or small network inserted as a “neutral zone” between a company’s private network and the outside public network
+
+Network construct that provides secure segregation of networks that host services for users, visitors, or partners
+
+DMZ use has become a necessary method of providing a multilayered, defense-in-depth approach to security
+
 
 ## Iptables
 Command to see the rules:
@@ -485,10 +468,11 @@ Enables servers located **inside** the firewall/router LAN to be accessed by cli
 
 ## NAT with iptables
 four built-in-tables
-1. MANGLE -> manipulate bit in TCP header ( not for nat not for packet filter ).
-1. FILTER -> packet filtering ( used for filtering packets ).
-1. NAT -> network address translation ( used for nat (DNAT, SNAT, MASQUERADE, REDIRECT) ).
+1. MANGLE (PREROUTING, INPUT, OUTPUT, FORWARD, POSTROUTING) -> manipulate bit in TCP header ( not for nat not for packet filter ).
+1. FILTER (INPUT, OUTPUT, FORWARD) -> packet filtering ( used for filtering packets ).
+1. NAT (DNAT, SNAT, MASQUERADE, REDIRECT)-> network address translation ( used for nat (DNAT, SNAT, MASQUERADE, REDIRECT) ).
 1. RAW -> exceptions to connections tracking.
+
 
 # VPN Virtual Private Network
 Security goal of a vpn
@@ -596,6 +580,47 @@ But crypto is insufficient for web security. Trust: what dpes the server really 
 > <b>ip addr tun0 up 10.0.0.1/30 mtu 1500</b><br><br>
 > Openvpn static key: generate key on one side<br>
 > <b>openvpn --genkey --secret secret.key</b><br><br>
+
+
+# Proxies
+
+## Benefits of forwarding proxy
+- Authentication, Authorization, Auditing, whitelisting, blacklistings...
+- Caching
+    - Problems:
+        - how long is it possible to to keep a document in cache and still be shure that is up-to-date ?
+        - how to decide if the document are worth caching and for how long ?
+    - Solutions:
+        - HEADS http request (very inefficent);
+        - *if-modified-since* request header;
+
+forwarding other non-HTTP request ?
+- HTTP tunneling;
+- HTTP CONNECT;
+- The proxy enstablishes the TCP connection and becomes the middle point; 
+
+### HTTP CCONNECT
+allow to use of any protocol that use TCP. IDEA: The proxy simply recives the destination host the clients want to connect to and enstablishes a connection on its behalf. Then, when the connection is enstablished, the proxy server continues to proxy the TCP stream **unmodified** to and from the client. Clearly the proxy can perform Authentication before accepting to foreward the data stream.
+
+Proxy can be used to filter content (COntent-filtering Proxy). After user authentication HTTP proxy control the content that can may be relayed (virus malware, facebook...).
+
+## Reverse proxy
+- Forward proxy operates on behalf on the client;
+- Reverse proxy operates on behalf on the server;
+
+- Typical functions:
+    - Load balancing;
+    - Chace static content;
+    - Compresson;
+    - Accessing several servers into the same URL space;
+    - Securing of the internal servers;
+    - Application level controls;
+    - TLS acceleration;
+
+### Internal server protection
+The reverse proxy receives the requests form the clients and then issues new, prim and proper requests to the real server. No direct connection with the outside also means defense against DOS. Can support HTTPS with server that only support HTTP. Can add AAA to services that not have them (Example an IoT device behind a firewall that must be accessible form the outside).
+
+
 
 # Intrusion Detection System (IDS) 
 An intrusion detection system aims (obiettivo) at detecting the presence of intruders before serius damage is done. Second generation of IDS are IPS (Intrusion Prevention System), also produce **responses** to suspicius activity, for example, by modifying firewalls rules or blocking switches ports. 
