@@ -760,6 +760,14 @@ allow to use of any protocol that use TCP. IDEA: The proxy simply recives the de
 
 Proxy can be used to filter content (COntent-filtering Proxy). After user authentication HTTP proxy control the content that can may be relayed (virus malware, facebook...).
 
+## SSL bump
+It consists in using the requested host name to dynamically generate a server certificate and then impersonate the named server. Remember that we start the TLS handshake using an IP address and the hostname is sent in the HTTP request...
+
+but with the same webserver can host multiple websites. If HTTPS is used, the SSL/TLS connection requires a certificate to be sent by the server, but which certificate has to be sent? The hostname is within the HTTP traffic but it is encrypted. **SNI is the solution** Server Name Indication (SNI) is an extension to TLS by which a client indicates which hostname it is attempting to connect to at the start of the handshaking process. **It is in clear text**. This allows a server to present multiple certificates on the
+same IP address and TCP port number and hence allows multiple secure (HTTPS) websites (or any other service over TLS) to be served by the same IP address without requiring all those sites to use the same certificate.
+
+**SNI implications** An eavesdropper can see which site is being requested
+
 ## Reverse proxy
 - Forward proxy operates on behalf on the client;
 - Reverse proxy operates on behalf on the server;
@@ -834,6 +842,10 @@ Behavior-based (anomaly detection) or Signature detection (misuse detection). **
 # Signature based IDS principles
 Basucally is a packet sniffer on steroids. Signature -> payloads of packets, timing, etc. **SNORT** is one of the best known intrusion detectors. Easy to learn easy t use, rules stored in **/etc/snort/rules** directory. It can't inspect encrypted raffic (SSL/VPNs), not all attacks arrive from the network, record and process huge amount of traffic.
 
+**can’t inspect encrypted traffic (VPNs, SSL)**  
+**not all attacks arrive from the network**  
+**record and process huge amount of traffic**  
+
 # Honeypot
 Is a security resouce whose value lies in it being attacked, probed or compromised. A **honeypot** is usually a single computer, a **honeynet** is a network of computers usually protected by a firewall to regulate traffic. IDEA attract the attackers.
 
@@ -852,6 +864,33 @@ Best solution is to combine both signature and behavioral rules.
 # OBSERVATION
 Legitimate traffic in real networks contains anomalies. Protocol anomalies come from custom applications that use off-the-shelf protocol libraries, but use them in unexpected ways. Behavioral anomalies come from exceptional, but often critical, buisness processes.
   
+# Security Information and Event Management (SIEM) (ex. SPLUNK)
+it should be providing the following collection of services:
+- Log management
+- IT regulatory compliance
+- Event correlation
+- Active response
+- Endpoint security
+ 
+Once logs are stored, you can build filters or rules and timers to audit (monitor against a standard) and validate compliance, or to identify violations of compliance requirements imposed upon the organization.
+
+It can provide a more complete picture of the health status of the system to rule out specific theories on the cause of given events and it can activate procedures (Active response) after the identification of given (security) events.
+
+Log correlation generally make use of “supporting data” (data collected by other sources that can be imported into the SIEM to make comparative determinations). They can be used as weights to prioritize and escalate alerts. Correlation engines usually are the most distinguishing feature of SIEM (And also what the vendors want to sell…).
+Before they have to perform event normalization (Message logs are in standard formats, but are not homogeneous, “drop” from one vendor firewall, “block” from another)
+ 
+### Operational interface
+Dashboards and maps (present information in a way that administrators can understand at glance).
+
+It is a graphical and organized representation of alerts, event data, and statistical information. It allows administrators to see patterns, understand trends, identify unusual activity
+
+# Penetration testing and vulnerability assessment
+ see ETH
+ 
+ 
+ 
+ 
+ 
 # Open Question
 ### List and detail which are the characteristics a host needs to have in a LAN for being the next hop for a given destination network.
 The next hop specifies the most optimal router in its routing path. For be the next hop an host should be in the optimal path to reach the destination host or it must be in the routing table.
