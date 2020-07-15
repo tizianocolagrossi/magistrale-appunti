@@ -475,6 +475,9 @@ four built-in-tables
 
 
 # VPN Virtual Private Network
+
+Important subsidiary goal: **usability** If a solution is too difficult to use, it will not be used -> poor usability leads to no security
+
 Security goal of a vpn
 - Traditional
     - Confidentiality of data
@@ -492,8 +495,8 @@ Usability goals: **Trasparency** VPN shuld be invisible to users, software, hard
 - Host-to-host security.
 
 It looks best to introduce security in the:
-- Transport layer.
-- Network layer.
+- Transport layer **Protection end-to-end between processes**.
+- Network layer  **protect end-to-end between systems (IPsec)**.
 
 bacause:
 implemented at->|pysical layer|datalink|network(ipsec)|transport(opnvpn)|application
@@ -509,11 +512,12 @@ Flexibility                 |hard to add new sites          |hard to add new sit
 Symplicity                  |excellent                      |excellent              |**OK** site to site **NO OK** host to site|**OK** site to site **OK** host to site|depends on application
 
 So best VPN on **Transport** or **Network** layer.
+
 ## SSL tunneling
 
 Tunneling  is an operation of a network connection on top of another network connection. It allow two hosts or sites to communicate trough another network that they do not want to use directly. The site so site tunneling **enables a PDU to be trasported from one site to another whitout its content being processed by host on the route**. Idea: encapsulate the whole PDU in another PDU sent out on the network connecting twho sites.
 
-Instead a **secure tunneling** enables a PDU to be transported from one site to another whitout its content beeing seen or chenged by hosts on the route. Idea: Encrypt the PDU and then encapsulate it in another PDU sent out on the network connecting the two sites.
+Instead a **secure tunneling** enables a PDU to be transported from one site to another whitout its content beeing seen or chenged by hosts on the route. Idea: Encrypt the PDU and then encapsulate it in another PDU sent out on the network connecting the two sites. (**Note that the host-to-host communication does not need to use IP**). **Note: dst. address in IP header is for dst. edge router.**
 
 Tunneling offers the basic level to provide a VPN.
 
@@ -533,6 +537,15 @@ Certificates func:
 1. Viene inviata la chiave segreta crittografata a Google.
 1. Google decrittografa la chiave segreta con la propria chiave privata e la trattiene.
 1. Il tuo browser e Google utilizzano la chiave segreta condivisa per crittografare le comunicazioni.
+
+### SSL protocol Architecture
+
+Adds extra layer between T- and A-layers, and extra elements to A-layer.
+- **Record Protocol**: Protocol offering basic encryption and integrity services to applications
+- **Application Protocols**: control operation of the record protocol
+    - **Handshake**: Used to authenticate server (and optionally client) and to agree on encryption keys and algorithms.
+    - **Change cipher spec**: Selects agreed keys and encryption algorithm until further notice.
+    - **Alert**: Transfers information about failures
 
 # IPsec
 Is a network layer protocol suite for providing security over ip. Is part of IPv6, and an addon for IPv4. It can handle all tree possible security architectures:
