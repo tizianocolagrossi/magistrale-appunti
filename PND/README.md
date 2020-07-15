@@ -679,17 +679,64 @@ But crypto is insufficient for web security. Trust: what dpes the server really 
 ## Fundamentals of tunneling
 - tun -> encapsulate IP layer
 - tap -> encapsulate Ethernet layer
-><br>
-> // useful commands <br><br>
-> check our local interfaces<br>    
-> <b>ip link</b> <br><br> 
-> //create a new tun interface<br>
-> <b>ip tunnel add tun0 mode ipip remote \<ipaddressR\> local \<ipaddressL\></b> <br> <br>
-> // activate tun interface<br>
-> <b>ip addr tun0 up 10.0.0.1/30 mtu 1500</b><br><br>
-> Openvpn static key: generate key on one side<br>
-> <b>openvpn --genkey --secret secret.key</b><br><br>
 
+useful commands 
+
+check our local interfaces ```ip link```
+
+create a new tun interface ```ip tunnel add tun0 mode ipip remote \<ipaddressR\> local \<ipaddressL\>```
+
+activate tun interface ```ip addr tun0 up 10.0.0.1/30 mtu 1500```  
+
+Openvpn static key: generate key on one side ```openvpn --genkey --secret secret.key``` 
+
+Exchange the secret.key file with scp
+
+## Setup of IPsec Security Policies
+host a : fec0::1  
+host b : fec0::2
+### Example: IPv6 connection with ESP and Transport Mode
+
+Configuration at Host A:  
+```spdadd fec0::1(src Ip) fec0::2(dst ip) any(uppp layer protocol) -P out(policy for outogoing pkt) ipsec esp/transport//require```  
+``` spdadd fec0::2 fec0::1 any -P in(policy for incoming pkt)  ipsec esp/transport//require; ```
+
+Configuration at Host B:  
+```spdadd fec0::2 fec0::1 any -P out ipsec esp/transport//require;```  
+```spdadd fec0::1 fec0::2 any -P in ipsec esp/transport//require; ```
+
+### IPv6 connection with ESP/Transport applied first and AH/Transport applied next
+Configuration at Host A:
+```spdadd fec0::1 fec0::2 any -P out ipsec esp/transport//require ah/transport//require;```  
+```spdadd fec0::2 fec0::1 any -P in ipsec esp/transport//require ah/transport//require;```  
+  
+
+Configuration at Host B:
+```spdadd fec0::2 fec0::1 any -P out ipsec esp/transport//require ah/transport//require;```  
+```spdadd fec0::1 fec0::2 any -P in ipsec esp/transport//require ah/transport//require;```  
+
+### Example ESP Tunnel for VPN
+Configuration at Gateway A(10.0.1.0/24 (VPN))(172.16.0.1):  
+```spdadd 10.0.1.0/24 10.0.2.0/24 any -P out ipsec esp/tunnel/172.16.0.1-172.16.0.2/require;```  
+```spdadd 10.0.2.0/24 10.0.1.0/24 any -P in ipsec esp/tunnel/172.16.0.2-172.16.0.1/require;```  
+
+Configuration at Gateway B(10.0.2.0/24 (VPN))(172.16.0.2):  
+```spdadd 10.0.2.0/24 10.0.1.0/24 any -P out ipsec esp/tunnel/172.16.0.2-172.16.0.1/require;```  
+```spdadd 10.0.1.0/24 10.0.2.0/24 any -P in ipsec esp/tunnel/172.16.0.1-172.16.0.2/require;```  
+
+
+### Manual setup of Security Associations
+Manually setting up an AH SA:  
+
+basic syntax: add src dst proto spi -A authalgo key;  
+```add fec0::1 fec0::2 ah 700 -A hmac-md5 0xbf9a081e7ebdd4fa824c822ed94f5226;```  
+```add fec0::2 fec0::1 ah 800 -A hmac-md5 0xbf9a081e7ebdd4fa824c822ed94f5226;```  
+
+Manually setting up an ESP SA:
+
+basic syntax: add src dst proto spi -E encalgo key;  
+```add fec0::1 fec0::2 esp 701 -E 3des-cbc 0xdafb418410b2ca6a2ba144561fab354640080e5b7a;```  
+```add fec0::2 fec0::1 esp 801 -E 3des-cbc 0xdafb418410b2ca6a2ba144561fab354640080e5b7a;```  
 
 # Proxies
 
