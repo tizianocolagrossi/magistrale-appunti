@@ -887,9 +887,20 @@ It is a graphical and organized representation of alerts, event data, and statis
 # Penetration testing and vulnerability assessment
  see ETH
  
+ ## Vulnerability assessment vs. Penetration testing
+ Vulnerability assessment:
+ - the process of identifying and quantifying vulnerabilities within a system
  
+ Penetration testing:
+ - the process of evaluating the security of a computer system or network by simulating an attack from malicious outsiders and malicious insiders
  
+ ## Methodologies
+ Different processes and methodologies are available to perform security assessments
+ - OSSTMM
  
+ Provide a standardized approach to conduct penetration tests
+ 
+ An OSSTMM audit is an accurate measurement of security at an operational level that is void of assumptions and anecdotal evidence. Consistent and repeatable.
  
 # Open Question
 ### List and detail which are the characteristics a host needs to have in a LAN for being the next hop for a given destination network.
