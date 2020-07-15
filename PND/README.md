@@ -547,6 +547,90 @@ Adds extra layer between T- and A-layers, and extra elements to A-layer.
     - **Change cipher spec**: Selects agreed keys and encryption algorithm until further notice.
     - **Alert**: Transfers information about failures
 
+### SSL/TLS Handshake Protocol
+4-phase “Client/Server” protocol to establish parameters of the secure connection (**"Client” is the initiator**):
+1. **Hello**: Establishment of security capabilities: Client sends list of possibilities, in order of preference. Server selects one, and informs Client of its choice. Parties also exchange random noise for use in key generation.
+1. **Server authentication and key exchange**: Server executes selected key exchange protocol (if needed). Server sends authentication info. (e.g.X.509 cert.) to Client.
+1. **Client authentication and key exchange**: Client executes selected key exchange protocol (mandatory). Client sends authentication info. to Server (optional).
+1. **Finish**: Shared secret key is derived from pre-secrets exch. in 2, 3. Change Cipher Spec. protocol is activated. Summaries of progress of Handshake Protocol are exchanged and checked by both parties.
+
+**SSL/TLS Security Capabilities**
+
+Conventionally expressed by a descriptive string, specifying:
+- Version of SSL/TLS (EX: ``` TLS -> (Latest version of) TLS ```)
+- Key exchange algorithm (EX: ``` RSA -> RSA key exchange ```)
+- Grade of encryption (previous to TLSv1.1) (EX: ``` WITH -> (merely filler...) ```)
+- Encryption algorithm (EX: ``` AES_128 -> 128-bit AES encryption ```)
+- Mode of block encryption (if block cipher used) (EX: ``` CBC -> Cipher Block Chaining ```)
+- Cryptographic checksum algorithm (EX: ``` SHA ->  Use HMAC-SHA digest ```)
+
+**SSL/TLS Heartbeat**
+It is an extension (RFC 6520) that allows to keep an established session alive (That is, as soon as the data exchange between two endpoints terminates, the session will also terminate).
+
+To avoid the re-negotiation of the security parameters for establishing a secure session, we can keep using the same parameters even if there is no exchange of data (It introduces two messages: **HeartbeatRequest** and **HeartbeatResponse**).
+
+## SSL VPN Architecture
+Two primary models
+ - **SSL Portal VPN** Allow remote users to:
+    - Connect to VPN gateway from a Web browser
+    - Access services from Web site provided on gateway
+ - **SSL Tunnel VPN** (More capabilities than portal VPNs) Allow remote users to:
+    - Access network protected by VPN gateway from
+    - Web browser allowing active content
+    
+## VPN device placement
+Main options for placement:
+- VPN functionality in firewall
+- VPN device in internal network
+- Single-interface VPN device in DMZ
+- Dual-interface VPN device in DMZ
+
+### VPN-enabled firewall
+Advantages:
+- No holes in FW between external VPN device and internal network
+- Traffic between device and internal network must go through FW
+- Simple network administration since only one “box” to administer
+
+Disadvantages:
+- Limited to VPN functionality offered by FW vendor
+- FW directly accessible to external users via port 443.
+- Adding VPN functionality to FW can introduce vulnerabilities
+
+### SSL VPN in internal network
+Advantages:
+- Only single rule for single address to be added to FW.
+- No “holes” needed in FW between VPN device and internal network
+- VPN traffic is behind FW, so protected from attacks by machines in DMZ.
+
+Disadvantages:
+- VPN traffic passes through FW on tunnel, so it is not analyzed.
+- Unsolicited traffic can be sent into internal network from outside to internal VPN device.
+- Internal network is compromised if VPN device is compromised
+
+### SSL VPN In DMZ
+Advantages:
+- Internal network protected against compromised VPN device
+- Traffic between device and internal network must go through FW.
+- IDS in DMZ can analyze traffic destined for internal network
+
+Disadvantages:
+- Numerous ports open in FW between device and internal hosts
+- Decrypted traffic from device to internal network must be sent through DMZ.
+- FW bypassed when user traffic is destined for hosts in DMZ
+
+### Dual interfaces VPN device in DMZ
+Clients connect to external device interface, internal traffic uses internal interface
+
+Advantages:
+- All advantages of placing VPN device DMZ
+- Unencrypted traffic to internal hosts is protected from other hosts in DMZ.
+- Only FW interface connected to device’s internal interface needs to permit traffic from VPN device
+
+Disadvantages:
+- Numerous ports open in FW between device and internal hosts.
+- May introduce additional routing complexity.
+- FW bypassed if split tunneling is not used and user traffic is destined for hosts in DMZ
+
 # IPsec
 Is a network layer protocol suite for providing security over ip. Is part of IPv6, and an addon for IPv4. It can handle all tree possible security architectures:
 **Feature**|**Gateway to Gateway**|**Host to Gateway**|**Host to Host**
@@ -579,6 +663,18 @@ Traffic flow confidentiality||(\*)|(\*)
 
 IPsec vs TLS: TLS is much more flexible because is in the upper levels. IPsec has to run in kernel space. IPsec much more complex and complicated to manage with.
 But crypto is insufficient for web security. Trust: what dpes the server really know about the applications ? Unless client-side certificates are used, absolutely nothing. SSL provide a secure pipe. **Someone** is at the other end, but you don't know who. Usually there isn't user authentication in SSL, but in the application layer. **SSL the client knowledge of the server** the client receives the server's certificate, but a certificates means that someone has attested to the **binding of some name to a public key**. Who has done the certification ? Is it the right name ? **Every browser has a list of built-in CA** Hundreds of certificate authorities. Do you trust them all to be honest and competent? Do you even know them all ? **IT'S ALL MATTER OF TRUST**. So the cryptography itself seems correct, the human factors are dubious. Most user don't know what certificate is, or how to verify one.   
+
+## IPsec vs TLS
+- TLS much more flexible because is in the upper levels
+- TLS also provides application end-to-end security, best for web applications(HTTPS)
+- IPsec hast to run in kernel space
+- IPsec much more complex and complicated to manage with
+
+**Crypto is insufficient for Web security**. One issue: linkage between crypto layer and applications. Trust: what does the server really know about the client? Unless client-side certificates are used, absolutely nothing. SSL provides a secure pipe. “Someone” is at the other end; you don’t know who.
+
+**SSL: the Client’s Knowledge of the Server** The client receives the server’s certificate but a certificate means that someone has attested to the binding of some name to a public key who has done the certification? Is it the right name?
+
+**(SSL) The cryptography itself seems correct but the human factors are dubious**
 
 ## Fundamentals of tunneling
 - tun -> encapsulate IP layer
