@@ -902,6 +902,11 @@ It is a graphical and organized representation of alerts, event data, and statis
  
  An OSSTMM audit is an accurate measurement of security at an operational level that is void of assumptions and anecdotal evidence. Consistent and repeatable.
  
+ # INFO
+
+- IPv6 equivalent of an IPv4 broadcast address within a network (FF02::1)
+- destination address of a ICMPv6 Router Solicitation (FF02::2)
+
 # Open Question
 ### List and detail which are the characteristics a host needs to have in a LAN for being the next hop for a given destination network.
 
