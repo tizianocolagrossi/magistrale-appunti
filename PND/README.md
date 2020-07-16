@@ -904,76 +904,138 @@ It is a graphical and organized representation of alerts, event data, and statis
  
 # Open Question
 ### List and detail which are the characteristics a host needs to have in a LAN for being the next hop for a given destination network.
+
+**Directly connected, in forwarding mode, properly configured, with (at least) a default route set (possibly in another NIC)**
+
 The next hop specifies the most optimal router in its routing path. For be the next hop an host should be in the optimal path to reach the destination host or it must be in the routing table.
 
 ### Describe the 3-1-4 rule for /64 GUA in IPv6 and explain why you think it is useful.
+
+**GUA are (2000::/3), so very huge and hard to manage, possibly any network mask size. Then, ISP generally assign 3 hextet for the prefix, 1 hextet for the subnet and 4 for the ID interface, so that every organization can have 2^16 subnets and 2^64 hosts, while using the Interface ID.**
+
 IPv6 consist of 128 bits (8 part of 16 bits). For the GUA the 8 part are divided in: First 3 part represent the router prefix, the next one is the subnet id and the last 4 parts represent the interface identifier. This is useful because we can constuct our ip knowing the router prefix, using SLAAC or similar.
 
 ### Describe the main differences between IPv4 and IPv6 about the mechanism of IP-MAC address resolution.
+
+**No broadcast, only multicast (solicited node multicast address),  ICMPv6 instead of ARP, LUA addresses**
+
 IN the IPv4 the resolution forn the couple of IP-MAC it's used ARP protocol, with ARP request or reply. Instead in the IPv6 it's used NDP (Neoghbor Discovery Protocol), with the pachet ICMPv6 RouterSollecitation, RouterAdvertisement, NeighborSollecitation(request of the address), NeighborAdvertisement(response with the address).
 
 ### Considering the above figure, mention the possible attacks host a1 could mount if the addressing of the network is based on IPv6.
+
+**MITM realized with ARP poisoning, ICMP redirect, ICMP rogue Router  Advertisement, DHCP rogue server**
+
 Host a1 could make an MITM using the redirect Message ICMPv6 to set a new route rom the host, or a rogue RA or a DHCP rogue server.
 
 ### You have to setup a network with 30 hosts and allow all of such hosts to reach the Internet. Moreover, 2 of them have to also be reachable from the Internet. You only have one public IP address assigned from your ISP. Explain the type of mechanisms you would use to properly configure your network.
+
+**Source NAT (Masquerade) and Destination NAT (port forwarding/virtual server), and subdivision of nat in DMZ and INTERNAL for security reason and a proxy in DMZ to give access to HTTP/S**
+
 I should split the network in at least two subnetwork. One of this is the DMZ where I will position the two host that has to be reachable from the internet. The router/firewall must secure this two subnetwork and must accept traffic from outside only if the destination are the two host in the DMZ. In the orther subnetwork are the internal host that has only to reach the outside. In the DMZ I also will place an proxy to reach internet. The router has to Nat all the network and must do port forwarding dor the pc in the DMZ.
 
 split network to at least 2 subnetwork > 1 to DMZ (put here the host reachable from the outside and a proxy to control traffic html outside and reverse proxy to controll trafic to 2 host reachab;e) > roter/firewall secure the 2 subnetwork, all natted and the 2 reachable with port forwarding.
 
 ### Explain the most important differences on having a VPN that protects data at transport-level and one that protects data at network-level.
+
+**Network more performant (IPsec), more transparent to the upper layers, harder to setup. In tunnel mode, differences are removed**
+
 The critical part in a VPN in Network layer is the trasparency, because is not so easy to grant this protection in a alredy established network. In son that much flexible and trasparent. In network level there are two level of addresses and the virtual address packet is encrypted. Instead in trasport level vpn is used SSL/TLS it provide a secure channel (completely flexible)
 
 ### Describe pros and cons of transparent proxies.
+
+**+ No need to configure the clients, all pro for a proxy(cache, filter info etc), -impossible to intercept encrypted traffic without warnings**
+
 To end user transparent proxy is a MITM. So no need to configure the host to use it. It can be used for caching, so for an optimization of the requast to internet. It can filtering the traffic and it can do DDoS protection. HTTPS make the traffic indecipherable to anyone who intercept, but typically DNS traffic are not enrypted so it can at least see werw thw traffic is going. Some trasparent proxy  like SQUID can handle HTTPS traffic in different ways, in some scenario, network adminitrator set up HTTPS interception on transparent proxy. The proxy act like a MITM whit its own HTTPS certificate authorities. 
 
 NO configuration, Caching, Filter traffic, DDoS protection, MITM, HTTPS interception.
 
 ### Detail how a signature-based IDS works.
-Signature based IDS detect attacks by looking for specific pattern in the traffic. Known malicius istruction sequences used by attackers or byte sequences in network traffic.
+
+**Searches for patterns while monitoring. Nework IDS, bit-pattern in every packet, patterns are signatures, when found rise alarm. Important to normalize packets(defragmentation or decryption). Host IDS, event-pattern in the system.**
+
+Signature based IDS detect attacks by looking for specific pattern in the traffic. Known malicius istruction sequences used by attackers or byte sequences in network traffic.Important to normalize packets (defragmentation or decryption)
 
 ### Explain how a SIEM can help to meet the IT Regulatory Compliance of an organization.
+
+**It helps automatically producing reports and operating security checks, controls that generally are requirements of audit, law and regulations**
+
 A SIEM can help because it can do Data aggregation, Correlation, Allerting. 
 And so it's more fast look for something wrong in the organization.
 
 ### Explain the main differences between a MAC address and an IP address.
+
+**MAC address indetifies the NIC card(who), the ip identifies where the NIC is**
+
 MAC 6byte, IPv4 4byte, IPv6 16bytes. The MAC is provided by the NIC manufactorer. The IP is provided by the ISP.MAC operate at the data link layer, IP operate at network layer.
 
 ### Explain why the NAT mechanism is also said to provide some kind of security to the NAT’d network.
+
+**Because the inner private IPs are masquered, so no one can see it from the outside and by default it doesn`t accept connection from the outside**
+
 NAT mechanism provide some kind of security because the host natted are hidden and not reachable from the outside, you can make teh host reacable using port forwarding.
 
 ### Enumerate and briefly describe the type of VPN implementations you know. Highlight pros and cons.
+
+**IPsec(N-lay) good for HtoS instead openVPN(T-lay) is good for StoS and for HtoS. In theory IPsec more fast. + N-layer more trasparent nut harder to setup. T-layer +easy to setup - due to the upper layer is less trasparent**
+
 IPsec and OpenVpn. Ip sec is good for site to site buto not forn host to site instead OpenVpn is good for site to site and also for host to site.
 In theory IPsec shuld be more fast than OpenVpn but it depends from the configuration and how offload we have.
 
 ### Enumerate the types of outcomes you can have when a network IDS evaluates a sample. 
-It can have 4 outcomes, false positive, true positive, false negative, true negative. 
+
+**It can have 4 outcomes, false positive, true positive, false negative, true negative.** 
 
 ### Describe what a reverse proxy is and what can provide.
+
+**is a proxy that work fro the server. Can provide AAA services, encryption, load alancimg and more** 
+
 An reverse proxy is a proxy that work fom the server. So it recive all the request or part of the request to the server, and sort them to the detination. It also can add some AAA mechanism to other host. Example it can provide authentication or HTTPS entryption to an host thath doesn't have.
 
 ### Explain the differences between an IPv6 Global address and an IPv6 Link-local address.
+
+**Global address is for communication over the internet, Link local addresses is for communication over the link space. GUA(2000::/3), Link-Local (FF80::/10)**
+
 The Global address is userd for reach host between network, instead the link local address is used only in the subnet. Unicast (2000::/3) -> (3FFF::) Link-Local (FF80::/10) -> (FEBF::).
 
 ### Enumerate and briefly describe the mechanisms of IPv6 to dynamically assign Global Unicast addresses to the hosts of a network.
+
+**Host send RouterSollecitation, Router respond with RouterAdvertisement (SLAAC, SLAAC+DHCPv6, or statefud DHCPv6). RA contains the prefix of the subnet and the linklocal address of the router set as default gateway**
+
 The host send a Router Sollecitation requesting a new IPv6 and the router reply with a Router advertisement, can be used SLAAC SLAAC+DHCPv6 or stateful DHCPv6, in the case of the SLAAC the RA contain the Prefix aka the first 8 bytes of the IPv6 address than the host concatenate that to the interface ID that can be calculated by EUI-64 or using a random value.
 
 ### Explain the benefits of encapsulation.
-The benefits are that Encapsulation make manteinance easy because code change can be made indipendently.
+
+**The benefits are that Encapsulation make manteinance easy because code change can be made indipendently.**
 
 ### Explain the differences between source NAT and destination NAT.
+
+**SNAT for outcoming connections, DNAT for incoming connections)**
+
 Source NAT is when an entire network appears to outside as a single IP (or multiple if NAT has more than one ip) but this ip is not the ip of the host in the network. Instead the destination dat is when we want reach an natted ip from the outside and we use the DNAT mechanism aka port forwarding.
 
 ### You have to setup a VPN in a company composed of two networks: DMZ and INTERNAL. Where would you place the VPN gateway device? Explain your motivations for your choice.
+
+**VPN devices with dual interfaces in DMZ client connected to external devices and internal clients from internal card + All advantages of placing VPN device DMZ, Unencrypted traffic hyde from the host in the dmz**
+
 VPN in the DMZ because we assume the DMS less secure than the internal network and so the DMS is more resdtricted and more controlled.
 
 ### Explain why it is important to have a code in the Common Vulnerabilities and Exposures for a given vulnerability and how this canhelp the writing of a detection rule for a IDS.
-Besause for signature-base IDS we must known how the exploit work, besause so we can recognise pattern in the traffic in our network
+
+**Besause for signature-base IDS we must known how the exploit work, besause so we can recognise pattern in the traffic in our network**
 
 ### Why it is important to have a methodology for performing security assessments? Mention at least one known methodoloy.
-Ome metodologies is OSSTMM. It provide a STANDARDIZE appoach to conduct a pentest and it's important becouse with a methodologi we have a consisten and repetable test.
+
+**Methodologies as OSSTMM are important because they provide a STANDARDIZE approach for have a consistent and repetable test**
+
+Ome metodologies is OSSTMM. It provide a STANDARDIZE appoach to conduct a pentest and it's important becouse with a method we have a consisten and repetable test.
 
 ### Explain how a proxy that uses HTTP CONNECT works.
-The proxy enstablish an triple handshake to create a connection to the server rewuired from the HTTP connect and then forward the traffic to that host.
+
+**The proxy enstablish an triple handshake to create a connection to the server rewuired from the HTTP connect and then forward the traffic to that host.**
 
 ### Describe the mechanism of the extension headers in IPv6
-In the IPv6 there is an extension header that indicate if and what type is the next header in the packet. It can be used for the option of the packet.
+
+**Extension header if indicated in the next header provide an extension to the main header in the IPv6 packets that provide flexibility to IPv6**
+
+Extension header (indicated in nextHeader) allow the IPv6 header to have fixed size for efficiency and provide flexibility without having to redesign the entire protocol
+
