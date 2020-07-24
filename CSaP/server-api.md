@@ -150,7 +150,7 @@ RESPONSE
 
 ## reply [message#]
 
-Reply to a message to a thread.  
+Reply to a thread.  
 REQUEST 
 > POST /:topic/threads/:id    
 
