@@ -66,7 +66,7 @@ RESPONSE
 ```
 
 ## list [messages | topics] 
- The server send all the messages of the topics to which the user is subscribed.  
+ The server send all the messages of the topics selected.  
  REQUEST
  > GET /:topic/messages
  ---
