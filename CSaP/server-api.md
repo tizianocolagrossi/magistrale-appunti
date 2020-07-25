@@ -66,7 +66,7 @@ RESPONSE
     "status": 200,
      "topic": "unixconfig",
      "owner": "eurus",
-     "thread_id" = [
+     "thread_id": [
         "di%s!o",
         "5j*dkp",
         "h&tsk#",
