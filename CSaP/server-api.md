@@ -64,19 +64,15 @@ RESPONSE
 ```yaml
 {
     "status": 200,
-    "data": [
-        {
-            "id": "123e4567-e89b-12d3-a456-426614174000",
-            "topic": "unixconfig",
-            "owner": "eurus",
-            thread_id = [
-              "di%s!o",
-              "5j*dkp",
-              "h&tsk#",
-              "l8t7rb",
-            ]     
-        }, 
-    ]
+     "id": "123e4567-e89b-12d3-a456-426614174000",
+     "topic": "unixconfig",
+     "owner": "eurus",
+     "thread_id" = [
+        "di%s!o",
+        "5j*dkp",
+        "h&tsk#",
+        "l8t7rb",
+     ]     
 }  
 ```
 
