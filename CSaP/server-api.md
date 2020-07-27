@@ -183,7 +183,6 @@ HEADER REQUEST
 BODY REQUEST 
 ```yaml
 {
-  "owner": "eurus",
   "message": "Wow is awesome!",     
 }    
 ```
@@ -222,9 +221,8 @@ HEADER REQUEST
 BODY REQUEST 
 ```yaml
 {
-  "owner": "eurus",
   "title": "title test",
-  "messages": "this is a new test thread" ,      
+  "message": "this is a new test thread" ,      
 }   
 ```
 
