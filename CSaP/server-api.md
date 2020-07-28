@@ -40,7 +40,8 @@ RESPONSE
 ```yaml
 {
     "status": 200,
-    "sub": [
+    "lenght": 1,
+    "data": [
         "unixconfig", 
     ]
 }  
@@ -64,7 +65,7 @@ RESPONSE
 ```yaml
 {
     "status": 200
-    "lenght": 2
+    "lenght": 2,
     "data": [
         "unixconfig",
         "cyberpunk", 
