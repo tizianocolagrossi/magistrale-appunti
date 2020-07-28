@@ -75,7 +75,7 @@ RESPONSE
 ## list [messages of topics] 
  The server send all the messages id of the topics selected.  
  REQUEST
- > GET /:topic/messages
+ > GET /topics/:topicname
 
 HEADER REQUEST 
 ```yaml
