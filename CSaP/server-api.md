@@ -292,7 +292,7 @@ RESPONSE
 }   
 ```
 
-## Login [user]
+## Logout [user]
 logout user  
 REQUEST  
 > GET /user/logout
