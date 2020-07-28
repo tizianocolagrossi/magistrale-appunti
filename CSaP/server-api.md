@@ -119,7 +119,7 @@ RESPONSE
 ```yaml
 {
     "status": 200,
-    "type": "reply",
+    "type": "REPLY",
     "data": {
             "id": "5hit&d"
             "owner": "eurus"
@@ -131,7 +131,7 @@ or
 
 {
     "status": 200,
-    "type": "thread",
+    "type": "THREAD",
     "data": {
             "id": "5hit8d",
             "owner": "eurus",
