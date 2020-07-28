@@ -274,7 +274,7 @@ RESPONSE
 ## Login [user]
 login user  
 REQUEST  
-> GET /user
+> GET /user/login
 
 HEADER REQUEST 
 ```yaml
