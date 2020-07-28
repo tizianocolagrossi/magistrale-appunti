@@ -22,10 +22,10 @@
  ## command: authenticate
  **TODO**
 
- ## list topic sub (for list messages )
+ ## list topic sub 
  The server send all the topics to which the user is subscribed.  
  REQUEST
- > GET /messages
+ > GET /topics/sub
 
 HEADER REQUEST 
 ```yaml
@@ -41,37 +41,8 @@ RESPONSE
 {
     "status": 200,
     "sub": [
-        "unixconfig" 
+        "unixconfig", 
     ]
-}  
-```
-
-## list [messages | topics] 
- The server send all the messages id of the topics selected.  
- REQUEST
- > GET /:topic/messages
-
-HEADER REQUEST 
-```yaml
-{
-    "username": "eurus",
-    "token": "bdsakjldj*ghdsjal"
-}   
-```
-
-
-RESPONSE
-```yaml
-{
-    "status": 200,
-     "topic": "unixconfig",
-     "owner": "eurus",
-     "thread_id": [
-        "di%s!o",
-        "5j*dkp",
-        "h&tsk#",
-        "l8t7rb",
-     ]     
 }  
 ```
 
@@ -101,6 +72,35 @@ RESPONSE
 }    
 ```
 
+## list [messages of topics] 
+ The server send all the messages id of the topics selected.  
+ REQUEST
+ > GET /:topic/messages
+
+HEADER REQUEST 
+```yaml
+{
+    "username": "eurus",
+    "token": "bdsakjldj*ghdsjal"
+}   
+```
+
+
+RESPONSE
+```yaml
+{
+    "status": 200,
+     "topic": "unixconfig",
+     "owner": "eurus",
+     "thread_id": [
+        "di%s!o",
+        "5j*dkp",
+        "h&tsk#",
+        "l8t7rb",
+     ]     
+}  
+```
+
 ## get [message#]
 The server send the message required by user  
 REQUEST  
@@ -113,7 +113,6 @@ HEADER REQUEST
     "token": "bdsakjldj*ghdsjal"
 }   
 ```
-
 
 RESPONSE
 ```yaml
@@ -142,35 +141,13 @@ or
 
 ```
 
-##  status [message#]
-Server send the status af a given message (sent/published)  
-REQUEST  
-> GET /messages/:id/status  
-
-HEADER REQUEST 
-```yaml
-{
-    "username": "eurus",
-    "token": "bdsakjldj*ghdsjal"
-}   
-```
-
-
-RESPONSE
-```yaml
-{
-    "status": 200
-    "data": "sent" | "published"
-}    
-```
-
 ## reply [message#]
 
 Reply to a thread.  
 REQUEST 
-> POST /:topic/threads/:id    
+> POST /replies/:id    
 
-where topic is the **:topic** name and **:id** is the message id is the id of the message to which the user must reply.  
+where **:id** is the message id is the id of the message to which the user must reply.  
 
 HEADER REQUEST 
 ```yaml
@@ -193,22 +170,10 @@ RESPONSE
 }    
 ```
 
-## create [topic]
-Create a new topic in the witeboard app  
-REQUEST  
->POST /:topic  
-
-RESPONSE
-```yaml
-{
-    "status": 200
-}    
-```
-
 ## append [topic | thread]
 Create a new thread in a topic  
 REQUEST  
-> POST /:topic/threads  
+> POST /threads/:topicname  
 
 HEADER REQUEST 
 ```yaml
@@ -233,18 +198,10 @@ RESPONSE
 }    
 ```
 
-## subscribe [topic]
-Subscribe a user to a topic  
+## create [topic]
+Create a new topic in the witeboard app  
 REQUEST  
-> POST /:topic/subscribe
-
-HEADER REQUEST 
-```yaml
-{
-    "username": "eurus",
-    "token": "bdsakjldj*ghdsjal"
-}   
-```
+>POST /topics/:topicname  
 
 RESPONSE
 ```yaml
@@ -256,7 +213,7 @@ RESPONSE
 ## delete [topic]
 Delete a topic only if the user is the topic's owner  
 REQUEST 
-> DELETE /:topic
+> DELETE /topics/:topicname 
 
 HEADER REQUEST 
 ```yaml
@@ -272,6 +229,89 @@ RESPONSE
     "status": 200
 }    
 ```
+
+## subscribe [topic]
+Subscribe a user to a topic  
+REQUEST  
+> POST /topics/:topicname/sub
+
+HEADER REQUEST 
+```yaml
+{
+    "username": "eurus",
+    "token": "bdsakjldj*ghdsjal"
+}   
+```
+
+RESPONSE
+```yaml
+{
+    "status": 200
+}    
+```
+
+## Register [user]
+register new user  
+REQUEST  
+> POST /user
+
+HEADER REQUEST 
+```yaml
+{
+    "username": "eurus",
+    "passwordhash": "hashhashhash"
+}   
+```
+
+RESPONSE
+```yaml
+{
+    "status": 200,
+    token": "bdsakjldj*ghdsjal"
+}    
+```
+
+## Login [user]
+login user  
+REQUEST  
+> GET /user
+
+HEADER REQUEST 
+```yaml
+{
+    "username": "eurus",
+    "passwordhash": "hashhashhash"
+}   
+```
+
+RESPONSE
+```yaml
+{
+    "status": 200,
+    token": "bdsakjldj*ghdsjal"
+}   
+```
+
+## Login [user]
+logout user  
+REQUEST  
+> GET /user/logout
+
+HEADER REQUEST 
+```yaml
+{
+    "username": "eurus",
+    "token": "bdsakjldj*ghdsjal"
+}   
+```
+
+RESPONSE
+```yaml
+{
+    "status": 200,
+}   
+```
+
 
 # Status Code Used
 
