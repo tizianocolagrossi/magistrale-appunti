@@ -251,6 +251,26 @@ RESPONSE
 }    
 ```
 
+## unsubscribe [topic]
+Unubscribe a user to a topic  
+REQUEST  
+> POST /topics/:topicname/unsub
+
+HEADER REQUEST 
+```yaml
+{
+    "username": "eurus",
+    "token": "bdsakjldj*ghdsjal"
+}   
+```
+
+RESPONSE
+```yaml
+{
+    "status": 200
+}    
+```
+
 ## Register [user]
 register new user  
 REQUEST  
