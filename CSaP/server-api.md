@@ -30,8 +30,8 @@
 HEADER REQUEST 
 ```yaml
 {
-    "username": "eurus",
-    "token": "bdsakjldj*ghdsjal"
+    "username":"eurus",
+    "token":"bdsakjldj*ghdsjal"
 }   
 ```
 
@@ -39,9 +39,9 @@ HEADER REQUEST
 RESPONSE
 ```yaml
 {
-    "status": 200,
-    "lenght": 1,
-    "data": [
+    "status":200,
+    "lenght":1,
+    "data":[
         "unixconfig", 
     ]
 }  
@@ -55,8 +55,8 @@ REQUEST
 HEADER REQUEST 
 ```yaml
 {
-    "username": "eurus",
-    "token": "bdsakjldj*ghdsjal"
+    "username":"eurus",
+    "token":"bdsakjldj*ghdsjal"
 }   
 ```
 
@@ -64,9 +64,9 @@ HEADER REQUEST
 RESPONSE
 ```yaml
 {
-    "status": 200
-    "lenght": 2,
-    "data": [
+    "status":200,
+    "lenght":2,
+    "data":[
         "unixconfig",
         "cyberpunk", 
     ]
@@ -81,8 +81,8 @@ RESPONSE
 HEADER REQUEST 
 ```yaml
 {
-    "username": "eurus",
-    "token": "bdsakjldj*ghdsjal"
+    "username":"eurus",
+    "token":"bdsakjldj*ghdsjal"
 }   
 ```
 
@@ -90,10 +90,10 @@ HEADER REQUEST
 RESPONSE
 ```yaml
 {
-    "status": 200,
+    "status":200,
      "lenght":4,
-     "topic": "unixconfig",
-     "owner": "eurus",
+     "topic":"unixconfig",
+     "owner":"eurus",
      "thread_id": [
         "di%s!o",
         "5j*dkp",
@@ -111,8 +111,8 @@ RESPONSE
 HEADER REQUEST 
 ```yaml
 {
-    "username": "eurus",
-    "token": "bdsakjldj*ghdsjal"
+    "username":"eurus",
+    "token":"bdsakjldj*ghdsjal"
 }   
 ```
 
@@ -120,11 +120,11 @@ HEADER REQUEST
 RESPONSE
 ```yaml
 {
-    "status": 200,
+    "status":200,
      "lenght":2,
-     "thread": "hjsk7",
-     "owner": "eurus",
-     "reply_id": [
+     "thread":"hjsk7",
+     "owner":"eurus",
+     "reply_id":[
         "di%s!o",
         "5j*dkp",
      ]     
@@ -147,25 +147,25 @@ HEADER REQUEST
 RESPONSE
 ```yaml
 {
-    "status": 200,
-    "type": "REPLY",
-    "data": {
-            "id": "5hit&d"
-            "owner": "eurus"
-            "messages": "Wow is awesome!"       
+    "status":200,
+    "type":"REPLY",
+    "data":{
+            "id":"5hit&d"
+            "owner":"eurus"
+            "messages":"Wow is awesome!"       
         }
 }   
 
 or
 
 {
-    "status": 200,
-    "type": "THREAD",
-    "data": {
-            "id": "5hit8d",
-            "owner": "eurus",
-            "title": "DWM rice",
-            "messages": "this is my configuration of DWM",      
+    "status":200,
+    "type":"THREAD",
+    "data":{
+            "id":"5hit8d",
+            "owner":"eurus",
+            "title":"DWM rice",
+            "messages":"this is my configuration of DWM",      
         }
 }    
 
@@ -182,21 +182,21 @@ where **:id** is the message id is the id of the message to which the user must 
 HEADER REQUEST 
 ```yaml
 {
-    "username": "eurus",
-    "token": "bdsakjldj*ghdsjal"
+    "username":"eurus",
+    "token":"bdsakjldj*ghdsjal"
 }   
 ```
 
 BODY REQUEST 
 ```yaml
 {
-  "message": "Wow is awesome!",     
+  "message":"Wow is awesome!",     
 }    
 ```
 RESPONSE
 ```yaml
 {
-    "status": 200
+    "status":200
 }    
 ```
 
@@ -208,23 +208,23 @@ REQUEST
 HEADER REQUEST 
 ```yaml
 {
-    "username": "eurus",
-    "token": "bdsakjldj*ghdsjal"
+    "username":"eurus",
+    "token":"bdsakjldj*ghdsjal"
 }   
 ```
 
 BODY REQUEST 
 ```yaml
 {
-  "title": "title test",
-  "message": "this is a new test thread" ,      
+  "title":"title test",
+  "message":"this is a new test thread" ,      
 }   
 ```
 
 RESPONSE  
 ```yaml
 {
-    "status": 200
+    "status":200
 }    
 ```
 
@@ -233,10 +233,18 @@ Create a new topic in the witeboard app
 REQUEST  
 >POST /topics/:topicname  
 
+HEADER REQUEST 
+```yaml
+{
+    "username":"eurus",
+    "token":"bdsakjldj*ghdsjal"
+}   
+```
+
 RESPONSE
 ```yaml
 {
-    "status": 200
+    "status":200
 }    
 ```
 
@@ -248,8 +256,8 @@ REQUEST
 HEADER REQUEST 
 ```yaml
 {
-    "username": "eurus",
-    "token": "bdsakjldj*ghdsjal"
+    "username":"eurus",
+    "token":"bdsakjldj*ghdsjal"
 }   
 ```
 
@@ -268,15 +276,15 @@ REQUEST
 HEADER REQUEST 
 ```yaml
 {
-    "username": "eurus",
-    "token": "bdsakjldj*ghdsjal"
+    "username":"eurus",
+    "token":"bdsakjldj*ghdsjal"
 }   
 ```
 
 RESPONSE
 ```yaml
 {
-    "status": 200
+    "status":200
 }    
 ```
 
@@ -288,15 +296,15 @@ REQUEST
 HEADER REQUEST 
 ```yaml
 {
-    "username": "eurus",
-    "token": "bdsakjldj*ghdsjal"
+    "username":"eurus",
+    "token":"bdsakjldj*ghdsjal"
 }   
 ```
 
 RESPONSE
 ```yaml
 {
-    "status": 200
+    "status":200
 }    
 ```
 
@@ -308,16 +316,16 @@ REQUEST
 HEADER REQUEST 
 ```yaml
 {
-    "username": "eurus",
-    "passwordhash": "hashhashhash"
+    "username":"eurus",
+    "password":"letmein"
 }   
 ```
 
 RESPONSE
 ```yaml
 {
-    "status": 200,
-    "token": "bdsakjldj*ghdsjal"
+    "status":200,
+    "token":"bdsakjldj*ghdsjal"
 }    
 ```
 
@@ -329,16 +337,16 @@ REQUEST
 HEADER REQUEST 
 ```yaml
 {
-    "username": "eurus",
-    "passwordhash": "hashhashhash"
+    "username":"eurus",
+    "password":"letmein"
 }   
 ```
 
 RESPONSE
 ```yaml
 {
-    "status": 200,
-    token": "bdsakjldj*ghdsjal"
+    "status":200,
+    token":"bdsakjldj*ghdsjal"
 }   
 ```
 
@@ -350,15 +358,15 @@ REQUEST
 HEADER REQUEST 
 ```yaml
 {
-    "username": "eurus",
-    "token": "bdsakjldj*ghdsjal"
+    "username":"eurus",
+    "token":"bdsakjldj*ghdsjal"
 }   
 ```
 
 RESPONSE
 ```yaml
 {
-    "status": 200,
+    "status":200,
 }   
 ```
 
