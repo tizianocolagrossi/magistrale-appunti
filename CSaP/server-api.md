@@ -73,7 +73,7 @@ RESPONSE
 }    
 ```
 
-## list [messages of topics] 
+## list [threads of topics] 
  The server send all the messages id of the topics selected.  
  REQUEST
  > GET /topics/:topicname
@@ -91,6 +91,7 @@ RESPONSE
 ```yaml
 {
     "status": 200,
+     "lenght":4,
      "topic": "unixconfig",
      "owner": "eurus",
      "thread_id": [
@@ -98,6 +99,34 @@ RESPONSE
         "5j*dkp",
         "h&tsk#",
         "l8t7rb",
+     ]     
+}  
+```
+
+## list [reply of threads] 
+ The server send all the replies id of the thread selected.  
+ REQUEST
+ > GET /threads/:thread_id
+
+HEADER REQUEST 
+```yaml
+{
+    "username": "eurus",
+    "token": "bdsakjldj*ghdsjal"
+}   
+```
+
+
+RESPONSE
+```yaml
+{
+    "status": 200,
+     "lenght":2,
+     "thread": "hjsk7",
+     "owner": "eurus",
+     "reply_id": [
+        "di%s!o",
+        "5j*dkp",
      ]     
 }  
 ```
@@ -288,7 +317,7 @@ RESPONSE
 ```yaml
 {
     "status": 200,
-    token": "bdsakjldj*ghdsjal"
+    "token": "bdsakjldj*ghdsjal"
 }    
 ```
 
