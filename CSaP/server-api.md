@@ -65,7 +65,7 @@ RESPONSE
 ```yaml
 {
     "status":200,
-    "lenght":2,
+    "length":2,
     "data":[
         "unixconfig",
         "cyberpunk", 
@@ -91,7 +91,7 @@ RESPONSE
 ```yaml
 {
     "status":200,
-     "lenght":4,
+     "length":4,
      "topic":"unixconfig",
      "owner":"eurus",
      "thread_id": [
@@ -121,7 +121,7 @@ RESPONSE
 ```yaml
 {
     "status":200,
-     "lenght":2,
+     "length":2,
      "thread":"hjsk7",
      "owner":"eurus",
      "reply_id":[
