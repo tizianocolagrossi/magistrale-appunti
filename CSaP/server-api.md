@@ -40,7 +40,7 @@ RESPONSE
 ```yaml
 {
     "status":200,
-    "lenght":1,
+    "length":1,
     "data":[
         "unixconfig", 
     ]
