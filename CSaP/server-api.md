@@ -311,7 +311,7 @@ RESPONSE
 ## Register [user]
 register new user  
 REQUEST  
-> POST /user
+> POST /users
 
 HEADER REQUEST 
 ```yaml
@@ -332,7 +332,7 @@ RESPONSE
 ## Login [user]
 login user  
 REQUEST  
-> GET /user/login
+> GET /users/login
 
 HEADER REQUEST 
 ```yaml
@@ -353,7 +353,7 @@ RESPONSE
 ## Logout [user]
 logout user  
 REQUEST  
-> GET /user/logout
+> GET /users/logout
 
 HEADER REQUEST 
 ```yaml
