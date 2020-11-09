@@ -64,4 +64,8 @@ Guarantees that messages are delivered such that they respect all cause-effect r
 **Indication:** < *crb*. Deliver | *p*,*m* >: Delivers a message m broadcast by process p.
 #### **Properties:**
 **CRB1-CRB4:** Same as  properties RB1-RB4 in (regular) reliable broadcast.  
-**CRB5:** *Causal delivery:* For any messages *m1* that potentially caused a message *m2*, i.e., *m1* -> *m2*, no process delivers *m2* unless it has alredy delivered *m1* 
+**CRB5:** *Causal delivery:* For any messages *m1* that potentially caused a message *m2*, i.e., *m1* -> *m2*, no process delivers *m2* unless it has alredy delivered *m1*
+
+one implementation for this kind of algorithm is similar to the concept of the vector clock. When a process send a message, send also all his history of the messages received, and when the other process receive this vector of messages deliver all the messages that it has not delivered yet.
+
+There are a inproved version of the non wait crb that has a ack mechenism for remove the message from the history send when the message is received from all the correct process.
