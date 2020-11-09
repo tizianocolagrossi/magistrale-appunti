@@ -31,3 +31,37 @@ The idea that we use to achive this, to build this algorithm, is the idea of a *
 - A process receiving a message for the first time forwards it to a set of k randomly chosen processes (this operation is also called a round).
 - The algorithm perform a maximum number of r rounds.
 
+## Ordered Comminication
+**Try to define guarantees about order of deliveries inside group of processes** We want this type of ordering:
+- Deliveries respect the FIFO ordering of the corresponding send (local ordering)
+- Deliveries respect the Causal ordering of the corrisponding send
+- Deliveries respect a total ordering of deliveries (atomic communication, we will see this after the consensus)
+
+## FIFO Broadcast 
+It can be regular or uniform (**IT HAS NO ORDERING ACROSS PROCESS** local ordering)
+
+### **module specification**:
+**Name:** FIFOReliableBroadcast, **instance** *frb*.
+#### **Events:**
+**Request:** <*frb*, Broadcast | *m* >: Broadcast a message *m*  
+**Indication:** <*frb*, Deliver | *p*, *m* >: Delivers a message *m* broadcast by process *p*
+#### **Properties:**
+**FRB1-FRB4:** Same as properties RB1-RB4 in a (regular) reliable broadcast by process *p*  
+**FRB5:** *FIFO delivery:* if dome process broadcasts a message *m1* before broadcasts message *m2*, then no correct process delivers *m2* unless it has alredy delivered *m1* 
+
+**But some time FIFO is not enough**
+
+## Causal order Broadcast
+Guarantees that messages are delivered such that they respect all cause-effect relations. (*causal order is an extension of the heppaned before relation*) a message *m1* may have potentially caused another message *m2* (denotes *m1*->*m2*) if any of the following holds:
+- some process *p* delivers *m1* before broadcasts *m2*
+- some process *p* delivers *m1* and subsequently broadcast *m2*
+- there exist some message *m'* such that *m1* -> *m'* and *m'* -> *m2*
+  
+### **Module specification:**
+**Name:** CausalOrderReliableBroadcast, **instance** *crb*.
+#### **Events:**
+**Request:** < *crb*, Broadcast | *m* >: Broadcast a message *m* to all process.
+**Indication:** < *crb*. Deliver | *p*,*m* >: Delivers a message m broadcast by process p.
+#### **Properties:**
+**CRB1-CRB4:** Same as  properties RB1-RB4 in (regular) reliable broadcast.  
+**CRB5:** *Causal delivery:* For any messages *m1* that potentially caused a message *m2*, i.e., *m1* -> *m2*, no process delivers *m2* unless it has alredy delivered *m1* 
