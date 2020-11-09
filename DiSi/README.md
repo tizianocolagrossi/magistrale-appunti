@@ -1,4 +1,4 @@
-# Distribited System
+# Distributed System
 
 ## todo recover notes before quorum 
 
