@@ -3,6 +3,7 @@
 ## Dictionary
 - **Agreement properties**: If a correct process deliver a message then **every** other correct process deliver the same message.
 - **Causal delivery**: For any message *m1* that potentially caused a message *m2*, i.e *m1*->*m2*, no process delivers *m2* unless it has alredy delivered *m1*.
+- **Fail-silent algorithm**: process crashes can never be reliably datected (failure model crash, **no failure detector**)
 
 ## todo recover notes before quorum 
 
@@ -155,3 +156,10 @@ Processes can crash but the crashes can be reliably detected by all the other pr
 - Write-All: each write operation updates the value locally stored at each process the writer consider to have not crashed.
 - A write completes when the writer recives an ack from each process that has not crached
   
+######ALGORITHM###########
+
+**can we adapt the algorithm for fail-silent?**  (1 writer N reader)  
+In ordert to accomplish that we need another assumption. We need **a majority of correct processes** (**QUORUM**). **When I write** i BEBCast, and then I wait for acks from n/2+1 processes (a quorum of processes). Assuming majority of corrects this eventually terminates. **When I read** I BEBCast, and wait for register values from n/2+1 processes (another quorum). Assuming majority of correct this eventually terminates. **This two quorum intersect for properties of  quorum** and so **I will read the write on a process in the intersect of this two quorum**. **BUT WE NEED ANOTHER ITEM BECAUSE THIS IS NOT ENOUGH** Because with only this mechanism we culd have a situation with two write one sequentially to the other but with two **quorum different for the two write operations** And now the quorum of the acks intersect with the other quorum and can create a set with different values, not uniform. **We can solve this problem using time stamp** the reader now will see the timestamp of the data and it **return** the value with the **greater timestamp**.
+
+#########ALGORITHM###########
+
