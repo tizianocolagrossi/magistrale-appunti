@@ -4,6 +4,9 @@
 - **Agreement properties**: If a correct process deliver a message then **every** other correct process deliver the same message.
 - **Causal delivery**: For any message *m1* that potentially caused a message *m2*, i.e *m1*->*m2*, no process delivers *m2* unless it has alredy delivered *m1*.
 - **Fail-silent algorithm**: process crashes can never be reliably datected (failure model crash, **no failure detector**)
+- **Sequential consistency**: The result of any execution is the same as if the (read and write) operations by all processes on the data store were executed in some sequential order and the operations of each individual process appear in this sequence in the order specified by its program.
+- **Atomicity (or linearizzability)**: Each operation should **appear to take effect instantaneously** at some moment between its start and completion.
+- **Compositionality**: Given a set of registers, such that each one of them independently respects a consistency condition, we would like that any execution on this set of registers respects the same consistency conditions.
 
 ## todo recover notes before quorum 
 
@@ -162,4 +165,25 @@ Processes can crash but the crashes can be reliably detected by all the other pr
 In ordert to accomplish that we need another assumption. We need **a majority of correct processes** (**QUORUM**). **When I write** i BEBCast, and then I wait for acks from n/2+1 processes (a quorum of processes). Assuming majority of corrects this eventually terminates. **When I read** I BEBCast, and wait for register values from n/2+1 processes (another quorum). Assuming majority of correct this eventually terminates. **This two quorum intersect for properties of  quorum** and so **I will read the write on a process in the intersect of this two quorum**. **BUT WE NEED ANOTHER ITEM BECAUSE THIS IS NOT ENOUGH** Because with only this mechanism we culd have a situation with two write one sequentially to the other but with two **quorum different for the two write operations** And now the quorum of the acks intersect with the other quorum and can create a set with different values, not uniform. **We can solve this problem using time stamp** the reader now will see the timestamp of the data and it **return** the value with the **greater timestamp**.
 
 #########ALGORITHM###########
+
+### **Sequential consistency**
+ for the sequential we will see only the definition of teh semantic. And then we will see an implementation of the atomic.
+
+**Sequential consistency**: The result of any execution is the same as if the (read and write) operations by all processes on the data store were executed in some sequential order and the operations of each individual process appear in this sequence in the order specified by its program. i.e.**There exists a global ordering, that respects the local ordering seen by each process**. **Sequential consistency** gives to **each process the illusion of using a single storage**. Even if the results does not respect the global constraint that happens in the real execution. **Sequential consistency and regular consistency are orthogonal**. They do not imply each other.
+
+### **Atomic consistency**
+**Atomicity (or linearizzability)**: Each operation should **appear to take effect instantaneously** at some moment between its start and completion. **Any execution there is atomic is also regular and sequential consistency**.
+
+### **COMPOSITIONALITY OF CONSISTENCY CONDITIONS**
+**Compositionality**: Given a set of registers, such that each one of them independently respects a consistency condition, we would like that any execution on this set of registers respects the same consistency conditions. So regular and atomic is compositional. **If we have 10 register regual also the composition of any set of this register is regual, same as for the atomic.** This is NOT valid for the Sequential consistency. **SEQUENTIAL CONSISTENCY IS NOT COMPOSITIONAL**.
+
+### **Atomic register**
+#### (1,N) ATOMIC REGISTER: SPECIFICATION
+##### **Properties:**
+**Termination**. If a correct process invokes an operation, then the operation eventually receives the correspondingconfirmation.
+
+**Validity**. A read operation returns the last value written or the value concurrently being written.
+
+**Ordering**. If a read returns v2 after a read that precedes it has returned v1, then v1 has not been written after v2 (**IMPORTANT**)
+
 
