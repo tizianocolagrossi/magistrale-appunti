@@ -187,3 +187,55 @@ In ordert to accomplish that we need another assumption. We need **a majority of
 **Ordering**. If a read returns v2 after a read that precedes it has returned v1, then v1 has not been written after v2 (**IMPORTANT**)
 
 
+**In order to create a (1,N) Atomic register we need a (1,1) Atomic register.**
+#### **ATOMIC REGISTER (1,1)**
+TODOOOOOO
+
+##### **IDEA (1,1)ATOMIC -> (1,N)ATOMIC**
+- Ra: N (1,1) registers that connect the writer to the readers
+- Rb: N^2 (1,1) registers that connect readers
+  
+**Idea**  
+- Write writes val in registers Ra
+- Reader
+  - reads from 1 Ra register and from N Rb registers
+  - chooses the value val eith the largest timestamp
+  - writes val in N Rb registers
+  - return val
+  
+The reader helps the writer. Because before returns the value it write the value that he had read in the other registers before terminate and return the value.
+
+Here we implemented it unsing regule register ATOMIC(1,1). but can we do it only with messages?  
+
+#### **Read-Impose write-all**
+
+**(1,N)ATOMIC Register** based on Best effort Broadcast (**BeB**), Perfect Failure Detector (**P**), perfect point 2 point link (**pp2p**). In this case, in order to implement an atomic register, every time that we read we must broadcast our value to the other register in order to **impose** our read value. And at the end of the write we return the value read (**we write the value with a vector clock in order to mantain an order of the last value that the other processes should read**).
+
+
+#### **Read-Impose write-all FailSilent**
+**(1,N)ATOMIC Register** based on Best effort Broadcast (**BeB**) and  perfect point 2 point link (**pp2p**). Using the **quorum tecniques**. Also in this kind of algorithm the reader must help the writer. **the first part is the same as the regular** 
+
+But a read has to impose after the query phase. (**So you write on a quorum and you read from a quorum**)
+
+Performance  
+**write** at most 2N messages, 2 steps 
+**Read** at most 4N messages, 4 steps
+
+
+
+### **Regular VS Atomic : PERFORMANCES**
+**MESSAGE PASSING IMPLEMENTATIONS!**  
+|               |           | (1,N)Reg | (1,N)Reg | (1,N)Ato | (1,N)Ato |
+|---------------|-----------|:--------:|:--------:|:--------:|:--------:|
+|               |           |   READ   |   WRITE  |   READ   |   WRITE  |
+| Fail-Stop (P) | Messages  | 0(local) |    2N    |    2N    |    2N    |
+| Fail-Stop (P) | Steps     | 0(local) |     2    |     2    |     2    |
+| Fail-Stop (P) | Resilency |    f<N   |    f<N   |    f<N   |    f<N   |
+| Fail-Silent   | Messages  |    2N    |    2N    |    4N    |    2N    |
+| Fail-Silent   | Steps     |     2    |     2    |     4    |     2    |
+| Fail-Silent   | Resilency |   f<N/2  |   f<N/2  |   f<N/2  |   f<N/2  |
+
+ 
+
+ ### (N,N) Atomic register
+ **NON LO CHIEDE ALL ESAME**
