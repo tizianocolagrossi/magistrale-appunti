@@ -238,4 +238,38 @@ Performance
  
 
  ### (N,N) Atomic register
- **NON LO CHIEDE ALL ESAME**
+ NON LO CHIEDE ALL ESAME
+
+
+ ## CONSENSUS (Regular)
+
+**Used for some decision procedd that cannot be reversed** so one decision and only one.
+
+### In synchronous system
+#### **Module**:  
+**Name:** Consensus, **instance** *c*.  
+##### **events**:  
+ Request: <c, *Propose* | *v* >:propose value *v* for consensus  
+ Indication: <c, *Decide* | *v* >: outputs a decided value *v* of consensus  
+ ##### **Properties**  
+ **C1** *Termination*: Every correct process eventually decides a value    
+ **C2** *Validity*: If a process decides v then v was proposed by some process  
+ **C3** *Integrity*: No process decided twice  
+ **C4** *Agreement*: No two correct process decides differently  
+
+#### **Which technique can we use ?**
+- **Leader based strategy**: leader impose (but if the leader crash, new leader new impose). **PROBLEM** if the process that craches is speed if another process receive the message from the leader ad it decides the value from the leader, when the leader crashes the process has alredy decided the value of the past leader end due to the fact that we cannot decides twice we are done. 
+  - **SOLUTION** hierarchical consensus. Idea: a new round r start either when
+    - The leader of round r-1 chrashes.
+    - I receive a message from the leader of r-1.
+    - when in round r I receive a message from the leader of r, I assume its proposal.
+    - when r=my_id I decide my proposal, and i BEB it.
+
+## **Uniform consensus specification**
+
+##### **Properties:**
+**UC1-UC3**: same as C1-C3 in regular consensus.  
+**UC4**: *Uniform agreement* No two process decides differenlty.
+
+
+
