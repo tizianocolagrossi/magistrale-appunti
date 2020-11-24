@@ -8,8 +8,11 @@
 - **Atomicity (or linearizzability)**: Each operation should **appear to take effect instantaneously** at some moment between its start and completion.
 - **Compositionality**: Given a set of registers, such that each one of them independently respects a consistency condition, we would like that any execution on this set of registers respects the same consistency conditions.
 
-## todo recover notes before quorum 
+## List of algorithm
+...
 
+## todo recover notes before quorum 
+...
 
 ### QUORUM
 
@@ -271,5 +274,79 @@ Performance
 **UC1-UC3**: same as C1-C3 in regular consensus.  
 **UC4**: *Uniform agreement* No two process decides differenlty.
 
+
+
+# **Paxos**
+
+What if the system is asynchronous ? **Theorem** (FLP) Consider an asyncrhonous system composed by n processes. if **failure>0** then consensus is unsolvable in such system. (The proof shows that for any algorithm there exist a run in which you either: violate a *safety* or violate *liveness*)
+
+But in the **eventually synchronous** the consensus can be solved.
+
+The Paxos provide a viable solution to consensus in eventually synchronous settings with crash failures. 
+- **Safety** (validity, integrity, agreement) is **always** guaranteed.
+- The algorithm is **live** (termination) only when the network behaves in a *good way* fo long enought periods of time.
+
+**Assumptions: majority of correct processes and eventually synchronous system**.
+
+Actors in the basicPaxos protocols: (not necessary that those role are phisically separated)
+- **Proposer** propose a value.
+- **Acceptor** process that must commit a  final decided value.
+- **Learners** passively assist to the decision and obtain the final decided value.
+
+**The majority assumption is needed only on the set of acceptors**
+
+###### **What the protocol should do**
+- Only a value that has been proposed must been chosen. 
+- Only a single value is chosen. 
+- A process never learns that a value has ben chosen unless it actually has been.
+
+###### **Multiple acceptors**
+- A proposer sends a proposal to a set of acceptors.
+- An acceptor MAY accept the proposed value.
+- A value is chosen when a majority of acceptors acept it.
+
+The majority is needed to guarantee that only a value is chosen -> we want to preservethe algorithm invariant that a **value is chosen when accepted by the majority of acceptors**.
+
+***P1** an acceptor must accept the forst proposal it receives*
+
+**Problem**: if several values are concurrently proposed by different proposers, none of them could reach the needed majority. We have a sor of deadlock (*this is true only if an acceptor must accept the first proposed value*).  
+**This implies that an acceptor should accept multiple proposal**
+
+We keep track of different proposed values assigning them a prposal number that is **unique (total order of proposals)**. A proposal woll be a pair <*round number*, *value*>.  
+A **value is chosen** when a **single proposal with that value has been accepted** by a **majority of the acceptors** (chosen proposal).  
+We can allow multiple proposal to be chosen, but **all chosen proposal must have the same value**.
+
+***P2** if a proposal with value c is choseen then , every higher numbered proposal that is chosen has value v.*  
+
+**For a value V chosen, a proposal containing it must have been accepted by at least one acceptors, thus:**  
+***P2a:** if a proposal with a value **v** is chosen, every higer numbered proposal that is **accepted** by an acceptor has value **v*** (**P2a**->**P2**) 
+
+***P2b**: if a proposal with value **v** is chosen, every higher-numbered proposal issued by any proposer has value **v*** (**P2b**->**p2a*->**P2**).
+
+###### **How can we guarantee P2b?**
+P2c can be mantained by asking to a proposer that want to propose a value numbered **n** to learn the highest-numbered value (with number less than **n**, if any) that
+- has been accepted by each acceptor of majority
+- or will be accepted by each acceptor of majority
+
+Since any majority of acceptors S contains at least one member of Q (quorum of acceptors that accepted a value v in round m), we can conclude that a proposal round numbered **n** has value **v** by ensuring thet the following invarinat is mantained.
+
+***P2c**: for any **v** and **n**, if a proposal with value **v** and round number **n** is issued, then there is a set S consisting  of a majority of acceptors such that either:
+1. no acceptor in S has accepted any proposal round numbere less than **n**.
+2. **v** is the value of the highest-numbered proposal among all proposals round numbered less  than **n** accepted by the acceptorss in S.
+
+**P2c**->**P2b**
+
+#### **The strategy of Paxos**
+And so the strategy is: before sending your proposal you wake up first, you aks to the acceptors (**prepare** message in the terminology of paxos) is just a request, **please sir can you tell me if you accepted some value or not? and if you accepted a value can you tell me what value have you accepted?** (all acceptors reply to your message but you wait only for a majority of them) and you take the higher-numbered request you take the value and than you change your proposal and then send your proposal (you in this moment are helping the value that are been chosen). (prepare, see the majority, then send a proposal). (**P2c**->**P2b**->**P2a**->**P2**).
+
+**insert image that show promise strategy**
+
+**So paxos is a 2 phase alghorithm**
+1. send to all the acceptor *I want po prepare the round n*, and then I will wait the ack of the acceptors
+2. then take the higher-number proposal if it is alredy chosen and you will make your propose resendig the value alredy chosen by the quorum, or if there isn't a value alredy chosen you send your proposal.
+
+SO:
+- Phase 1: prepare request <-> response
+- Phase 2: accept request <-> response
 
 
