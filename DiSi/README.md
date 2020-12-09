@@ -7,6 +7,8 @@
 - **Sequential consistency**: The result of any execution is the same as if the (read and write) operations by all processes on the data store were executed in some sequential order and the operations of each individual process appear in this sequence in the order specified by its program.
 - **Atomicity (or linearizzability)**: Each operation should **appear to take effect instantaneously** at some moment between its start and completion.
 - **Compositionality**: Given a set of registers, such that each one of them independently respects a consistency condition, we would like that any execution on this set of registers respects the same consistency conditions.
+- **Uniform Agreement (UA)** if a process (**correct or not**) TODelivers a message m, then all correct processes will eventually TODeliver m.
+- **Non Uniform Agreement (NUA)** if a **correct** process TODelivers  a message m, then all correct processes will eventually TODeliver m. 
 
 ## List of algorithm
 ...
@@ -348,5 +350,39 @@ And so the strategy is: before sending your proposal you wake up first, you aks 
 SO:
 - Phase 1: prepare request <-> response
 - Phase 2: accept request <-> response
+
+# **Total Order Communication**
+ 
+## Regular Total order broadcast
+#### **Module**:  
+**Name:** TotalOrderBroadcast, **instance** *tob*.  
+##### **events**:  
+ Request: <tob, *Broadcast* | *m* >:Broadcast a message *m* to all processes  
+ Indication: <tob, *Deliver* | *p*, *m* >: Delivers a message *m* broadcast by process *p*
+ ##### **Properties**  
+ **TOB1** *Validity*: If a correct process *p* broadcast a message *m*, then *p* eventually delivers, *m*   
+ **TOB2** *No duplication*: No message is delivered more than once   
+ **TOB3** *No Creation*: If a process deliver a message *m* with sender *s*, then *m* was previously broadcast by *s*   
+ **TOB4** *Agreement* If a message *m* is delivered by some correct process, then *m* is eventually delivered by every correct process.    
+ **TOB5** *Total Order*: let *m1* and *m2* be any two messages and suppose *p* and *q* are any two correct processes that deliver *m1* and *m2*. if *p* delivers *m1* before *m2* then *q* delivers *m1* before *m2* 
+
+ 
+## Uniform Total order broadcast
+#### **Module**:  
+**Name:** UniformTotalOrderBroadcast, **instance** *utob*.  
+##### **events**:  
+ Request: <utob, *Broadcast* | *m* >:Broadcast a message *m* to all processes  
+ Indication: <utob, *Deliver* | *p*, *m* >: Delivers a message *m* broadcast by process *p*
+ ##### **Properties**  
+ **UTOB1-UTOB3** Same as properties TOB1-TOB3 in regular total-order broadcast   
+ **UTOB4** *Uniform Agreement* If a message *m* is delivered by some process (whenether correct or faulty), then *m* is eventually delivered by every correct process.    
+ **UTOB5** *Uniform Total Order*: let *m1* and *m2* be any two messages and suppose *p* and *q* are any two processes that deliver *m1* and *m2* (whenether correct or faulty). if *p* delivers *m1* before *m2* then *q* delivers *m1* before *m2* 
+
+# Software Replication
+Guarantees the availability of a service (also called object) despite failures. Assuming p the failure probability of an object O. O’s availability is 1-p. Replicating an object O on N nodes and assuming p the (independent- ensured with diversity) failure probability of each replica, O’s availability is 1- p^n/k (K is a algorithm dependent).
+
+# Replication with RAFT
+
+# Byzantine failure
 
 
