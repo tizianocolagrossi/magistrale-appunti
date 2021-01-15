@@ -9,7 +9,8 @@
 - **ODN**: Optical distribution network
 - **AON**: Active Optical Network aka P2P
 - **PON**: Passive optical netowork, passive branching of fibes via optical splitters and tree-based topologies
-- **Fiber to the excange** : The optical fiber terminates to the CO, and the CO is connected with te user via copper based line (e.g. ADSL)
+- **Fiber to the excange** : The optical fiber terminates to the CO, and the CO is connected with te user via copper based line (e.g. ADSL).
+- **Cross-talks**: Wires sharing the same cable interfere one each other
 - **Backhaul:** portion of the network comprises the intermediate links between the core network, or backbone network, and the small subnetworks at the edge of the network. The most common network type in which backhaul is implemented is a mobile network. A backhaul of a mobile network, also referred to as mobile-backhaul connects a cell site towards the core network. The two main methods of mobile backhaul implementations are fiber-based backhaul and wireless point-to-point backhaul.
 - **Latency** Is the time of the reaction of the network
 - **handoff/Handover**: procedure that keep the connection during the mobility of the user. A base station pass the control of the connection to another one base station.
@@ -98,5 +99,83 @@ This domain will be the mode of choice for fixed access in the coming years.
 #### **Wireless Access**
 This domain enjoys the highest expectation from the standopoint of ubiquitous networking 
 
+# XDSL 
+is a family of technologies that provide digital data trasmissions over the wires of a telephone network. DSL stands originally for digital subscriber loop.  
 
+## Asymmetric DSL
+Original market driver: distribution of video on demand (VoD) (failed for this target). The distinguishing characteristic of ADSL over other forms of DSL is that the volume of data flow is greater in one direction than the other. Providers usually market ADSL as a service for consumers to connect to the Internet in a relatively
+passive mode: able to use the higher speed direction for the "download" from the Internet but not needing to run servers that would require high speed in the other direction.
+### Speed
+Older ADSL standards can deliver 8 Mbit/s to the customer over about 2 km of unshielded twisted pair copper wire. The latest standard, ADSL2+, can deliver up to
+24 Mbit/s, depending on the distance from the central office.
 
+### ADSL frequency bands
+
+ADSL uses two separate frequency bands, referred to as the upstream and downstream bands.
+- The upstream band is used for communication from the end user to the telephone central office
+- The downstream band is used for communicating from the central office to the end user.
+- With standard ADSL, the band from 25.875 kHz to 138 kHz is used for upstream communication, while 138 kHz–1104 kHz is used for downstream communication
+
+### ADSL and cross-talks
+Two kinds of cross-talk noise exist: far-end cross-talk (FEXT) and near-end cross-talk (NEXT). Crosstalk typically increases with frequency -> significant impairment for high speed DSL.
+
+#### FEXT
+FEXT is the cross-talk between a transmitter and a receiver placed on opposite sides of the cable. FEXT signals travel the entire length of the channel. Since for ADSL “short” cables are used, the signal carried on other pairs, even though coming from far away, are not strongly attenuated and create interferences that affect other pairs. In order to reduce this kind of noise a cable usually doesn't contain more than a dozen twisted pairs.
+
+#### NEXT
+NEXT is the cross-talk between a transmitter and a receiver placed on the same side of the cable.
+Receiver's signals are softer than transmitter's one, since come from far
+away and thus there is a strong interference which reduces quality of useful received data.
+NEXT is one of the reason of the frequency division for upstream and downstream in ADSL.
+
+### ADSL: Modulations
+- CAP: stands for Carrier-less Amplitude/Phase
+modulation, and describes a version of QAM in which
+incoming data modulates a single carrier that is then
+transmitted down a telephone line. The carrier itself is suppressed before transmission (it contains no information, and can be reconstructed at the receiver), hence the word “carrier-less” (single
+carrier but suppressed)
+- DMT: (Discrete Multi-Tone)(multicarrier) 
+256 sub-bands of 4,3125 kHz each, so
+occupying 1.024MHz. Each sub-band is QAM64 modulated for
+clean sub-bands, down to QPSK for
+noisier lines.
+
+#### **Principle of DMT modulation**
+It divide the operational ADSL bandwith into very small subchannells. Discrete carrier or tones are used in the center of each data subchannell. These carriers are used to transmit data indipendently in each subcarrier by means of a specified QAM modulation.
+
+Independent subchannels can be manipulated
+individually with consideration of the line conditions, 
+If a subchannel is experiencing external interference it
+may not be used in favor of other subchannles
+**DTM can dynamically adapt the data rate to the line
+conditions**
+##### **Water filling**
+The signal power for each subcarrier is determined as the depth of the
+liquid in a pool. Knowing the discreate values of p(fk) for each subcarrier fk one may deduce the number of bit per simbol to associate to the QAM costellation used in each subchannel.
+
+## VDSL Vectoring
+Crosstalk cancelling by injecting an “anti-signal”
+on each crosstalk-impaired line
+- Requires full synchronization over the full vectored system
+- All data samples are shared between all the lines
+- Requires calculation of the “anti-signals”
+- Requires a crosstalk estimating mechanism to derive the crosstalk coefficients
+
+## Point to Point Protocol: summary
+PPP was designed for simple links to transport packets between two peers. The ppp encapsulation provides for multiplexing of different network layer protocols simultaneously over the same link. It provides a Link Control Protocol (LCP) which negotiates the establishment and termination of a PPP link. LCP also negotiates the options for encapsulation format, authentication and link quality monitoring.
+
+It is used together with ADSL for its ability to directly
+connect the user to the Central Office of its ISP and its
+important functions like: authentication, authorization,
+automatic configuration of network interfaces and DHCP
+support.
+
+In the majority of European countries ADSL is based on
+the ATM protocol so PPP is encapsulated inside ATM cells
+(PPPoA). Nonetheless ADSL can stand on top of Ethernet and be
+incapsulated in Ethernet Frames (PPPoE).
+
+### Authentication
+Authentication Option uses Password Authentication Protocol
+(PAP) or Challenge Handshake Authentication Protocol (CHAP). The protocol used depends on negotiation. CHAP uses a one-way hashing algorithm which is known only to the
+user, to respond to a challenge sent by the authenticator. CHAP is more secure than PAP.
