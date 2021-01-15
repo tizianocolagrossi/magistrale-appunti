@@ -15,7 +15,8 @@
 - **Latency** Is the time of the reaction of the network
 - **handoff/Handover**: procedure that keep the connection during the mobility of the user. A base station pass the control of the connection to another one base station.
 - **crosstalk** signal that pass from a cable to another. And generAte interference.
-
+- **BER** bit error rate.
+- **OLT** Optical line terminal.
 
 
 # Introduction
@@ -40,7 +41,7 @@ Alredy known **WAN** **MAN** **LAN** And then we have:
     - Serve as relay stations for communications signals transmitted from earth stations
 - Cellular Systems
     - Each cell is typically from one to several square miles in area
-    - Each cell has its own low-power trasmitter radio rela antenna
+    - Each cell has its own low-power trasmitter radio rela .sd1
     - Computers and other communcations pricessors coordinate and control the trasmission to/from mobile users as they move from one cell to another 
 
 ## Network Topologies
@@ -179,3 +180,65 @@ incapsulated in Ethernet Frames (PPPoE).
 Authentication Option uses Password Authentication Protocol
 (PAP) or Challenge Handshake Authentication Protocol (CHAP). The protocol used depends on negotiation. CHAP uses a one-way hashing algorithm which is known only to the
 user, to respond to a challenge sent by the authenticator. CHAP is more secure than PAP.
+# Qwestion and answer 
+
+# Cuomo
+
+
+## Describe the functions that are performed in the different functional areas of a network and the main network topologies used in that areas
+A network is divided in functional area: **access network**, **core network** and **edge of the network**. The **access network** is the part that connect subscribers to their service provider. The access network play has an important role. It connect the communication carriers and the service providers with the entity that they serve. The **core network** is a backbone network **it usualli has a mesh topology** and provide any to any connection among devices in the network (it consist of multiple switches or ip routers). The internet is a core network composed by the interconnection of the core networks of all the service providers. Instead **the edge of the network** is were the networks and the end user exist. Usually has a star topology and this part of the networks may perform some intelligent fucntions that the core network does not perform. (the core network switch the packets instead the hop-by-hop routinf of the edge)
+
+## Describe how modulation of the ADSL allow to use in an efficient way copper cables
+The copper based network was designed mainly for carrying POTS (Plain old telephone systems). The ADSL provide for passive trasmission of analog voice service (POTS) and it can deliver from 8 to 24 Mbit/s (ADSL-ADSL2+). It uses two separate freqwuency bands (upstream and downstream). The dimension of these two band are asymmetric (Asymmentric Digital Subscriber Line). The downstream band is larger than the upstream this because is designed taking into account that when it was developed, the end users tended to use data from the internet instead of creating it. And it uses the DMT modulation that split the upstream and  the downstream in subchannels (tones). This subchannels can be manipulated individually taking into account the line conditions. For example if a subchannel has an external interference that cause error it may not be used in favor os other subchannels. **DMT can dynamically adapt the data rate to the line conditions**. It uses the **water filling** method in order to estimate the power o each subcarrier. And using this method we can assign the righ QAM costellation in each subcarrier in order to optimize the overall performance.
+
+## What is MIMO and how it is used in the LTE and future generarions cellular systems
+Multiple Input Multiple Output known as MIMO is referred to the use of multiple antennas as trasmitters and receivers side. It is used in LTE in order to reach the 100Mbps peek in downlink. MIMO has multiple modes of operatition for trasmit antennas. **Spatial multiplexing**, **Beamforming** and **single stream trasmit diversity**. The trasmit diversity permit to have multiple replicas of the same signal sent to several antennas, this permit to have an higher SNR at the Rx. The **spatial multiplexing** instead it permit to different data streams to be sent simultaneously on different antennas. And **beamforming** we can have two kind of beamforming: Phased array systems that have a finite number of predefined pattern (fixed) or we could have an adaptive array systems that have an infinite nymber of patterns that are adjusted to the scenario in real time. In the future generation of LTE there is an increment on the number of the multiple antennas used in the MIMO systems in order to increase the performance of the network. The benefits of the multiple antennas are: the simplifies multiuser processing and the reduced trasmit power.
+
+## Key feature in LTE
+The main feature in LTE are: **MIMO transmission**, **Adaptive modulation and coding AMC**, **Hybrid ARQ** and **Spectrum flexibility (OFDMA and SC-FDMA)**. With AMC using channel quality indication (CQI) (eNB send DL reference dignal, the UE send the CQI report and the eNB allocate band and use AMC in order to determine the correct modulation scheemes to use) the transmitter can **adaptively** determine the modulation and coding schemes. With the HARQ we conbine the FEC (forwaed weeoe correction) and ARQ (automatic repeat request) this means that if the received data has an error the receiver buffer the data and request a retrasmission af the data. When the retrasmitted data is received it the receiver combines the received data with the data buffered in order to reconstruct the packet this appens only with the FEC the error cannot be reconstructed. The **spectrum flexibity (OFDMA and SC-FDMA)** The current specification of LTE support subset of 6 different system bandwiths. The uplink (UE ti eNB) uses SC-FDMA (single carrier frequancy division multiple access) and in the downlink it uses OFDMA (ortogonal frequancies division multiple access). While SC-FDMA allocate user just in time domain OFDMA allocates user in time and frequency domain. The minimum allocation resource is a **Resouece block (RB)**. In OFDMA each sub carrier only carries information related to one specific symbol, instead in SC-FDMA each subcarrier contains information od all trasmitted symbols. Lastly we have the **MIMO trasmission**. With multiple antennas we can achive better performance using the Beamforming, statial multiplexing and singrle stream diversity. The beamgorming permit us to use at the same time multiple antennas in order to create a beam to improve the performance and in oder to focus the beam in only the direction af the end user in order to achive longher distance and because the beam is directional we dont have an interference in the air and so we can serve multiple user at the same time that is the spatial divercity. Instead with the spatial multiplexing generated by having myltiple antenna that are receiving the same signal we have free multiple replicas of the same signal because having the antennas displaced in different point we have myltiple stream of the same data and we can use this in order to have an higher SNR at Rx.  
+
+
+## FTTx architectures and VDSL vectoring
+There are many FTTx and the difference of one from each othe is where the fiber otics end adn start the copper (if there is the copper). The more the fiber optics is near the router the more the cohnnection can be fast. We can have multiple line of fiber optics (one for each user), or we can dave a single line that splits into multiple line to reach the end users, this operation of splitting the line can be done actively or passively. In this network the OLT (optical line terminal) manafet the entire bandwith in the downstream (point to multipoint proto) , instead in the upstream (multiple point to point network) the ONUs (optical network unit) trasmit only towards the OLT, and the ONUs cannot detecs other ONUS trasmissios. **The data trasmitted by the ONUs it may collide** so are used protocol that are designed for sistem like this such ad TDMA. Whit TDM-PON is used a beoadcast scheme in the downstream and TDMA in the upstream.
+
+The VDSL vectoring is a method that permit to cancel the crosstalk by injecting an antisignal in each crosstalk impaired line. in order to work it requre a full synchronization over the vectored system. It require the calculation of the antisignal and on order to doing that it require a mechanism to derive the crosstalk coefficients. After this the antisignal is ingected trough the copper lines and reduce the crosstalk.
+
+## PON architecture and how they work
+
+## traffic engineering in PON for downstream and upstream
+
+## in the computation of the capacity that a channel can provide both the effect if the bandwith and of the SNR are present. Discuss how these have an inpact and how they can be managed to improve the capacity of the channel
+
+## describe the possible noise effect in a digital signal and how they are combatted
+
+## Witch are the key difference if the old use of the copper wire to procvide data (analog voice band modem) and the digital one
+
+
+
+
+# Polverini
+
+## Provide a description of the fragmentation service in ipv6 explaining the pros and the cons of the used approach
+In ipv6 the fragmentation of the packets can be done only from the senders. This in in opposition with the ipv4 that permit the fragmentation to the routers. The reason for this is that with this rule (fragmentation only from the source) we can reduce the overall delay in the trasmission, but in order to doing that we need to evaluate the MTU of the channel. and this is done with the MTU discovery. As we said before aS the pros we have less delay and less processing requires (the routes in this case do nothing for the frammentation) but ad the cons we have the need of an MTU path discovery procedure and we also are introducing some security threats. For example if we have some overlapping at the other end of the trasmission we could use this for inibit the power of an IDS to see an attack or similar. 
+
+
+## Describe the security servicies provided by Encapsulating Security payload protocol, specifying the differences between the case in witch is used in transport or in tunnel mode
+IP level of security includes tree areas. Autentication, confidentiality and key management. These can be done using some ip header: **AH** (authentication), **ESP** encrytion only and **ESP** with both encryption and authentication. Both there headers support tunnel and trasport mode. The tramsport mode provide pritection to the upper level protocols, for example the ESP header in transport mode encrypt and optionally authenticate the payload of IP but not the IP heafer, the AH in trasport mode authenticate the payload and some field of the IP header.
+Instead in the tunnel mode the ESP or AH header privides pritection to all the IP packet. The entire packet are used as payload of a new IP packet (outher packet) and are used when one or both ends are a secure gateway.
+
+
+                     
+## Witch reference to the SDN architecture, provide a description of the data-control plane interaction generated by an application that provides the NAT service.
+In a nat service we have a match for an ip address and port and an action to change the address and port. A SDN has a logical centered control plane for easier management of the network. We have at the **data plane switches** that have a switch flow table computed and installed by the **controller**. The **controller** id the operating system of the network. It mantain the state of the network, it **interact with the network control application** and with the **swotches** below, is implemented ad distributed system. At the top we have the **network control apps** these are the brain of the control plane. For example if we have a host H1 that are natted the packet from H1 reach the switch S1, if S1 has no rule for this event (the packet) the switch request to the controlled a flow rule for the packet (with missingflowrule events ) the controller than request to the application that provides the NAT service how handle the packet the application respond to the controller that respond and install to the switch the flow rule for that packet in order to avod all these passager the next time. After some delta t time  the rule installed if is not used is removed from the switch this for reducing the memory consumption. 
+
+## Describe how trace route can discover the path taken from a packet toward a partcular destination
+The traceroute command sent a list of packet incrementing the TTL of the packet starting from 0. When a router receive a packet wit TTL to 0 replay with a packet ICMP time exceded. using this packet and incrementing the TTL one by one each time the tracerote can estimate a plausible path that the packet are following.
+
+## Key feature in ipv6
+
+
+
+
+
+
+
