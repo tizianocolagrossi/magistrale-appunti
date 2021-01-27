@@ -1,7 +1,5 @@
 # PND's notes 2020
 
-![image info](./ipv4_packet_header.jpg)
-
 ## Ethernet vs IP addresses
 Ethernet has **physical** addresses. You can not(ish) change the MAC address of your NICs, an Ethernet address **tells WHO** you are, but does not tell
 anything on WHERE you are.
@@ -246,6 +244,9 @@ ISP only has to deliver a public IPv4 address for Home router interface. DHCPv4 
 1. It send RA with this informations
 
 # IPv6 vs IPv4
+
+
+![image info](./ipv4_packet_header.jpg)
 
 IPv6 takes advantage of 64-bit CPUs.
 Simpler IPv6 Header.
