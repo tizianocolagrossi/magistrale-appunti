@@ -248,6 +248,8 @@ ISP only has to deliver a public IPv4 address for Home router interface. DHCPv4 
 
 ![image info](./ipv4_packet_header.jpg)
 
+![image info](./)
+
 IPv6 takes advantage of 64-bit CPUs.
 Simpler IPv6 Header.
 Fixed 40 byte IPv6 header.
