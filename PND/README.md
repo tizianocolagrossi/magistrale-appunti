@@ -1,5 +1,7 @@
 # PND's notes 2020
 
+![image info](./ipv4_packet_header.jpg)
+
 ## Ethernet vs IP addresses
 Ethernet has **physical** addresses. You can not(ish) change the MAC address of your NICs, an Ethernet address **tells WHO** you are, but does not tell
 anything on WHERE you are.
