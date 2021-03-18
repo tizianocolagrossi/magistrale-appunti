@@ -353,3 +353,102 @@ Enabling long mode in x86_64, after we set up the proper data strictures we can 
 ### GRUB & UEFI
 
 The stage 1 bootloader (MBR) leaves the control to stage 2 bootloader which has the role of starting the kernel.
+
+- In Linux Distributions we usually have GRUB (formerly LILO), it uses /boot/grub/grub.conf for loading the startup entries
+- In Windows NT is ntldr which uses boot.ini as configuration file
+
+The kernel image is loaded in RAM by using BIOS I/O services
+- In Linux Distributions the kernel is located in **/boot/vmlinuz-\<version>**
+- In Windows NT the kernel is located at **C:\Windows\System32\ntoskrnl.exe**
+
+#### UEFI
+
+The Unified Extensible Firmware Interface is a set of specifications of software interfaces between an operating system and the platform firmware. 
+
+**Uefi features**
+- Ability to use large disks partitions (over 2 TB) with a GUID Partition Table (GPT)
+- Flexible pre-OS environment, including network capability, GUI, multi language
+- 32-bit (for example IA-32, ARM32) or 64-bit (for example x64, AArch64) pre-OS environment
+- C language programming
+- Modular design
+- Backward and forward compatibility
+
+The UEFI boot manager takes control right after powering on the machine. It looks at the boot configuration, loads the firmware settings from the nvRAM and then uses startup files located in a specific FAT32 partition that must be created ad hoc (ESP - EFI System Partition). The partition has a folder for every boot entry (OS) and a .efi files that follows a standard path name:
+- **/efi/boot/boot_x64.efi**
+- **/efi/boot/bootaa64.efi**
+
+```c
+
+#include <efi.h>
+#include <efilib.h>
+
+EFI_STATUS
+EFIAPI
+efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
+{
+    InitializeLib(ImageHandle, SystemTable);
+    Print(L"Hello, world!\n");
+
+    return EFI_SUCCESS;
+}
+
+
+```
+
+#### GUID Partition Table (GPT)
+
+The GUID Partition Table is a partition table standard defined within UEFI. GPT makes use of GUIDs (Globally Unique Identifiers) for identifying partitions.
+
+![](/AOSV/img/gpt.PNG)
+
+**A certain kind of malware can take control of the system before the OS starts (e.g. MBR Rootkits).**
+
+These Rootkits can hijack the IDT for I/O operations in order to execute their own wrapper. Once the kernel is loaded, the rootkit notices that and patches the binary code while loading it into RAM.
+
+UEFI overcomes this issue by allowing only signed executables by using 3 kinds of keys:
+- Platform Keys (PK): tell who owns and controls the hardware platform
+- Key-Exchange Keys (KEK): shows who is allowed to update the hardware platform
+- Signature Database Keys (DB): show who is allowed to boot the platform in secure mode
+
+
+
+## Multi-core support
+
+Who shall execute the startup code? For legacy reasons, startup code is always sequential and it is executed by a single core (the master). For this reason, upon startup only one core is active and the others are in idle state. We need a way to “wake” all of the other cores.
+
+##### Interrupts on multicore architectures
+
+The **Advanced Programmable Interrupt Controller (APIC)** is an **interrupt controller**. Every processor has a Local-APIC which is used for sending inter-processor interrupts requests (IPIs). LAPICs are connected through a logical bus called APIC Bus and interrupts are of two types:
+- LINT 0: normal interrupts
+- LINT 1: non-maskable interrupts
+
+The I/O APIC contains a redirection table which is used to route the interrupts it receives from peripheral buses to one or moder LAPICs.
+
+![](/AOSV/img/lapic.PNG)
+
+The **Interrupt Command Register (ICR)** is used for initiating an IPI. In that register is specified the kind of the interrupt and the target core.
+
+![](/AOSV/img/icr.PNG)
+
+##### INIT-SIPI-SIPI Sequence
+
+```assembly
+# address Local-APIC via register FS
+mov $sel_fs, %ax
+mov %ax, %fs
+
+# broadcast 'INIT' IPI to 'all-except-self'
+mov $0x000C4500, %eax ; 11 00 0 1 0 0 0 101 00000000
+mov %eax, %fs:(0xFEE00300)
+# wait until command is received
+.B0: btl $12, %fs:(0xFEE00300)
+jc .B0
+
+# broadcast 'Startup' IPI to 'all-except-self'
+# using vector 0x11 to specify entry-point
+# at real memory-address 0x00011000
+mov $0x000C4611, %eax ; 11 00 0 0 1 0 0 0 110 00010001
+mov %eax, %fs:(0xFEE00300)
+.B1: btl $12, %fs:(0xFEE00300)
+jc .B1
+```
