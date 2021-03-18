@@ -20,3 +20,21 @@ In questo tipo di rispondere diffuso, si presuppone il convincimento che quanto 
 
 Cosi facendo la **ragione automatizzante** degli algoritmi **si sostituisce alla ragione dialogica** che invece si solge liberandosi da ogni automatismo destinato a svuotare l'originalita del io e del tu.
 
+**Domanda: L'automatizzazione  riguarda  anche la   comparazione,   la selezione  e la scelta tra  uno scopo ed uno scopo  diverso?** Con questo interrogativo, si apre la questione sul nesso tra l'automatizzazione, intesa come insieme di operazioni realizzative di uno scopo voluto, e l'automatizzazione intesa anche  come selezione  produttiva,  al  di  là della libera volontà della singola persona, di uno scopo tra i molteplici possibili scopi.
+
+La risposta sembra essere no. In questa ultima direzione si incontrano una difficolta ed una contraddizione non superabili, perche la scelta di uno scopo non puo essere automatizzata, in quanto se potesse esserlo allora lo scopo sarebbe contenuto in un insieme di dati gia disponibili.
+
+**(Da qua non so che cazzo vuole dire!)**
+Qui si attiva una interpretazione creativa, che, al di là dei dati disponibili, avvia il rischio della libertà, l'avventura e l'entusiasmo formativi della creazione di senso,  insuperabilmente  connessa  alla  selezione  di  uno  scopo  ed inaccessibile a qualsiasi automatizzazione macchinale.
+**(a qua)**
+
+La socialita consiste nella relazione, tra un io e un tu differenti, formatrice di visioni del mondo distinte confrontate in un dialogo. L'automazione della individualita e della socialita nel selezionare gli scopi **presuppone l'automatizzazione del dialogo** e questa risulta essere una situazione non possibile.   
+
+L'integrale  automatizzazione  della  società, **comporterebbe l'inessenzialità  degli  esseri  umani**,  lasciando  prefigurare  un  mondo dove  le  "macchine  intelligenti"  continuano  a  funzionare,  nella  loro totale autonomia automatizzante, anche in una compiuta assenza degli esseri  umani,  in  un mondo  di  macchine  intelligenti  senza  persone dialoganti.
+
+L'opera  dello  storico  è  costantemente  impegnata  nel riaffermare che **la storia non è il darsi di un semplice mutamento**, come accade  nel  continuo  trasformarsi  delle cose,  della  vita  dei  vegetali  e degli animali. **La storia è l'opera esclusiva degli esseri umani, gli unici viventi  presi  dalla  vocazione  di  trasformare,  secondo  il  pensiero  e  la**
+**volonta**, non secondo la combinatoria algoritmicamente efficace di dati.
+
+"Non c’è scelta, quanto a grandezza, tra 3 e 4: 4 e più grande  di  3". Resta soltanto il prendere atto della quantita dei numeri, della grandezza ed adeguarvisi. La stessa situazione del doversi limitare a prenderne atto riguarda il rapporto di sproporzione tra le persone ed i dati della rete, padroneggiati da chi esercita su di essi il potere algoritmico, radicato  in  una  maggiore capacità-potenza economico-finanziaria. Anche questa capacita-potenza funzionale e servile verso il potere dei Dati, che si diffonde come il Potere dell'Automatizzazione.
+
+Il centro diventa l'automatismo tecnico che esclude la vera possibilita di scelta, **usando gli esseri umani come luoghi di concretizzazione dei materiali lavorati dai processi di automatizzazione.** Ci si viene a trovare in uno stadio di evoluzione storica di eliminazione di tutto ciò che non è tecnico. **L'ingiustizia  viene  considerata  un  calcolo  mal  riuscito, una automatizzazione che non ha avuto successo funzionale.**
