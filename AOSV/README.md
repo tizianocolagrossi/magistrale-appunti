@@ -3,23 +3,23 @@
 
 ## Outline
 1. **BIOS/UEFI** Actual Hw setup
-   1. Pre-Boot and Real Mode
-   2. BIOS
-2. **Bootloader Stage 1** Executes the stage 2 bootloader (skipped for UEFI)
-   1. MBR
-   2. x86 Protected Mode
-   3. x86 Memory Addressing
-   4. x86 Privileges and Protection
-   5. Paging
-3. **Bootloader Stage 2** Loads and starts the kernel
-   1. GRUB/UEFI
-   2. Multi-core Support
-4. **Kernel** Takes control and initializes the machine  (machine-dependent operations)
-   1. Initial Life of the Linux Kernel
-   2. startup_32()
-   3. start_kernel()
-      1. A Primer on Memory Organization
-      2. Bootmem and Memblock Allocators
+   1. [Pre-Boot and Real Mode](#pre-boot-and-real-mode)
+   2. [BIOS](#bios)
+2. [**Bootloader Stage 1**](#stage-1-bootloader) Executes the stage 2 bootloader (skipped for UEFI)
+   1. [MBR](#mbr)
+   2. [x86 Protected Mode](#x86-protected-mode)
+   3. [x86 Memory Addressing](#x86-memory-addressing)
+   4. [x86 Privileges and Protection](#x86-privileges-and-protection)
+   5. [Paging](#paging)
+3. [**Bootloader Stage 2**](#stage-2-bootloader) Loads and starts the kernel
+   1. [GRUB/UEFI](#grub--uefi)
+   2. [Multi-core Support](#multi-core-support)
+4. [**Kernel**](#kernel-boot) Takes control and initializes the machine  (machine-dependent operations)
+   1. [Initial Life of the Linux Kernel](#initial-life-of-the-linux-kernel)
+   2. [startup_32()](#startup_32-secondary)
+   3. [start_kernel()](#start_kernel)
+      1. [A Primer on Memory Organization](#a-primer-on-memory-organization)
+      2. [Bootmem and Memblock Allocators](#bootmem-and-memblock-allocators)
       3. Paging Introduction
       4. Paging Initialization
       5. TLB
