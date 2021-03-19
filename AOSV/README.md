@@ -925,6 +925,146 @@ In the following example code, a check if a page is present is carried out:
 
 #### Paging Initialization
 
+As already introduced, **startup_32()** enables the Paging unit. While the kernel code is
+compiled with base address at **PAGE_OFFSET** + 1MB, the kernel is actually loaded at the
+beginning of physical memory.
+
+The initialization of kernel page tables begins at compile time,
+statically defining an array called swapper_pg_dir (at 0x00101000), that establishes page
+table entries for 2 pages of 4MB each, pg0 and pg1. These two pointers covers the addresses
+from 1MB to 9MB but they are placed at PAGE_OFFSET + 1MB.
+
+![](img/kernel_start_mem.png)
+
+The 8MB of addressable memory must be addressed both in real mode than in protected
+mode. For this reason, for that memory area the physical address must be equal to the virtual
+one.
+
+This strategy is realized by declaring statically 4 entries in the swapper_pg_dir:
+- Entry 0 and 0x300 (768) point to pg0
+- Entry 1 and 0x301 (769) point to pg1  
+
+These entries have set bits P,R/W,U/S and cleared A,D,PCD,PWD and Page Size.
+
+![](img/bootstrapping.png)
+
+The Provisional Page Table with only two pages is set with the following assembly
+instructions
+
+```c
+
+movl $swapper_pg_dir-0xc0000000,%eax
+movl %eax,%cr3 /* set the page table pointer.. */
+movl %cr0,%eax
+orl $0x80000000,%eax
+movl %eax,%cr0 /* ..and set paging (PG) bit */
+
+```
+
+**The rest of kernel page tables are initialized by paging_init() called by setup_arch().**
+
+The initialization of kernel page tables starts with function paging_init() that initializes the
+necessary pages for addressing ZONE_DMA and ZONE_NORMAL from PAGE_OFFSET.
+
+```c
+for (; i < PTRS_PER_PGD; pgd++, i++) {
+    vaddr = i*PGDIR_SIZE; /* i is set to map from 3 GB */
+    if (end && (vaddr >= end)) break;
+    pmd = (pmd_t *) pgd;/* pgd initialized to (swapper_pg_dir+i) */
+    .........
+   for (j = 0; j < PTRS_PER_PMD; pmd++, j++) {
+      .........
+      pte_base = pte = (pte_t *) alloc_bootmem_low_pages(PAGE_SIZE);
+      for (k = 0; k < PTRS_PER_PTE; pte++, k++) {
+         vaddr = i*PGDIR_SIZE + j*PMD_SIZE + k*PAGE_SIZE;
+         if (end && (vaddr >= end)) break;
+         .........
+         *pte = mk_pte_phys(__pa(vaddr), PAGE_KERNEL);
+      }
+      set_pmd(pmd, __pmd(_KERNPG_TABLE + __pa(pte_base)));
+      .........
+   }
+}
+```
+
+The starting address vaddr is set
+to start from 3GB because we are
+mapping the virtual addresses of
+kernel pages.
+
+**The kernel prefers to use 4MB
+pages if the CPU support them,
+this for reducing the TLB miss rate
+and speeding up the address
+translation.**
+
+
+After pagetable_init() execution, all the ZONE_NORMAL and ZONE_DMA is directly mapped
+in the kernel.
+
+**Memory is not allocated, is just mapped. Memory is allocated only for the Page
+Tables.**
+
+##### **set_pmd() and __pa()/__va()**
+
+```c
+#define set_pmd(pmdptr, pmdval) (*(pmdptr) = pmdval)
+```
+param:
+- **pmdptr**, pointing to an entry of the PMD, of type pmd_t. The value to assign, of pmd_t type is computed by using the macro
+
+```c
+#define __pa(x)((unsigned long)(x)-PAGE_OFFSET)
+```
+
+Linux sets up a direct mapping from the physical address 0 to the virtual address **PAGE_OFFSET**
+at 3GB on x86. The opposite can be done using the **__va(x)** macro.
+
+##### **mk_pte_sys()**
+
+The function **creates a page table entry** given the **physical address** and the **protection metadata**.
+
+```c
+#define mk_pte_phys(physpage, pgprot)	__mk_pte((physpage) >> PAGE_SHIFT, pgprot)
+```
+
+parameters:
+- **frame physical address** physpage, of type unsigned long
+- bit string pgprot for a PTE, of type **pgprot_t**
+
+The macro **builds a complete PTE entry**, which includes the physical address of the target
+frame. The return type is pte_t and it can be then assigned to one PTE entry.
+
+##### **Loading the page table**
+
+```c
+void __init paging_init(void)
+{
+	pagetable_init();
+
+	load_cr3(swapper_pg_dir);	
+
+#if CONFIG_X86_PAE
+
+	/*
+	 * We will bail out later - printk doesn't work right now so
+	 * the user would just see a hanging kernel.
+	 */
+
+	if (cpu_has_pae)
+		set_in_cr4(X86_CR4_PAE);
+#endif
+
+	__flush_tlb_all();
+
+#ifdef CONFIG_HIGHMEM
+	kmap_init();
+#endif
+	zone_sizes_init();
+}
+```
+
+
 #### TLB
 
 #### Final Operations and Recap
