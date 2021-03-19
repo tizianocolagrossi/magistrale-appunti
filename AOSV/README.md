@@ -20,10 +20,10 @@
    3. [start_kernel()](#start_kernel)
       1. [A Primer on Memory Organization](#a-primer-on-memory-organization)
       2. [Bootmem and Memblock Allocators](#bootmem-and-memblock-allocators)
-      3. Paging Introduction
-      4. Paging Initialization
-      5. TLB
-      6. Final operations and recap
+      3. [Paging Introduction](#paging-introduction)
+      4. [Paging Initialization](#paging-initialization)
+      5. [TLB](#tlb)
+      6. [Final operations and recap](#final-operations-and-recap)
 5. **Init (or systemd)** First process: basic environment initialization
 6. **Runlevels/Targets** Initializes the user environment
 
@@ -323,7 +323,7 @@ Every active process must have a Page Directory, but there’s no need to alloca
 
 ![](/AOSV/img/paging_path.PNG) 
 
-#### **TlB**
+#### **TLB paging**
 
 ![](/AOSV/img/tlb.PNG) 
 
@@ -876,4 +876,56 @@ memory to the buddy page allocator.
 In recent versions of the kernel (5+), the bootmem allocator has been removed in favour of the
 memblock allocator on almost all architectures. See this patch https://lwn.net/Articles/764807/
 
+#### Paging Introduction
+
+Prior to version 2.6.11 the Linux paging model consisted of 3 indirection levels, next versions
+introduced another level of indirections for a total of 4.
+
+For splitting the linear address there are three kinds of macros that can be used:
+- **SHIFT** macros specify the length in bits mapped to each PT level
+- **MASK** macros AND’d with an address mask out all the upper bits and they are often used for understanding if an address is aligned to a given level within the page table
+- **SIZE** macros reveal how many bytes are addressed by each entry at each level
+
+![](img/splitting_addr_paging.png)
+
+##### **Configuring the PT**
+
+Those macros are declared in the following source files:
+- [arch/x86/include/asm/pgtable-2level_types.h](https://elixir.bootlin.com/linux/v5.11.2/source/arch/x86/include/asm/pgtable-2level_types.h)
+- [arch/x86/include/asm/pgtable-3level_types.h](https://elixir.bootlin.com/linux/v5.11.2/source/arch/x86/include/asm/pgtable-3level_types.h)
+- [arch/x86/include/asm/pgtable_64_types.h](https://elixir.bootlin.com/linux/v5.11.2/source/arch/x86/include/asm/pgtable_64_types.h)
+
+
+As already introduced earlier, swapper_pg_dir keeps the virtual memory address of the PGD
+(PDE) portion of the kernel page table. The data structure is initialized at compile time,
+depending on the memory layout defined for the kernel bootable image.
+
+Any entry in the PGD is accessed with displacement, but the main types for defining page
+table entries are explicitly defined, even if they are just unsigned integers:
+
+```c
+
+typedef struct { unsigned long pte_low; } pte_t;
+typedef struct { unsigned long pmd; } pmd_t;
+typedef struct { unsigned long pgd; } pgd_t;
+
+```
+
+This is done essentially for enforcing type protection and for supporting PAE (where additional
+4 bits are used for addressing more than 4GB of RAM).
+An additional structure is used for storing page protection bits: pgprot_t.
+
+Type casting macros are defined in asm/page.h which **takes the previous types and returns the
+relevant part of the struct**. They are **pte_val()**, **pmd_val()**, **pgd_val()** and **pgprot_val()**.
+For **reverse** type casting we have **__pte()**, **__pmd()**, **__pgd()**, **__pgprot()**.
+
+In the following example code, a check if a page is present is carried out:
+![](img/code_page_present.png)
+
+
+#### Paging Initialization
+
+#### TLB
+
+#### Final Operations and Recap
 
