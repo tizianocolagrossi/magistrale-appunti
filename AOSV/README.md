@@ -750,3 +750,17 @@ The **Page table is usually located** at the top beginning of **ZONE_NORMAL**. T
 
 #### Bootmem and Memblock Allocators
 
+##### Bootmem allocator
+
+Previously we concluded that the **memory map of the initial kernel image is known at compile time**. But it's impratical to initialize all of the core kernel memory structires at compile time. And so the Linux kernel have a link-time memory manager, embedded into the kernel
+image, called **bootmem allocator** (linux/bootmem.h). 
+
+This allocator **relies on bitmaps** (instead of linked list of free block) that tells if any 4KB page in the currently reachable memory is busy or free. 
+
+It also offers API (only at boot time) to get free buffers;
+
+The information used by the bootmem allocator is represented by **struct bootmem_data**. Is an array that hold up to MAX_NUMNODES such structures is statically allocated and then it is discarded when the system initialization completes. Each entry in this array corresponds to a
+node with memory. For UMA systems only entry 0 is used.
+
+###### **Initializing bootmem**
+
