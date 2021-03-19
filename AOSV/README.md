@@ -764,3 +764,96 @@ node with memory. For UMA systems only entry 0 is used.
 
 ###### **Initializing bootmem**
 
+The bootmem allocator is **initialized during early architecture specific setup**. Each architecture is required to supply a **setup_arch()** (called by start_kernel()) function which, among other tasks, is **responsible for acquiring the necessary parameters to initialise the boot memory allocator**. These parameters define limits of usable physical memory:
+
+- **min_low_pfn** - the lowest PFN that is available in the system
+- **max_low_pfn** - the highest PFN that may be addressed by low memory(ZONE_NORMAL)
+- **max_pfn** - the last PFN available to the system
+
+after tose limits are defined,the **init_bootmem()** (UMA case one node) or **init_bootmem_node()** (NUMA case) function should be called to initialize the bootmem allocator. 
+
+###### **Bootmem APIs**
+
+```c
+#include <linux/bootmem.h>
+void *alloc_bootmem(unsigned long size);
+```
+
+Allocate size number of bytes **from ZONE_NORMAL**. The allocation will be **aligned to the L1** hardware cache to get the maximum
+benefit from the hardware cache
+
+```c
+void *alloc_bootmem_low(unsigned long size);
+```
+Allocate size number of bytes **from ZONE_DMA**. The allocation will be **aligned to the L1** hardware cache
+
+```c
+void *alloc_bootmem_pages(unsigned long size);
+```
+Allocate size number of bytes **from ZONE_NORMAL** **aligned on a page size** so that full pages will be returned to the caller
+
+```c
+void *alloc_bootmem_low_pages(unsigned long size);
+```
+Allocate size number of bytes **from ZONE_NORMAL** **aligned on a page size** so that full pages will be returned to the caller
+
+```c
+void free_bootmem(unsigned long addr, unsigned long size);
+```
+
+**Bootmem API is only available for code linked in the kernel image.**
+
+##### **Memblock allocator**
+
+**Memblock** is a method of managing memory regions **during the early boot period** when the
+usual kernel memory allocators are not up and running. The memblock allocator, differently
+from the bootmem does **not use bitmaps** for keeping track of allocated regions. 
+
+Memblock views the **system memory as collections of contiguous regions**. There are several
+types of these collections:
+
+- **memory** describes the physical memory available to the kernel (may differ from the
+actual physical memory installed in the system), instance when the memory is
+restricted with mem= command line parameter
+- **reserved** describes the regions allocated
+- **physmem** **describes the actual physical memory available during boot** regardless of the
+possible restrictions and memory hot(un)plug; the **physmem type is only available on
+some architectures**.
+
+Each region represented by **struct** **memblock_region** that defines the region extents, its
+attributes and NUMA node id on NUMA systems.
+
+Every memory type is described by the struct memblock_type which contains an array of memory regions along with the allocator
+metadata.
+
+The **“memory”** and **“reserved”** types are **wrapped with struct memblock**. This structure
+is statically initialized at build time. The **region** arrays are **initially sized** to
+**INIT_MEMBLOCK_REGIONS** for **“memory”** and **INIT_MEMBLOCK_RESERVED_REGIONS** for
+**“reserved”**. The region array for **“physmem”** is initially sized to **INIT_PHYSMEM_REGIONS**.
+
+The **memblock_allow_resize()** enables automatic resizing of the region arrays during
+addition of new regions. This feature should be used with care so that memory allocated for
+the region array will not overlap with areas that should be reserved, for example initrd.
+
+###### **API**
+
+**After** the initialization of memory regions done by **setup_arch()** with functions memblock_add() or memblock_add_node() functions. We can use the following APIs:
+
+- **memblock_phys_alloc*()** - these functions return the physical address of the allocated memory
+  
+  ```c
+  memblock_phys_alloc_range(phys_addr_t size, phys_addr_t align, phys_addr_t start,
+phys_addr_t end);
+  memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t align, int nid);
+  memblock_phys_alloc(phys_addr_t size, phys_addr_t align);
+  ```
+  
+- **memblock_alloc*()** - these functions return the virtual address of the allocated memory:
+
+  ```c
+  memblock_alloc(phys_addr_t size, phys_addr_t align)
+  memblock_alloc_raw(phys_addr_t size, phys_addr_t align)
+  memblock_alloc_from(phys_addr_t size, phys_addr_t align, phys_addr_t min_addr)
+  memblock_alloc_low(phys_addr_t size, phys_addr_t align)
+  memblock_alloc_node(phys_addr_t size, phys_addr_t align, int nid)
+  ```
