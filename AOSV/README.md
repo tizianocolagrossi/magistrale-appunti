@@ -1064,8 +1064,173 @@ void __init paging_init(void)
 }
 ```
 
+##### **load_cr3()**
+
+```c
+#define load_cr3(pgdir) \
+	asm volatile("movl %0,%%cr3": :"r" (__pa(pgdir)));
+```
+
+The load cr3 instruction is directly mapped to the assembly code which loads the address of
+the PGD into CR3. **(v2.4)**
+
+Latest versions of the kernel uses the paravirtualization scheme to map all of the basic
+functions that for example regards the mmu, like writing CR3, creating PGD, PTE and so on.
+So in modern kernel you will find load_cr3 mapped to
+
+```c
+static inline void write_cr3(unsigned long x){
+	PVOP_VCALL1(mmu.write_cr3, x);
+}
+```
+
+This is the final virtual memory map of the kernel, it has nothing to do with the physical
+counterpart.
+
+![](img/final_mapped_kernel_virtual.png)
+
+As you can see the kernel may only address only 896MB because the last 128MB are reserved:
+- VMALLOC - virtual contiguous memory areas that are not contiguous in physical
+memory, especially for user processes.
+- persistent mappings - used for mapping highmem pages
+- fixmaps - virtual addresses customly mapped to selectable physical frames
+
 
 #### TLB
 
+The degree of automation in the management process of TLB entries depends on the
+hardware architecture. Kernel hooks exist for explicit management of TLB operations
+(mapped at compile time to nops in case of fully-automated TLB management)
+
+On **x86, automation is only partial**: **automatic TLB flushes** occur upon **updates of the CR3 register** (e.g. page table changes) but Changes inside the current page table are not
+automatically reflected into the TLB.
+
+##### TLB Relevant events
+
+**Scale classification**
+- **global**: dealing with **virtual addresses** accessible by **every CPU/core **in
+real-time-concurrency
+- **local**: dealing with **virtual addresses** accessible in **timesharing concurrency**
+
+**Typology classification**
+- Virtual to physical address remapping
+- Virtual address access rule modification (read only vs write access)
+
+The typical management is TLB implicit renewal via flush operations
+
+##### TLB Flush Costs
+
+**Direct costs**
+- the latency of the firmware level protocol for TLB entries invalidation (selective vs
+non-selective)
+- the latency for cross-CPU coordination in case of global TLB flushes
+
+
+**Indirect costs**
+- TLB renewal latency by the MMU firmware upon misses in the translation process of
+virtual to physical addresses and this cost depends on the amount of entries to be refilled
+- Tradeoff vs TLB API and software complexity inside the kernel (selective vs non-selective
+flush/renewal)
+
+
+##### Linux full TLB flush
+
+```c
+void flush_tlb_all(void){
+	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH);
+	on_each_cpu(do_flush_tlb_all, NULL, 1);
+}
+```
+
+This flushes the **entire TLB** on **all** processors running in the system (most expensive TLB flush operation). After it completes, **all modifications to the page tables are globally visible**. This is required after the kernel page tables, which are global in nature, have been modified.
+
+##### Linux partial TLB flush
+
+```c
+void flush_tlb_mm(struct mm_struct *mm)
+```
+This flushes all TLB entries related to a portion of the userspace memory context. On some
+architectures (e.g. MIPS), this is required for all cores (usually it is confined to the local
+processor).
+
+**This is called only after an operation affecting the entire address space:**
+- when cloning a process with a fork()
+- when, in general, there is an interaction with the Copy-On-Write protection
+
+
+```c
+void flush_tlb_page(struct vm_area_struct *vma, unsigned long a);
+```
+
+This API flushes a single page from the TLB. The two most common uses of it are to flush the
+TLB after a page has been faulted in or has been paged out.
+
+```c
+void flush_tlb_range(struct mm_struct *mm, unsigned long start,unsigned long end);
+```
+This flushes all entries within the requested user space range for the mm context. This is used
+after a region has been moved (mremap()) or when changing permissions (mprotect()). This
+API is provided for architectures that can remove ranges of TLB entries quicker than iterating
+with flush_tlb_page().
+
+
+
+```c
+void flush_tlb_pgtables(struct mm_struct *mm, unsigned long start,
+unsigned long end);
+```
+
+Used when the page tables are being torn down and free'd. Some platforms cache the lowest
+level of the page table, which needs to be flushed when the pages are being deleted (e.g.
+Sparc64). This is called when a region is being unmapped and the page directory entries are
+being reclaimed.
+2.
+
+```c
+void update_mmu_cache(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep);
+```
+Only called after a page fault completes. It tells that a new translation now exists at pte for
+the virtual address addr. Each architecture decides how this information should be used.
+
+
+
+
+
 #### Final Operations and Recap
+
+![](img/kernel_flow.png)
+
+The main operations carried out by **start_kernel()** (init/main.c) are:
+1. **setup_arch()** that initializes the architecture
+2. **build_all_zonelists()** - builds the memory zones
+3. **page_alloc_init() / mem_init()** - the steady state allocator (Buddy System) is initialized
+and the boot one removed
+4. **sched_init()** - initializes the scheduler
+5. **trap_init()** - the final IDT is built
+6. **time_init()** - the system time is initialized
+7. **kmem_cache_init()** - the slab allocator is initialized
+8. **arch_call_rest_init() / rest_init()** - prepares the environment, kernel_thread(**kernel_init**), **cpu_startup_entry()** -> **do_idle()** - starts the idle process
+
+##### End of the Kernel Boot
+
+```c
+void cpu_startup_entry(enum cpuhp_state state)
+{
+	arch_cpu_idle_prepare();
+	cpuhp_online_idle(state);
+	while (1)
+		do_idle();
+}
+```
+
+![](img/idle_process.png)
+
+The **idle loop** is the ending of the kernel booting process
+
+Since the very first long jump ljmp $0xf000,$0xe05b at the reset vector at F000:FFF0 which
+activated the BIOS, we have worked hard to setup a system which is spinning forever.
+
+**This is the end of the "romantic" Kernel boot procedure: we infinitely loop into a hlt instruction
+or ...**
+
 
