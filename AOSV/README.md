@@ -844,16 +844,23 @@ the region array will not overlap with areas that should be reserved, for exampl
   ```c
 
   memblock_phys_alloc_range(phys_addr_t size, phys_addr_t align, phys_addr_t start, phys_addr_t end);
+
   memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t align, int nid);
+
   memblock_phys_alloc(phys_addr_t size, phys_addr_t align);
   ```
   
 - **memblock_alloc*()** - these functions return the virtual address of the allocated memory:
 
   ```c
-  memblock_alloc(phys_addr_t size, phys_addr_t align)
-  memblock_alloc_raw(phys_addr_t size, phys_addr_t align)
-  memblock_alloc_from(phys_addr_t size, phys_addr_t align, phys_addr_t min_addr)
-  memblock_alloc_low(phys_addr_t size, phys_addr_t align)
-  memblock_alloc_node(phys_addr_t size, phys_addr_t align, int nid)
+  memblock_alloc(phys_addr_t size, phys_addr_t align);
+
+  memblock_alloc_raw(phys_addr_t size, phys_addr_t align);
+
+  memblock_alloc_from(phys_addr_t size, phys_addr_t align, phys_addr_t min_addr);
+
+  memblock_alloc_low(phys_addr_t size, phys_addr_t align);
+
+  memblock_alloc_node(phys_addr_t size, phys_addr_t align, int nid);
+  
   ```
