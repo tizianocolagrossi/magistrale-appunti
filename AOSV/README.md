@@ -684,3 +684,69 @@ The main data structures for memory management in the kernel are:
 - **Core Map**, that keeps the status information for any frame (or page) of the physical memory and the free memory frames for any NUMA node
 
 ### start_kernel()
+
+![](/AOSV/img/kernel_flow.PNG)
+
+**start_kernel() **executes on a single core (the master). All of the other cores keep waiting that the master has finished. 
+
+The start_kernel() function is declared as
+```c
+asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
+```
+
+- **asmlinkage** tells the compiler that the calling convention is such that parameters are passed on stack
+- **__visible** prevent Link-Time Optimization (since gcc 4.5)
+- **__init** tells the kernel that the function is only used at initialization phase so memory can be freed’ after
+- **__no_sanitize_address** prevent address sanitizing (since gcc 4.8)
+
+
+The main operation of this function are:
+1. **setup_arch()** that initializes the architecture
+2. **build_all_zonelists()** - builds the memory zones
+3. **page_alloc_init()** / **mem_init()** - the steady state allocator (Buddy System) is initialized and the boot one removed
+4. **sched_init()** - initializes the scheduler
+5. **trap_init()** - the final IDT is built
+6. **time_init()** - the system time is initialized
+7. **kmem_cache_init()** - the slab allocator is initialized
+8. **arch_call_rest_init()** / **rest_init()** - prepares the environment
+   1. kernel_thread(kernel_init) - starts the kernel thread for process 1 is created
+      1. kernel_init_freeable() -> prepare_namespace() -> initrd_load() - mounts the initramfs, a temporary filesystem used to start the init process
+      2. run_init_process() -> kernel_execve() - Execute /bin/init
+   2. cpu_startup_entry() -> do_idle() - starts the idle process
+   
+##### setup_arch()
+The main operations carried out by setup_arch() (/arch/x86/kernel/setup.c) are:
+1. **load_cr3()** - initializes kernel page tables
+2. **__flush_tlb_all()** - flush the TLB
+3. **init_bootmem()** - initializes the bootmem allocator (v < 5)
+4. **e820__memory_setup()** / **e820__reserve_resources()** - initializes the available memory (also for memblock allocator)
+5. **x86_init.paging.pagetable_init()** -> **native_pagetable_init()** -> **paging_init()** - initializes paging
+
+#### A Primer on Memory Organization
+
+##### NUMA
+
+Linux is avaiable for a great number of architecturs, and so a **machine independent** way for describing the memory is needed.
+
+Large scale machines memory may be arranged into banks. A memory bank can be assigned to each CPU, or a bank can be suitable for Direct Memory Access (DMA) near the devices.
+
+In linux each of this banks is called **node** and the *concept of addressing* the memory in nosed is called Non-Uniform Memory Access (**NUMA**) (with single node we have a UMA architecture). 
+
+Each node is represented by the **struct pg_data_t** and all nodes are kept in linked list
+
+![](/AOSV/img/numa.PNG)
+
+###### Zones
+
+Each node is divided in a number of blocks called zones. On x86 there are three kinds of zone:
+
+- **ZONE_DMA is directly mapped** by the kernel in the lower part of memory and it is destined to ISA (Industry Standard Architecture) devices, in x86 first 16 MB
+- **ZONE_NORMAL is directly mapped** by the kernel into the upper region of the linear address space, in x86 from 16MB to 896MB
+- **ZONE_HIGHMEM** is the remaining available memory and it is **not directly mapped** by the kernel, in x86 from 896MB to end of memory.
+
+The **Page table is usually located** at the top beginning of **ZONE_NORMAL**. This ZONE_NORMAL is fixed in size, addressing 16GiB can require 176MB of data structures!
+
+![](/AOSV/img/zones.png)
+
+#### Bootmem and Memblock Allocators
+
