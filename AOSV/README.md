@@ -12,9 +12,18 @@
    4. x86 Privileges and Protection
    5. Paging
 3. **Bootloader Stage 2** Loads and starts the kernel
-4. **Kernel** Takes control and initializes the machine (machine-dependent operations)
    1. GRUB/UEFI
    2. Multi-core Support
+4. **Kernel** Takes control and initializes the machine  (machine-dependent operations)
+   1. Initial Life of the Linux Kernel
+   2. startup_32()
+   3. start_kernel()
+      1. A Primer on Memory Organization
+      2. Bootmem and Memblock Allocators
+      3. Paging Introduction
+      4. Paging Initialization
+      5. TLB
+      6. Final operations and recap
 5. **Init (or systemd)** First process: basic environment initialization
 6. **Runlevels/Targets** Initializes the user environment
 
@@ -452,3 +461,226 @@ mov %eax, %fs:(0xFEE00300)
 .B1: btl $12, %fs:(0xFEE00300)
 jc .B1
 ```
+
+## Kernel Boot
+
+### Initial Life of the Linux Kernel
+
+The stage 2 of the Bootloader (or UEFI) loads in RAM the image of the kernel, but this image is really different from the one that we have at steady state. **We remind thet the CPU starts it in Real Mode** with 1Mb of addressable memory. So **where is the entry point?** and **when** the kernel **switch to Protected Mode?**
+
+![](/AOSV/img/real_protected_flow.PNG)
+
+The first istruction executed is a 2_byte jump to **start_of_setup** directly written in machine code.
+
+```assembly
+
+   .globl _start
+
+_start:
+         # Explicitly enter this as bytes, or the assembler
+		   # tries to generate a 3-byte jump here, which causes
+		   # everything else to push off to the wrong offset.
+		   .byte	0xeb		# short (2-byte) jump
+		   .byte	start_of_setup-1f
+
+```
+
+#### **start_of_setup()**
+
+The **start_of_setup()** routine is a little routine that makes some initial setup:
+- set up **stack**
+- zeroes the **.bss** section
+- jump to **main()** in /arch/x86/boot/main.c
+
+**in this portion of code the wernEr still run in real mode**, and the function implements part of the [Kernel Boot Protocol](http://lxr.linux.no/linux+v2.6.25.6/Documentation/i386/boot.txt). (for examle it loads the boot option in memory).
+
+#### **main()**
+
+The **main()** function prepare the machine to enter protected and then to the switch. And so it:
+
+- enable **A20** line
+- setup the IDT (Interrupt desc tab) and the GDT (Global desc tab)
+- setup memory, asks BIOS which is the available memory for creating a physical address map. As a general rule, the kernel is installed in RAM starting from the physical address 0x00100000, i.e. from the second megabyte. For kernel 2.6, a typical amount of required RAM is 3MB.
+
+In the end the function calls **go_to_protected_mode()** in arch/x86/boot/pm.c
+
+#### **go_to_protected_mode()**
+
+```c
+
+/*
+ * Actual invocation sequence
+ */
+void go_to_protected_mode(void)
+{
+	/* Hook before leaving real mode, also disables interrupts */
+	realmode_switch_hook();
+
+	/* Enable the A20 gate */
+	if (enable_a20()) {
+		puts("A20 gate not responding, unable to boot...\n");
+		die();
+	}
+
+	/* Reset coprocessor (IGNNE#) */
+	reset_coprocessor();
+
+	/* Mask all interrupts in the PIC */
+	mask_all_interrupts();
+
+	/* Actual transition to protected mode... */
+	setup_idt();
+	setup_gdt();
+	protected_mode_jump(boot_params.hdr.code32_start,
+			    (u32)&boot_params + (ds() << 4));
+}
+
+```
+
+##### Interrupt Descriptor Table
+In real mode the Interrupt Vector Table is always at address 0. The IDTR register is set up in the following way:
+
+```c
+
+/*
+ * Set up the IDT
+ */
+static void setup_idt(void)
+{
+	static const struct gdt_ptr null_idt = {0, 0};
+	asm volatile("lidtl %0" : : "m" (null_idt));
+}
+
+```
+
+##### Global Descriptor Table 
+
+```c
+
+static void setup_gdt(void)
+{
+	/* There are machines which are known to not boot with the GDT
+	   being 8-byte unaligned.  Intel recommends 16 byte alignment. */
+	static const u64 boot_gdt[] __attribute__((aligned(16))) = {
+		/* CS: code, read/execute, 4 GB, base 0 */
+		[GDT_ENTRY_BOOT_CS] = GDT_ENTRY(0xc09b, 0, 0xfffff),
+		/* DS: data, read/write, 4 GB, base 0 */
+		[GDT_ENTRY_BOOT_DS] = GDT_ENTRY(0xc093, 0, 0xfffff),
+		/* TSS: 32-bit tss, 104 bytes, base 4096 */
+		/* We only have a TSS here to keep Intel VT happy;
+		   we don't actually use it for anything. */
+		[GDT_ENTRY_BOOT_TSS] = GDT_ENTRY(0x0089, 4096, 103),
+	};
+	/* Xen HVM incorrectly stores a pointer to the gdt_ptr, instead
+	   of the gdt_ptr contents.  Thus, make it static so it will
+	   stay in memory, at least long enough that we switch to the
+	   proper kernel GDT. */
+	static struct gdt_ptr gdt;
+
+	gdt.len = sizeof(boot_gdt)-1;
+	gdt.ptr = (u32)&boot_gdt + (ds() << 4);
+
+	asm volatile("lgdtl %0" : : "m" (gdt));
+}
+
+```
+
+#### protected_mode_jump()
+
+After setting the initial IDT and GDT, the kernel jumps to protected mode via **protected_mode_jump()** in arch/x86/boot/pmjump.S. This routine:
+- sets PE in CR0
+- issues a ljmp to its very next instruction to load in CS the boot CS sector
+- sets up a data segment for flat 32-bit mode
+- sets up a temporary stack
+
+```c
+
+movl	%cr0, %edx
+	orb	$X86_CR0_PE, %dl	# Protected mode
+	movl	%edx, %cr0
+
+	# Transition to 32-bit mode
+	.byte	0x66, 0xea		# ljmpl opcode
+2:	.long	.Lin_pm32		# offset
+	.word	__BOOT_CS		# segment
+
+```
+
+#### startup_32() #primary
+
+**startup_32() #primary** jumps into startup_32() in arch/x86/boot/compressed/head_32.S and this routine does the following:
+
+- sets the segments to known values (__BOOT_DS)
+- loads a new stack
+- clears again the BSS section
+- determines the actual position in memory via a call/pop (image below)
+- calls extract_kernel() (previously named decompress_kernel())
+
+```c
+
+/*
+ * Calculate the delta between where we were compiled to run
+ * at and where we were actually loaded at.  This can only be done
+ * with a short local call on x86.  Nothing  else will tell us what
+ * address we are running at.  The reserved chunk of the real-mode
+ * data at 0x1e4 (defined as a scratch field) are used as the stack
+ * for this calculation. Only 4 bytes are needed.
+ */
+	leal	(BP_scratch+4)(%esi), %esp
+	call	1f
+1:	popl	%edx
+	addl	$_GLOBAL_OFFSET_TABLE_+(.-1b), %edx
+
+
+```
+
+#### KASLR (Kernel Address Space Layout Randomization)
+
+In order to prevent that an attacker patches the kernel memory image, at the boot time the kernel **randomly choses** where to decompress itself in memory replying on the most accurate source of entropy avaiable. However, since the kernel is mapped using 2Mb aligned pages, the number of valid slot is limited.
+
+*The current layout of the kernel's virtual address space only leaves **512M for the kernel code** and 1.5G for modules. Since there is no need for that much module space, his patches reduce that to 1G, leaving 1G for the kernel, thus 512 possible slots (as it needs to be 2M aligned). The number of slots may increase when the modules' location is added to KASLR.*
+
+### startup_32() #secondary
+After the decompression the true image of kernel can run, and this is done by a jump to startup_32() at arch/x86/kernel/head_32.S. **This routine sets up the environment for the first Linux process (process 0):**
+
+- initializes the segmentation registers with their final values
+- clears again the bss
+- builds the page table
+- enables paging
+- creates the final IDT
+- jumps to the architecture-dependent kernel entry point (i.e. start_kernel() at init/kernel.c
+
+#### Memory
+
+During the initialization the steady-state kernel must take control of the available physical memory. This because it will have to manage it with respect to the virtual address spaces of all processes, in particular it needs to be able to:
+- allocate and deallocate memory
+- swap
+
+For this reason, upon starting, the kernel must have an early organization setup out of the box. For this reason the kernel use a set of statically generated page tables.
+
+**On 32bit architecture, the process address space is divided in two parts:**
+- from 0x00000000 to 0xbfffffff (3GB) addressed when User or Kernel Mode
+- from 0xc0000000 to 0xffffffff (1GB) addressed when Kernel Mode
+
+What should be kept in mind is that addresses lower than 0xc0000000 (value often referred as PAGE_OFFSET) depend on the specific process, the others **are the same for every process** and
+**equal to the corresponding entries of the Master Kernel Page General Directory.**
+
+##### Provisional Kernel Page Tables
+
+A provisional **Page Global Directory (PGD)** is initialized statically during the kernel compilation, while the provisional **Page Tables** are initialized by **startup_32().**
+
+The Page **Global Directory (PGD)** is stored in the **swapper_page_dir** variable. Now suppose that all the kernel segments, the provisional page tables and the dynamic area fits 8MB of RAM. In the early paging, with pages of size 4MB we needed 2 entries in the Page Table.
+
+Now, the **objective of this phase** of paging is to **allow these 8MB of RAM to be easily addressed both in real mode and protected mode**. Therefore the kernel must create a mapping from both the linear address 0x00000000 through 0x007fffff and the linear addresses 0xc0000000 through 0xc07fffff into the physical 0x00000000 through 0x007fffff.
+
+##### Enabling Paging
+
+![](/AOSV/img/enable_paging.PNG)
+
+##### Kernel-Level MM Data Structures
+
+The main data structures for memory management in the kernel are:
+- **Kernel Page Tables**, that keeps the memory mapping for kernel level code and data, it will pointed by swapper_pg_dir
+- **Core Map**, that keeps the status information for any frame (or page) of the physical memory and the free memory frames for any NUMA node
+
+### start_kernel()
