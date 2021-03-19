@@ -862,5 +862,18 @@ the region array will not overlap with areas that should be reserved, for exampl
   memblock_alloc_low(phys_addr_t size, phys_addr_t align);
 
   memblock_alloc_node(phys_addr_t size, phys_addr_t align, int nid);
-  
+
   ```
+
+  **After boot**
+
+  As the system boot progresses, the architecture specific **mem_init()** function frees all the
+memory to the buddy page allocator.
+
+**Unless an architecture enables CONFIG_ARCH_KEEP_MEMBLOCK, the memblock data structures
+(except “physmem”) will be discarded after the system initialization completes.**
+
+In recent versions of the kernel (5+), the bootmem allocator has been removed in favour of the
+memblock allocator on almost all architectures. See this patch https://lwn.net/Articles/764807/
+
+
