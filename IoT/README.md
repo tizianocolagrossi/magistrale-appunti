@@ -126,3 +126,8 @@ General guidelines **Routing**:
 
 ###### second slide end
 
+# Device and standard-dependent optimizations
+
+
+###### thrd slide end
+
