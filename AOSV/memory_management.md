@@ -334,7 +334,7 @@ One method is the one of using the LIFO approach. During the **allocation**, one
 
 If a **page is not available in the cache**, then it will be **allocated** by using the **Buddy System**. Obviously, a large amount of free pages can exist in these caches, for this reason they are **cut out** by using a watermarking strategy.
 
-![](img/quick_alloc.png)
+![](img/quick_alloc.PNG)
 
 ###### **likely() and unlikely()**
 The **likely()** and **unlikely()** are used for the branch prediction mechanism of the CPU. **Branch prediction allows to optimize the CPU pipeline and increasing the performance of the CPU**. The likely instruction will tell the compiler that the if condition will likely hit and the CPU can prepare the pipeline for that jump. The converse is for unlikely. When an likely branch will not be hit then the entire CPU pipeline will be flushed. This will have an impact on performances but it will rarely happen.
@@ -359,9 +359,9 @@ When a new slab is created a number of objects are packed into it and initialize
 ###### aim #3 - Coloring
 If there is space left over after objects packed into a slab, the remaining space is used to color the slab. Coloring is used for having objects in different line of CPU caches which helps ensure that objects from the same slab cache will unlikely flush each other.
 
-![](img/caches1.png)
-![](img/caches2.png)
-![](img/caches3.png)
+![](img/caches1.PNG)
+![](img/caches2.PNG)
+![](img/caches3.PNG)
 
 ###### **APIS**
 Creates a new cache and adds it to the cache chain
@@ -460,7 +460,7 @@ Cache flushes automation can be partial (similar to TLB), therefore there are fu
 
 
 ### Cache flush APIs
-![](img/cache_flush_api.png)
+![](img/cache_flush_api.PNG)
 
 ## Large Allocations & vmalloc
 
@@ -468,7 +468,7 @@ It is preferable when dealing with large amounts of memory to use physically con
 
 Linux provides a mechanism through **vmalloc()** where non-contiguous physical memory can be used that is contiguous in virtual memory. If you remember the Linux virtual memory layout, the area is limited (128MB).
 
-![](img/division_kernel_addr_space.png)
+![](img/division_kernel_addr_space.PNG)
 
 On x86, due to the limited size of the VMALLOC area, that kind of memory allocation is used sparingly, only for swap information and for mounting external kernel modules.
 
