@@ -170,3 +170,142 @@ The Linux kernel prefers the second, for 3 good reasons:
 - **large chunks of physical memory** can be accessed with 4MB pages, **reducing TLB miss** and speeding up access times
 
 ## Buddy System
+The technique followed by the Linux kernel for solving external fragmentation is based on the well-known buddy system algorithm.
+
+The Buddy System keeps all the free pages grouped into 11 lists of blocks that contain groups of 1,2,4,8,16,32,64,128,256,512 and 1024 contiguous frames. 1024 page frames correspond to 4MB of memory.
+
+The data structures used by the algorithm are:
+- the **mem_map** array, that is the **core map** that we already discussed. Actually, each zone is concerned with a subset of the mem_map elements
+- an **array of eleven elements** of **free_area_t**, one for each group size. This array is stored in the **free_area** field of the zone descriptor and contains the linked list of free page blocks and a pointer to a bitmap (*map), in which each bit represents a **pair of buddies**. The bit is set to 0 when both buddies are full or free, and 1 when only one buddy is used.
+
+![](/AOSV/img/buddy.PNG)
+
+### Allocation
+Suppose that you want to allocate 256 contiguous page frames, the algorithm check if there is a free 256 block, if not it checks in the list of 512. If it exists it allocates 256 pages for satisfying the request and the other 256 are added into the list of free 256-page-frame blocks. If there is no free 512-page block the kernel looks for next larger block, 1024. If it exists, it allocates 256 of the 1024 page frames to satisfy the request, then inserts the first 512 of the remaining 768 into the list of free 512-page-frame blocks and the last 256 pages frames into the list of free 256-page-frame blocks.
+
+### Deallocation
+When freeing memory, the kernel attempts to merge a pair of buddy blocks of size b together into a single block of size 2b. Only if (i) they have the same size, (ii) they are contiguous, (iii) the physical address of the first block is multiple of 2 ⨉ b ⨉ 212.
+
+**During the allocation and deallocation interrupts must be disabled and this is node by using a particular kind of spinlock (we will see later in the course).**
+
+# High Memory
+On x86 the **kernel directly maps only ZONE_DMA** and **ZONE_NORMAL** for a **total of 896MB**, but obviously machines started to have more than 4GB of RAM. 
+
+Due to the fixed limit 3GB/1GB of the address space, the kernel cannot map directly more than 896MB, for this reason all the memory mapping that exceeds that size are temporarily and they refer to the High Memory concept.
+
+## PKMap
+The kernel virtual address spaces from address PKMAP_BASE to FIXADDR_START is reserved for a PKMap, namely a **Persistent Kernel Map** located near the end of the address space.
+
+There are about 32MB of page table space for mapping pages from high memory into the usable space.
+
+For mapping pages, a simple **PT of 1024 entries is stored at the beginning of the PKMap area** to allow the **temporary** (very short time) **mapping** of up to 1024 pages from high mem with functions **kmap()** and **kunmap()**. That page is initialized at the end of pagetable_init() function.
+
+The current state of page table entries is managed by a simple array called pkmap_count with LAST_KMAP (= PTRS_PER_PTE = 1024 or 512 when PAE is enabled) entries.
+
+### APIs
+- **kmap()** it **permits a short-duration mapping** of a **single page**, requires global synchronization
+- **kmap_atomic()** **permits a very short duration mapping** of a **single page** but it is **restricted to the CPU** that issued it and the **task must be on that CPU until the termination**, usage is discouraged
+- **kunmap()** **decrements the associated page counter**. When the counter is 1 the mapping is not needed anymore but the CPU has still cached that mapping, for this reason **TLB must be flushed manually**
+- **kunmap_atomic()** unmaps a page that has been mapped atomically
+
+# Memory Finalization
+## Reclaiming Boot Memory
+The finalization of memory management is done within the function **mem_init()** which is in charge of **destroying the bootmem allocator**, calculating the dimensions of low and high memory and printing out an informational message to the user. On x86 the principle function called by mem_init is **free_pages_init()**.
+
+The free_all_bootmem is called by each NUMA node and in the end it calls free_all_bootmem_core which does the following.
+
+For each unallocated pages known to the allocator of that node
+- clears the **PG_RESERVED** bit
+- set usage **count** to 1
+- call **__free_pages()** so that the buddy allocator can build its free lists
+
+**Free all pages used for the bitmap and give them to the buddy allocator.**
+
+When free_all_bootmem returns all the pages in **ZONE_NORMAL** have been given to the buddy allocator, the rest of **free_pages_init** initializes the high memory.
+
+At this point, the boot memory allocator is no longer required, and the buddy allocator is the main physical page allocator for the system. Note also that not only is the data for the boot allocator removed, but also all code that was used to bootstrap the system. **free_all_bootmem()** is marked by **__init()**.
+
+# Steady-state memory allocation
+
+In general, in a kernel, we can recognize two kinds of memory allocation contexts at steady-state.
+- **Process Context** allocation that has been requested through a system call, typical of userspace processes. Within this context, if the request cannot be served, the process is put on wait by following also a **priority-based approach**
+- **Interrupt Context** that refers to an allocation due to a interrupt handler. Within this context, if the request cannot be served there’s no waiting time and the approach is **not priority based**
+
+
+Within the kernel, the following functions for memory allocation can be used, they are declared at <linux/malloc.h>.
+Memory allocation requests created with these functions are managed by the Buddy Allocator.
+
+```c
+// Allocate a single page and return struct address
+struct page * alloc_page(unsigned int gfp_mask)
+
+// Allocate 2^order number of pages and return a struct page
+struct page * alloc_pages(unsigned int gfp_mask, unsigned int order)
+
+// Allocates a dingle page, zeros it and returns a virtuall address
+unsigned long get_free_page(unsigned int gfp_mask)
+
+// Allocates a single page and returns a virtuall address
+unsigned long __get_free_page(unsigned int gfp_mask)
+
+// Allocate 2^order number of pages and return a virtual address
+unsigned long  __get_free_pages(unsigned int gfp_mask, unsigned int order)
+
+// Allocate 2^order number of pages from the DMA zone and return a struct page
+struct page *  __get_dma_pages(unsigned int gfp_mask, unsigned int order)
+
+// frees an order number of pages from the given page
+void __free_pages(struct page *page , unsigned int order)
+
+// frees a single page 
+void __free_page(struct page *page)
+
+// frees a page from he given virtual address
+void __free_pages(void *addr)
+
+```
+
+**Remember that within the Buddy Allocator, the caller needs to remember the allocated size and the address. If you pass a wrong void* addr to free_page() you could corrupt the kernel.**
+
+![](/AOSV/img/page_flag1.PNG)
+![](/AOSV/img/page_flag2.PNG)
+![](/AOSV/img/page_flag3.PNG)
+
+## NUMA Policies
+When we have a **NUMA architecture**, the function **__get_free_pages()** calls **alloc_page_node()** specifying a NUMA policy. A **NUMA policy** determines from which node the memory will be allocated. This support was added in kernel 2.6.
+
+###### **set_mempolicy()**
+The function set_mempolicy sets the NUMA memory policy of the calling process
+```c
+#include <numaif.h>
+int set_mempolicy(int mode, unsigned long *nodemask, unsigned long maxnode)
+```
+
+Where mode can be:
+- **MPOL_DEFAULT** allocate on node of the CPU that issued the command
+- **MPOL_BIND** strictly allocate to the specified nodemask
+- **MPOL_INTERLEAVE** interleaves allocation to the specified nodemask nodes
+- **MPOL_PREFERRED** sets the preferred node(s) for the allocation as nodemask
+
+nodemask points to a bit mask of node IDs that contains up to maxnode bits
+
+###### **mbind()**
+The function mbind() assigns a NUMA policy to the specified set of memory addresses
+```c
+#include <numaif.h>
+long mbind(void                  *addr    , unsigned long   len    , int        mode,
+           const unsigned long   *nodemask, unsigned long   maxnode, unsigned   flags)
+```
+
+###### **move_pages()**
+This function moves the specified pages of the process pid to the memory nodes specified by
+nodes. The result of the move is reflected in status. The flags parameter indicates constraints
+on the pages to be moved.
+```c
+#include <numaif.h>
+long move_pages(int         pid  , unsigned long   count , void   **pages, 
+                const int  *nodes, int            *status, int      flags)
+```
+
+## Fast Allocations & Quicklists
+
