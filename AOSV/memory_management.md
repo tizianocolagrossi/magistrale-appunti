@@ -308,4 +308,191 @@ long move_pages(int         pid  , unsigned long   count , void   **pages,
 ```
 
 ## Fast Allocations & Quicklists
+In general, within the kernel, fixed size data structures are very often allocated and released. The Buddy System that we presented earlier clearly does not scale:
+- this is a classic case of frequent logical contention
+- the buddy system on each NUMA node is protected by a (spin)lock
+- internal fragmentation can rise too much
 
+Allocation and release of page tables requires a frequent allocation and deallocation of the same fixed size structures. The functions that allows us to create page tables like
+- pgd_alloc(), pmd_alloc() and pte_alloc()
+- pgd_free(), pmd_free() and pte_free()
+
+
+They relies on Kernel-level **fast allocators**.
+
+There are two fast allocators in the kernel:
+- **quicklists**, used only for paging
+- **SLAB Allocator**, used for other buffers. There are three implementations of the SLAB allocator:
+  - the SLAB: implemented around 1994
+  - the SLUB: the unqueued SLAB allocator, default since 2.6.23
+  - the SLOB: Simple List Of Blocks, if the SLAB is not enabled this is the fallback
+
+### Quicklists
+Quicklists are used for **implementing** the **page table cache**. For the three functions **pgd/pmd/pte_alloc()** we have three quicklists pgd/pmd/pte_quicklist **per CPU**. Each architecture implements its own version of quicklists but the principle is the same.
+
+One method is the one of using the LIFO approach. During the **allocation**, one **page is popped off** the list, and during **free**, **one is placed as the new head** of the list. This is done while keeping a count of how many pages are used in the cache.
+
+If a **page is not available in the cache**, then it will be **allocated** by using the **Buddy System**. Obviously, a large amount of free pages can exist in these caches, for this reason they are **cut out** by using a watermarking strategy.
+
+![](img/quick_alloc.png)
+
+###### **likely() and unlikely()**
+The **likely()** and **unlikely()** are used for the branch prediction mechanism of the CPU. **Branch prediction allows to optimize the CPU pipeline and increasing the performance of the CPU**. The likely instruction will tell the compiler that the if condition will likely hit and the CPU can prepare the pipeline for that jump. The converse is for unlikely. When an likely branch will not be hit then the entire CPU pipeline will be flushed. This will have an impact on performances but it will rarely happen.
+ 
+## SLAB Allocator
+The general idea behind the SLAB allocator is to have caches of commonly used objects kept in a initialized state available for use by the kernel.
+
+The SLAB allocator consists of a variable number of caches, linked together by a doubly linked list called cache chain. Every cache manages objects of particular kind (e.g. mm_struct). Each cache maintains a block of contiguous pages in memory called slabs.
+
+The purpose of the SLAB allocator is threefold:
+1. allocating small blocks of memory to help **eliminate internal fragmentation**caused by the Buddy System
+2.** caching commonly** used **blocks** so that the system does not wait time allocating, initializing and destroying object  
+3. **better usage** of **L1** and **L2** caches by aligning objects
+
+###### aim #1 
+Two sets of caches are maintained for allocating objects from 2^5 (32KB) to 2^17 (131’072KB) bytes. One for DMA and one for standard allocation. These caches are called **size-N** (or **size-N(DMA)**), where N is the size of the allocation and they are allocated with the function
+**kmalloc()**.
+
+###### aim #2
+When a new slab is created a number of objects are packed into it and initialized using a constructor if available. When an object is free’d, it is left in a initialized state so the next allocation will be faster
+
+###### aim #3 - Coloring
+If there is space left over after objects packed into a slab, the remaining space is used to color the slab. Coloring is used for having objects in different line of CPU caches which helps ensure that objects from the same slab cache will unlikely flush each other.
+
+![](img/caches1.png)
+![](img/caches2.png)
+![](img/caches3.png)
+
+###### **APIS**
+Creates a new cache and adds it to the cache chain
+```c
+kmem_cache_t * kmem_cache_create(const char *name, size_t size, size_t offset, unsigned long flags, 
+                                 void (*ctor)(void*, kmem_cache_t *, unsigned long), 
+                                 void (*dtor)(void*, kmem_cache_t *, unsigned long))
+```
+
+Allocates a single object from the cache and return it to the caller
+```c
+void * kmem_cache_alloc(kmem_cache_t *cachep, int flags)
+```
+
+Frees an object and return it to the cache
+```c
+void * kmem_cache_free(kmem_cache_t *cachep, void *objp)
+```
+
+Allocate a block of memry from one of the sizes cache
+```c
+void * kmalloc(size_t size, int flags)
+```
+
+Free a block of memory allocated with kmalloc
+```c
+void * kfree(const void *objp)
+```
+
+Destroys all objects in alla slabs and frees up all associatd memory before removing the cache from the chain
+```c
+int kmem_cache_destroy(kmem_cache_t * cachep)
+```
+
+
+## CPU Caches
+Caches lines are generally small (32/64 bits), the macro L1_CACHE_BYTES sets the number of bytes for the L1 cache.
+
+Independently of the mapping scheme, close addresses fall in the same line but cache-aligned addresses fall in different lines. We need to cope with cache performance issues at the level of kernel programming (typically not of explicit concern for user level programming).
+
+Performance issues
+- **common members access**: most-used members in a data structure should be placed at its head to maximize cache hits. This should happen provided that the slab- allocation (kmalloc()) system gives cache-line aligned addresses for dynamically allocated memory chunks
+- **loosely related fields** should be placed sufficiently distant in the data structure so as to avoid performance penalties due to false cache sharing. The Kernel also need to face with cache aliasing.
+
+### Cache False Sharing
+This example explains the Cache False Sharing problem.
+
+```c
+struct foo {
+    int x;
+    int y;
+};
+
+static struct foo f;
+
+/* The two following functions are running concurrently: */
+
+int sum_a(void){
+    int s = 0;
+    for (int i = 0; i < 1000000; ++i)
+        s += f.x;
+    return s;
+}
+void sum_b(void){
+    for (int i = 0; i < 1000000; ++i)
+        ++f.y;
+}
+```
+
+Suppose that the sum_a and sum_b function
+run concurrently. sum_b modifies only the y
+value but doing this invalidates the cache,
+sum_a is therefore obliged to reload from
+memory the entire structure foo even if f.x
+will be always the same.
+
+For this reason, loosely related fields should be
+located in the struct as much distant as
+possible, in order to fall in different cache lines
+and prevent the Cache False Sharing issue.
+
+### Cache Aliasing
+Cache aliasing occurs when multiple mappings to a physical page of memory have conflicting caching states, such as cached and uncached. Due to these conflicting states, data in that physical page may become corrupted when the processor's cache is flushed. If that page is being used for DMA by a driver, this can lead to hardware stability problems and system lockups.
+
+In general we have a Cache Aliasing issue when the same physical address is mapped with different virtual addresses. Therefore, if your cache is indexed by the virtual address you will load the same physical addresses multiple times. This problem is typical in ARM architectures
+
+### Cache Flush Operation
+
+Cache flushes automation can be partial (similar to TLB), therefore there are function declared in the kernel which deal with cache flushing operations and they are implemented according to the specific architecture. In some cases, the flush operation uses the physical address of the cached data to support flushing (“strict caching systems”, e.g. HyperSparc). Hence, TLB flushes should always be placed after the corresponding data cache flush calls.
+
+| Flushing Full MM  | Flushing Range   | Flushing Page   |
+|--------------|--------------------|-----------------|
+| flush_cache_mm()       | flush_cache_range()     | flush_cache_page() |
+| Change all page tables | Change page table range | Change single PTE  |
+| flush_tlb_mm()         | flush_tlb_range()       | flush_tlb_page()   |
+
+
+### Cache flush APIs
+![](img/cache_flush_api.png)
+
+## Large Allocations & vmalloc
+
+It is preferable when dealing with large amounts of memory to use physically contiguous pages in memory both for cache-related and memory-access-latency reasons. Unfortunately, due to external fragmentation problems with the buddy allocator, this is not always possible. 
+
+Linux provides a mechanism through **vmalloc()** where non-contiguous physical memory can be used that is contiguous in virtual memory. If you remember the Linux virtual memory layout, the area is limited (128MB).
+
+![](img/division_kernel_addr_space.png)
+
+On x86, due to the limited size of the VMALLOC area, that kind of memory allocation is used sparingly, only for swap information and for mounting external kernel modules.
+
+![](img/api_non_cont_mem.png)
+
+### kmalloc() vs vmalloc()
+Allocation size:
+- **Bounded** for **kmalloc** (cache aligned): the boundary depends on the architecture and theLinux version. Current implementations handle up to 8KB
+- **64/128 MB** for **vmalloc**
+
+Physical contiguousness
+- Yes for kmalloc
+- No for vmalloc
+
+Effects on TLB
+- None for kmalloc
+- Global for vmalloc (transparent to vmalloc users)
+
+# User & Kernel Space
+## Kernel Page Table Isolation (KPTI)
+It is a protection mechanism introduced in Kernel 4.15 for facing the Meltdown vulnerability. The idea is that the Kernel address space when in user mode is reduced and contains only a small subset of pages, essential for calling the kernel facilities from user space (system calls).
+
+![](img/kpti.png)
+
+## User/Kernel Level Data Movement
+
+![](img/api_access_process_addr_space.png)
