@@ -3,19 +3,19 @@
 # Memory Management
 
 ## Outline
-1. **Memory Representation**
-2. **The Buddy System**
-3. **High Memory**
-4. **Memory Finalization**
-5. **Steady-state memory allocation**
-   1. Fast Allocations & Quicklists
-   2. SLAB Allocator
-   3. CPU Caches
-   4. Large Allocations & vmalloc
-6. **User & Kernel Space**
+1. [**Memory Representation**](#memory-representation)
+2. [**The Buddy System**](#the-buddy-system)
+3. [**High Memory**](#high-memory)
+4. [**Memory Finalization**](#memory-finalization)
+5. [**Steady-state memory allocation**](#steady-state-memory-allocation)
+   1. [Fast Allocations & Quicklists](#fast-allocations--quicklists)
+   2. [SLAB Allocator](#slab-allocator)
+   3. [CPU Caches](#cpu-caches)
+   4. [Large Allocations & vmalloc](#large-allocations--vmalloc)
+6. [**User & Kernel Space**](#user--kernel-space)
 
 
-# Memory Management
+# Memory Representation
 
 During the boot, the Kernel relies on a **temporary** memory manager. (During the boot, the Kernel relies on a temporary memory manager. The rationale is that there are not many memory requests during the boot)
 
