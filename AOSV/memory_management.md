@@ -472,7 +472,7 @@ Linux provides a mechanism through **vmalloc()** where non-contiguous physical m
 
 On x86, due to the limited size of the VMALLOC area, that kind of memory allocation is used sparingly, only for swap information and for mounting external kernel modules.
 
-![](img/api_non_cont_mem.png)
+![](img/api_non_cont_mem.PNG)
 
 ### kmalloc() vs vmalloc()
 Allocation size:
@@ -491,8 +491,8 @@ Effects on TLB
 ## Kernel Page Table Isolation (KPTI)
 It is a protection mechanism introduced in Kernel 4.15 for facing the Meltdown vulnerability. The idea is that the Kernel address space when in user mode is reduced and contains only a small subset of pages, essential for calling the kernel facilities from user space (system calls).
 
-![](img/kpti.png)
+![](img/kpti.PNG)
 
 ## User/Kernel Level Data Movement
 
-![](img/api_access_process_addr_space.png)
+![](img/api_access_process_addr_space.PNG)
