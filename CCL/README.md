@@ -44,3 +44,12 @@ Il centro diventa l'automatismo tecnico che esclude la vera possibilita di scelt
 
 
 # Il diritto davanti all'algoritmo
+
+Attraverso **internet** si impone un **nuovo modello economico**. La grande massa di operazioni che circola nella rete è formata soprattutto dai dati: l'individuo non solo li produce, ma esso stesso è un dato, prodotto per essere consumato nella vendita dei pacchetti *informazionali*.
+
+Emergono relazioni (di **dati**) **equivalenti** a **denaro** contante che fondono la dimensione economica con quella informatica. 
+
+Ogni atto nell'economia dell informazione retale (della rete), compreso l'accesso, è presentato come atto personale che nella navigazione l'utente diventa destinatario di una serie di messaggi (non dempre richiesti) orientati ad un **profilo** specifico. Questo profilo viene **usato** per **generare profitti** e e capace di occultare l'intento di orientare il consenso ed il pensiero, **facendoli convergere in un unica direzione**.
+
+Internet si estende, supera i soggetti, dissolve i loro desideri in una pluralita di consumi, **invade l'intimità**, continua ad esistere nella rappresentazione di un'umanità addolcita, *unica* padroneggiata dagli influencers. La **persona** è **evoluta** sempre piu ad una **dimensione pubblica**, rappresentata dall'immagine che **coincide, come mai era mai avvenuto finora, con quella privata** (in poche parole non c'è piu privacy).
+
