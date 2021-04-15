@@ -3,16 +3,8 @@
 # Memory Management
 
 ## Outline
-1. [**Memory Representation**](#memory-representation)
-2. [**The Buddy System**](#the-buddy-system)
-3. [**High Memory**](#high-memory)
-4. [**Memory Finalization**](#memory-finalization)
-5. [**Steady-state memory allocation**](#steady-state-memory-allocation)
-   1. [Fast Allocations & Quicklists](#fast-allocations--quicklists)
-   2. [SLAB Allocator](#slab-allocator)
-   3. [CPU Caches](#cpu-caches)
-   4. [Large Allocations & vmalloc](#large-allocations--vmalloc)
-6. [**User & Kernel Space**](#user--kernel-space)
+
+[[_TOC_]]
 
 
 # Memory Representation

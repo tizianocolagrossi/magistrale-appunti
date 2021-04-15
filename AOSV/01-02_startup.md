@@ -2,30 +2,8 @@
 # Advanced Operative Systems and Virtualization
 
 ## Outline
-1. **BIOS/UEFI** Actual Hw setup
-   1. [Pre-Boot and Real Mode](#pre-boot-and-real-mode)
-   2. [BIOS](#bios)
-2. [**Bootloader Stage 1**](#stage-1-bootloader) Executes the stage 2 bootloader (skipped for UEFI)
-   1. [MBR](#mbr)
-   2. [x86 Protected Mode](#x86-protected-mode)
-   3. [x86 Memory Addressing](#x86-memory-addressing)
-   4. [x86 Privileges and Protection](#x86-privileges-and-protection)
-   5. [Paging](#paging)
-3. [**Bootloader Stage 2**](#stage-2-bootloader) Loads and starts the kernel
-   1. [GRUB/UEFI](#grub--uefi)
-   2. [Multi-core Support](#multi-core-support)
-4. [**Kernel**](#kernel-boot) Takes control and initializes the machine  (machine-dependent operations)
-   1. [Initial Life of the Linux Kernel](#initial-life-of-the-linux-kernel)
-   2. [startup_32()](#startup_32-secondary)
-   3. [start_kernel()](#start_kernel)
-      1. [A Primer on Memory Organization](#a-primer-on-memory-organization)
-      2. [Bootmem and Memblock Allocators](#bootmem-and-memblock-allocators)
-      3. [Paging Introduction](#paging-introduction)
-      4. [Paging Initialization](#paging-initialization)
-      5. [TLB](#tlb)
-      6. [Final operations and recap](#final-operations-and-recap)
-5. **Init (or systemd)** First process: basic environment initialization
-6. **Runlevels/Targets** Initializes the user environment
+
+[[_TOC_]]
 
 # BIOS and UEFI
 ## Pre-Boot and Real Mode
