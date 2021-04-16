@@ -44,3 +44,41 @@ Il centro diventa l'automatismo tecnico che esclude la vera possibilita di scelt
 
 
 # Il diritto davanti all'algoritmo
+
+Un nuovo modello economico si impone attraverso internet. La massa di operazioni che circola nella rete è costituita principalmente da dati. L'**individuo** non solo li produce ma **esso stesso è diventato un dato**, prodotto per essere consumato nella vendita dei pachetti informazionali.
+
+Emergono **relazioni** definite e misurate di dati **equivalenti al denaro contante** che fondono la dimensione economica con quella informatica. 
+
+*Non è secondaria l'importanza dell uso del concetto del numero che riesce a livellare qualunque entità in una fase di programmazione algoritmica continua dalla rete. I numeri trattano l'umano secondo l'ordine semplificato di quantita monetizzanti.*
+
+Ogni atto nell'economia dell'informazione della rete, compreso l'accesso, è presentato come atto personale. L'utente diventa destinatario di messaggi non sempre richiesti che hanno lo scopo di generare profitti ed orientare il consenso ed il pensiero, facendoli convergere in un unica direzione. (*grazie alla profilazione*).
+
+Internet si estende, invade l'intimità, dissolve i desideri in una pluralità di consumi, perdura nella rappresentazione di un umanità addolcita padroneggiata dagli influencers. La persona è sempre più diretta verso verso una dimensione pubblica, rappresentata da un immagine che coincide come mai fino ad ora con quella privata.
+
+Cosi il concetto di interiorità della persona si trasforma gradualmente in un'appendice impersonale della dimensione dell esteriorità (social network, immagini etc...) che non è altro che la costellazione di dati della nuova economia informazionale.
+
+Sicuramente con l'affermarsi della rete  si ha un esibizione costante della propria immagine talmente pubblicizzata che rende residuale lo spazio della privacy. L'essere umano di proietta in un continuo narcisismo di esibizionistico. Diventa un consumatore che, per statuto, non pensa, non decide, non dialoga.
+
+Un'onda spinge verso una sola direzione, verso un effetto domino imitativo percepito come obbedienza, **fino a concretizzare paradigmi privi di una vita interiore** dove si sostituisce l'imago(inconscio) con le  stesse strutture orientative della moda. La capitatio della moda opera attraverso sottili fili di condizionamento, generatori di imitazione e di *conforto sociale*, sfruttati dalla signioria retale con l'intento di produrre consumo.
+
+*Certo, periodicamente traspare una protesta per i diritti di qualche  minoranza,  contro  la  violenza,  a  favore  di  un  diritto  negato,  per un'etica dimenticata, per le inciviltà del mondo reale; un'indignazione di sottofondo, subito sopita, priva di stabilità cosciente e di obiettivi, una  sorta  di fuoco  di  paglia,  dove  il  dialogo  è  emarginato  a  favore del  sensazionalismo.*
+
+**L'indifferente  nessuno  è  sostituito  dal  particolare qualcuno che ognuno tenta di incarnare,** sebbene cada, sin da subito, nell'anonimato  e  nell'uniformità  della  profilazione  di  un  originale che  si  disperde  in  una  connessione  continua,  virale. 
+
+Il Profilo trascende l'identità della persona, fino a creare un modello instabile, che converge verso lo stormo, privo di gerarchia e quindi uniforme ed omogeneo.
+
+
+
+**Con l'estinsione della relazione interpersonale** il diritto vede vanificarsi la sua testualità, non è piu diescorso (dia-logos), ma diventa (per effetto del mondo frammentato della rete) sempre piu residuale, **si trasforma in un monologo dell'economia dell'informazione** in sporadiche criticheall'ipertrofia legislativa, sempre  più  materia  di gruppi ristretti di addetti ai lavori.
+
+I nativi digitali vivono l'illusione del tutto gratuito, in realtà poteri tecnico-giuridici ed economici sono in competizione per sfruttare la situazione. **Il grande fratello diventa lo stesso umano che contribuisce alla tracciabilità e quindi alla formazione del grande dato, al quale partecipano tutti per incrementare i server sirena**
+
+A volte anche **la sola proposta di dibbattito pubblico sulle questioni delle *nuove tecnologie*** che sarebbe in grado di incidere sulle qualità delle ralzioni giuridiche e quindi sulla sprerequazione  sociale (Mancanza di uniformità ed equità nella ripartizione, spec. in senso economico), **appare come una minaccia contro l'idea di sviluppo tecnologico**.
+
+La persona si trova esposta ad una nuova mistificazione  della  libertà:  un  dominio  progressivamente  invasivo,  capace  di  infiltrarsi  nei  circuiti  operativi  informazionali,  detentore  di dati che tutti concorrono a formare nella totale ignoranza di dirigere la  loro  azione  produttiva  a  capitali  reali.
+
+**Si affievolisce la presenza della persona, si rafforza la sua immagine  trasmutata  in  funzione,** poiché  ognuno  diventa  la  configurazione  determinata  da  un  flusso  informazionale,  una  combinazione impersonale di dati. 
+
+**Internet**  significa  **dati**,  ma  anche  **algoritmi**,  sulla  base  dei  quali** ogni utente si trova confinato in un campo di informazioni distinto** e in cui** la qualità esistenziale dei contenuti non è considerata, ma anzi sostituita dalla quantità misurata algoritmicamente**. 
+
+**Il denaro da oggetto diventa soggetto misuratore** attraverso l'indicatore  numerico,  per  descriverlo  si  può  mutuare  il  lessico  di  Georg Simmel:  «il  denaro  con  la  sua  assenza  di  colori  e  la  sua  indifferenza si  erge  a  equivalente  universale  ...  diventa  il  più  terribile  livellatore, svuota  senza  scampo  il  nocciolo  delle  cose,  la  loro  particolarità,   il loro valore individuale, la loro imparagonabilità».
