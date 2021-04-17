@@ -109,4 +109,14 @@ Si vuol chiarire che è *perforabile* ogni elemento che viene trattato secondo u
 
 Una macchina non è immaginabile senza l'umanita, mentre gli uomini e le donne sono immaginabili senza la Macchina (forse intende che è attraverso l'umanità che un algoritmo/macchina puo essere immaginato e creato, mentre un uomo puo essere immaginato anche senza macchina o algoritmo)
 
-Chiarire che una Macchina è presente e funziona unicamente perche è un prodotto dell'opera umana comporta il prendere atto che la  direzione del funzionamento della macchina non ha una genesi macchinale ma è da ascrivere agli uomini ed alle donne che producono la macchina e che nal produrla vi inscrivono una programmata direzione
+Chiarire che una Macchina è presente e funziona unicamente perche è un prodotto dell'opera umana comporta il prendere atto che la  direzione del funzionamento della macchina non ha una genesi macchinale ma è da ascrivere agli uomini ed alle donne che producono la macchina e che nel produrla vi inscrivono una programmata direzione di funzionamento, definita da modalita storiche, oggi costruite dal potere della burocrazia della finanza che amministra l'umanità, instituendo la sproporzione tra un numero ristretto di burocrati finanzieri e tutto il resto dei soggetti umani.
+
+Il giudizio macchinico-meccanico non può prevedere nè un secondo grado ne un terzo grado di giudizio, poichè non ha la dimenzione della possibilitò e di conseguenza non può compiere un'operazione qualificabile come errore, che è tale poiche è possibile, non necessario. In presenza della sola macchina, senza l'uomo l'errore non sarebbe apparso , come se fosse stala la nostra missione farlo apparire. Il processo di macchinalizzazione  «non può elevarsi sino a noi ... Quello che invece dobbiamo temere è che riesca ad abbassarci al suo livello,  come  il  serpente  che,  incapace  di  innalzarsi  in  aria,  paralizza  al suolo, con un solo sguardo, gli uccelli. 
+
+**La macchinalizzazione comporta la necessaria trasformazione delle dimensioni personali in un ordine depersonalizzato.**
+
+Le leggi istituite prevedono delle sanzioni verso l'esercizio della mala fede, ma la sanzione non può essere né naturalistica, né macchinale, perché né gli elementi della natura, né quelli della Macchina possono concepire una sanzione, non essendo in grado di entrare in rapporto con l'intenzione  delle  persone,  non  situabile  né  nelle  cose,  né  nei  meccanismi.
+
+«... Le rimprovero [alla macchina] di mostrarsi a me con i tratti di quello che io credevo di essere ... da quando essa esiste,  io non so più ... che cosa sono io», perché è un'entità che opera al mio posto, non lasciando darsi alcun dialogo con me, riducendomi anzi ad una rigidità  metallica, insensibile, né entusiasta, né depressa.
+
+La persona nello scegliersi la sua personalità si dà una forma e così si sottrae al nulla dell'informe.
