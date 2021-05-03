@@ -45,11 +45,78 @@ Il centro diventa l'automatismo tecnico che esclude la vera possibilita di scelt
 
 # Il diritto davanti all'algoritmo
 
-Attraverso **internet** si impone un **nuovo modello economico**. La grande massa di operazioni che circola nella rete è formata soprattutto dai dati: l'individuo non solo li produce, ma esso stesso è un dato, prodotto per essere consumato nella vendita dei pacchetti *informazionali*.
+Un nuovo modello economico si impone attraverso internet. La massa di operazioni che circola nella rete è costituita principalmente da dati. L'**individuo** non solo li produce ma **esso stesso è diventato un dato**, prodotto per essere consumato nella vendita dei pachetti informazionali.
 
-Emergono relazioni (di **dati**) **equivalenti** a **denaro** contante che fondono la dimensione economica con quella informatica. 
+Emergono **relazioni** definite e misurate di dati **equivalenti al denaro contante** che fondono la dimensione economica con quella informatica. 
 
-Ogni atto nell'economia dell informazione retale (della rete), compreso l'accesso, è presentato come atto personale che nella navigazione l'utente diventa destinatario di una serie di messaggi (non dempre richiesti) orientati ad un **profilo** specifico. Questo profilo viene **usato** per **generare profitti** e e capace di occultare l'intento di orientare il consenso ed il pensiero, **facendoli convergere in un unica direzione**.
+*Non è secondaria l'importanza dell uso del concetto del numero che riesce a livellare qualunque entità in una fase di programmazione algoritmica continua dalla rete. I numeri trattano l'umano secondo l'ordine semplificato di quantita monetizzanti.*
 
-Internet si estende, supera i soggetti, dissolve i loro desideri in una pluralita di consumi, **invade l'intimità**, continua ad esistere nella rappresentazione di un'umanità addolcita, *unica* padroneggiata dagli influencers. La **persona** è **evoluta** sempre piu ad una **dimensione pubblica**, rappresentata dall'immagine che **coincide, come mai era mai avvenuto finora, con quella privata** (in poche parole non c'è piu privacy).
+Ogni atto nell'economia dell'informazione della rete, compreso l'accesso, è presentato come atto personale. L'utente diventa destinatario di messaggi non sempre richiesti che hanno lo scopo di generare profitti ed orientare il consenso ed il pensiero, facendoli convergere in un unica direzione. (*grazie alla profilazione*).
 
+Internet si estende, invade l'intimità, dissolve i desideri in una pluralità di consumi, perdura nella rappresentazione di un umanità addolcita padroneggiata dagli influencers. La persona è sempre più diretta verso verso una dimensione pubblica, rappresentata da un immagine che coincide come mai fino ad ora con quella privata.
+
+Cosi il concetto di interiorità della persona si trasforma gradualmente in un'appendice impersonale della dimensione dell esteriorità (social network, immagini etc...) che non è altro che la costellazione di dati della nuova economia informazionale.
+
+Sicuramente con l'affermarsi della rete  si ha un esibizione costante della propria immagine talmente pubblicizzata che rende residuale lo spazio della privacy. L'essere umano di proietta in un continuo narcisismo di esibizionistico. Diventa un consumatore che, per statuto, non pensa, non decide, non dialoga.
+
+Un'onda spinge verso una sola direzione, verso un effetto domino imitativo percepito come obbedienza, **fino a concretizzare paradigmi privi di una vita interiore** dove si sostituisce l'imago(inconscio) con le  stesse strutture orientative della moda. La capitatio della moda opera attraverso sottili fili di condizionamento, generatori di imitazione e di *conforto sociale*, sfruttati dalla signioria retale con l'intento di produrre consumo.
+
+*Certo, periodicamente traspare una protesta per i diritti di qualche  minoranza,  contro  la  violenza,  a  favore  di  un  diritto  negato,  per un'etica dimenticata, per le inciviltà del mondo reale; un'indignazione di sottofondo, subito sopita, priva di stabilità cosciente e di obiettivi, una  sorta  di fuoco  di  paglia,  dove  il  dialogo  è  emarginato  a  favore del  sensazionalismo.*
+
+**L'indifferente  nessuno  è  sostituito  dal  particolare qualcuno che ognuno tenta di incarnare,** sebbene cada, sin da subito, nell'anonimato  e  nell'uniformità  della  profilazione  di  un  originale che  si  disperde  in  una  connessione  continua,  virale. 
+
+Il Profilo trascende l'identità della persona, fino a creare un modello instabile, che converge verso lo stormo, privo di gerarchia e quindi uniforme ed omogeneo.
+
+
+
+**Con l'estinsione della relazione interpersonale** il diritto vede vanificarsi la sua testualità, non è piu diescorso (dia-logos), ma diventa (per effetto del mondo frammentato della rete) sempre piu residuale, **si trasforma in un monologo dell'economia dell'informazione** in sporadiche criticheall'ipertrofia legislativa, sempre  più  materia  di gruppi ristretti di addetti ai lavori.
+
+I nativi digitali vivono l'illusione del tutto gratuito, in realtà poteri tecnico-giuridici ed economici sono in competizione per sfruttare la situazione. **Il grande fratello diventa lo stesso umano che contribuisce alla tracciabilità e quindi alla formazione del grande dato, al quale partecipano tutti per incrementare i server sirena**
+
+A volte anche **la sola proposta di dibbattito pubblico sulle questioni delle *nuove tecnologie*** che sarebbe in grado di incidere sulle qualità delle ralzioni giuridiche e quindi sulla sprerequazione  sociale (Mancanza di uniformità ed equità nella ripartizione, spec. in senso economico), **appare come una minaccia contro l'idea di sviluppo tecnologico**.
+
+La persona si trova esposta ad una nuova mistificazione  della  libertà:  un  dominio  progressivamente  invasivo,  capace  di  infiltrarsi  nei  circuiti  operativi  informazionali,  detentore  di dati che tutti concorrono a formare nella totale ignoranza di dirigere la  loro  azione  produttiva  a  capitali  reali.
+
+**Si affievolisce la presenza della persona, si rafforza la sua immagine  trasmutata  in  funzione,** poiché  ognuno  diventa  la  configurazione  determinata  da  un  flusso  informazionale,  una  combinazione impersonale di dati. 
+
+**Internet**  significa  **dati**,  ma  anche  **algoritmi**,  sulla  base  dei  quali** ogni utente si trova confinato in un campo di informazioni distinto** e in cui** la qualità esistenziale dei contenuti non è considerata, ma anzi sostituita dalla quantità misurata algoritmicamente**. 
+
+**Il denaro da oggetto diventa soggetto misuratore** attraverso l'indicatore  numerico,  per  descriverlo  si  può  mutuare  il  lessico  di  Georg Simmel:  «il  denaro  con  la  sua  assenza  di  colori  e  la  sua  indifferenza si  erge  a  equivalente  universale  ...  diventa  il  più  terribile  livellatore, svuota  senza  scampo  il  nocciolo  delle  cose,  la  loro  particolarità,   il loro valore individuale, la loro imparagonabilità».
+
+# La macchina della giustizia
+
+Qui si ripropone il legamiìe tra la persona e *il suo esistere originale che, indipendentemente dalle determinazioni della società, possiede un proprio mondo, è un eccezione, è autonoma, è irripetibile*. **l'essere eccezione** non comporta una condizione di chiusura verso le altre persone, anzi **mostra** che la **singola persona** si trova in **collegamento** e in comunicazione **con le altre persone**, in **dialogo** con loro, nella **formazione di personalita originali** e differenziate.
+
+Il sapere **parziale** (è costutivamente mancante), **attende** di poter **accogliere** il **sapere di ogni persona**, cosi da **costituire** il **dialogo**. Questo dialogo consente si *illuminare* la mancanza, il desiderio di ricerca, in ogni persona, **senza mai raggiungere un sapere totale**.
+
+Invece l'amministrazione eseguita dalla Macchina è tale da non richiedere mai il parere su nessun argomento. La Macchina non ha doveri verso se stessa, ne verso i destinatari del suo funzionamento, funziona oppure non funziona. Sono queste due le uniche sue condizioni, non infligge il male alle persone ne può emettere il grido che domanda *perchè mi viene fatto del male?*.
+
+Il superamento della responsabilita personale (dell' inputabilita del non adempimento o dell' adempimento del dovere, della distinzione tra il torto-ingiusto e il retto-giusto) è un superamento  dell'unita esistenziale dell io. é il superamento sompiuto mediante la molteplicità degli elementi funzionali della Macchina, che non risponde-di-a, **perchè non  ha alcuna unità esistenziale**, è solo un insieme complesso di elementi che funzioano, in un aggregazione priva della capacità di selezionare secondi intenzioni volute e libere, il giusto e l'ingiusto davanti ad alternative. La Macchina (Algoritmo) non è inputabile, è innocente, perche non è esposta a rischi della libertà, il suo stato costante è significativamente estraneo ai versanti in opposizione della solidarietà e dell egoismo, della serenita e della disperazione etc...
+
+«Non è così interessante come si potrebbe credere ottenere, meccanicamente e a colpo sicuro, ciò a cui si ha diritto ... La Macchina è la giustizia  stessa  e  non  si  inganna  mai,  ma  non  mi  conosce  veramente. È giusta, ma non mi ama ... dalla Macchina ... esigevo la stima» La macchina non è capace di donarmi il riconoscimento, che esigevo, perche è nel riconoscimento che l'uno ritrova se stesso nell' altro, la mia dignità nella dignità dell'altro. **La Macchina non ha una dignita, che emerge come *plus* dell'interiorità del pensare e del volere, assenti nella Macchina**; **segue che la macchina non compie l'atto del riconoscimentp e quindi non puo nemmeno riceverlo**.
+
+La Macchina può calcolare, ma non giudicare, ovvero **può compiere operazioani su elementi che si lasciano trattare mediante sitemi numerici**, algoritmici, che **non sono in grado di valutare l'intenzione** dell'atto compiuto dalla libertà inputabile della singola persona. L'intenzione non è avvicinabile secondo gli schemi dei numeri, ma esige il linguaggio delle parile dialogiche, manifestative della volontà, imputabili perche personali.
+
+Il giudizio giuridico per sua struttura è *creativo*; **nel rispetto fella legalità vigente** crea la **valutazione** del signolo caso perchè stabilisce un rapporto con l'intenzione del destinatario del giudizio. Il movente è mio; è tale perchè appartiene alla mia personalità; non è quello del genere umano, di qualcuno che è *uno, nessuno, centomila*
+
+Nel descrivere che l'amministrazione della giustizia macchinale ha il carattere della certezza del calcolare, eseguito secondo le regole del linguaggio dei numeri, si conclude che questa macchina giudiziaria funziona se gli uomini e le donne sono "perforabili" (riferimento alla schede perforate), ovvero  se possono essere trattati come un materiale *leggibile* da un programma, che pero mai puo cogliere l'intenzione delle persone.
+
+Il "discorso amministrativo" è definito dal trattare tutto secondo la prospettiva unica dell'amministrare, ovvero del realizzare una sistemazione funzionale di un insieme di elementi, appartenenti ad ogni genere, così che ogni singolo elemento debba acquisire un senso solamente nella funzionalità, posta, controllata e "sorvegliata" secondo una selezione che è ritenuta positiva se l'oggetto trattato "è perforabile" ed è ritenuta negativa se "non è perforabile", ovvero se può essere oppure non essere trattato secondo il circuito di una scheda, di un chip, di un microchip, etc. 
+
+Si vuol chiarire che è *perforabile* ogni elemento che viene trattato secondo una direzione unica, sino a *credere che una questione non sia una questione perche non si può ancora perforarla*. La *perforabilità* di una condotta, di una situazionem di una relazione giuridica, etc..., vuole inficare che si amministrano queste realta umane confinandole in una regione, quella del loro poter essere conosciute-trattate, tralasciando ed anzi negando le altre regioni, come quelle della volontà che non si identifica nella conoscienza, né è oggettivabile in un conoscere, perchè concerne l'interezza della persona, irriducibile in distinte regioni di ambiti conoscitivi separati.
+
+**il concetto di perforabilità (oggettivazione spersonalizzante) e quello di imputabilità (soggettivazione personalizzante) non sono omogenei**; mostrano che la loro disomogeneita **rende impossibile** il giudizio giuridico inteso come un operazione della macchina; L'imputabilità concerne la persona nella sua interezza, non è fremmentavile nei diversi ambiti trattati dall'emergere unidimensionale della regione amministrante la *perforabilità* delle situazioni relazionali.
+
+Una macchina non è immaginabile senza l'umanita, mentre gli uomini e le donne sono immaginabili senza la Macchina (forse intende che è attraverso l'umanità che un algoritmo/macchina puo essere immaginato e creato, mentre un uomo puo essere immaginato anche senza macchina o algoritmo)
+
+Chiarire che una Macchina è presente e funziona unicamente perche è un prodotto dell'opera umana comporta il prendere atto che la  direzione del funzionamento della macchina non ha una genesi macchinale ma è da ascrivere agli uomini ed alle donne che producono la macchina e che nel produrla vi inscrivono una programmata direzione di funzionamento, definita da modalita storiche, oggi costruite dal potere della burocrazia della finanza che amministra l'umanità, instituendo la sproporzione tra un numero ristretto di burocrati finanzieri e tutto il resto dei soggetti umani.
+
+Il giudizio macchinico-meccanico non può prevedere nè un secondo grado ne un terzo grado di giudizio, poichè non ha la dimenzione della possibilitò e di conseguenza non può compiere un'operazione qualificabile come errore, che è tale poiche è possibile, non necessario. In presenza della sola macchina, senza l'uomo l'errore non sarebbe apparso , come se fosse stala la nostra missione farlo apparire. Il processo di macchinalizzazione  «non può elevarsi sino a noi ... Quello che invece dobbiamo temere è che riesca ad abbassarci al suo livello,  come  il  serpente  che,  incapace  di  innalzarsi  in  aria,  paralizza  al suolo, con un solo sguardo, gli uccelli. 
+
+**La macchinalizzazione comporta la necessaria trasformazione delle dimensioni personali in un ordine depersonalizzato.**
+
+Le leggi istituite prevedono delle sanzioni verso l'esercizio della mala fede, ma la sanzione non può essere né naturalistica, né macchinale, perché né gli elementi della natura, né quelli della Macchina possono concepire una sanzione, non essendo in grado di entrare in rapporto con l'intenzione  delle  persone,  non  situabile  né  nelle  cose,  né  nei  meccanismi.
+
+«... Le rimprovero [alla macchina] di mostrarsi a me con i tratti di quello che io credevo di essere ... da quando essa esiste,  io non so più ... che cosa sono io», perché è un'entità che opera al mio posto, non lasciando darsi alcun dialogo con me, riducendomi anzi ad una rigidità  metallica, insensibile, né entusiasta, né depressa.
+
+La persona nello scegliersi la sua personalità si dà una forma e così si sottrae al nulla dell'informe.
