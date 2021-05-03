@@ -353,8 +353,169 @@ The immediate handling of the IPI is allowed when there’s no need to share dat
 
 The kernel provides a set of macros and functions to easily trigger IPIs, the different IPI kinds of interrupt are referred as IPIs Vectors.
 
+The Linux kernel makes use of three kinds if inter-processor interrupts:
+- CALL_FUNCTION_VECTOR (0xfb) it is sent to all CPUs but the sender forcing that CPU to run a function passed by the sender. The handler is called call_function_interrupt(). This is used for example for halting the system. This is interrupt is usually triggered by the function smp_call_function();
+- RESCHEDULE_VECTOR (0xfc) when a CPU receives this type of interrupt, the corresponding handler named reschedule_interrupt() limits itself to acknowledging the interrupt, the rescheduling is done when returning from the interrupt;
+- INVALIDATE_TLB_VECTOR (0xfd) it is sent to all the CPU but the sender forcing them to invalidate the TLB, the handler is invalidate_interrupt().
+
+IPIs are used to scheduled multiple cross-core tasks, but a single vector exists (CALL_FUNCTION_VECTOR). There is the need to register a specific action associated with the firing of an IPI. Older version of the kernel were relying on a global data structure protected by a lock, but this solution hampers scalability and performance.
+
+From Kernel 5.0, there is a per-CPU linked list of registered functions and associated data to process. Concurrent access relies on the lock-free list.
+
+
 # Software Interrupts (SoftIRQs)
+
+We already introduced the necessity of deferring the non-critical work when handling an interrupt. The basic idea behind this strategy takes the name of top-half/bottom-half:
+
+- the **top-half** executes a minimal amount of work which is mandatory to later finalize the whole interrupt management. The top-half code is managed according to a **non-interruptible** scheme and it is in charge of scheduling the bottom-half task by queuing a record into a proper data structure;
+- the **bottom-half** **finalizes the work** to be done for completing the interrupt handling. The bottom-half executes the deferred work with **interrupts enabled**.
+
+### SoftIRQs and Tasklets
+
+Linux uses two kinds of non-urgent and interruptible kernel functions:
+- the **deferrable functions**, that are softIRQs and tasklets;
+- those executed by means of some work queues.
+
+Tasklets are built on top the SoftIRQs and the term softirq which often appears in the kernel
+source refers to both of them. The main differences between these two kinds of deferrable
+functions are:
+
+
+- **SoftIRQs** are **statically** allocated, they can run **concurrently** on several CPUs (even if
+they are of the different type, they are **reentrant** functions and must explicitly protect
+their data structures with spinlocks;
+- **Tasklets** are initialized at **runtime** (for instance when mounting a kernel module), they do
+**not need to worry about race conditions** on data structures since they are strictly
+controlled by the kernel. Tasklets of the same type are always **serialized**, they cannot run
+concurrently, **they do not need to be reentrant**.
+
+**The main steps carried out on a deferrable function are the following**
+
+1. **Initialization**. Define a new deferrable function, this is done when the kernel boots or when a module is loaded
+2. **Activation**. Marks the function as “pending” to be run the next time the kernel schedules a round of executions of deferrable functions.
+3. **Masking**. Selectively disable a function so that it will be not executed even if activated.
+4. **Execution**. Executes a pending deferrable function with other functions of the same type.
+
+**SoftIRQs** are **also called software interrupts** **but** keep in mind that they are **different** from the programmed exceptions.
+
+
+The checks for pending softirq should be performed periodically but without too much overhead. Here’s a list of significant points in the kernel in which the check is done:
+- when softirqs are enabled on local CPU;
+- when do_IRQ() finished processing;
+- after a timer interrupt on LAPIC;
+- after a CALL_FUNCTION_VECTOR;
+- when a ksoftirqd/n kernel thread is wakened.
+
+
+### Execution - do_softirq()
+
+If there is a pending softirq then the function do_softirq() is invoked. The function:
+1. checks if invoked in a interrupt context or softirqs are disabled, if yes returns
+2. executes local_irq_save()
+3. checks if there are pending softirq
+4. calls do_softirq_own_stack() if needed, this function switches to the softirq stack if needed and calls __do_softirq()
+5. calls local_irq_restore()
+
+
+The __do_softirq() reads the bit mask of the local CPU and executes the deferrable
+functions corresponding to every set bit. While executing a softirq, another softirq may pop up
+and in order to avoid that __do_softirq() never regain control to user processes it only
+executes a fixed number of iterations, the remaining softirqs will be handled by ksoftirqd
+daemon.
+
+### ksoftirqd
+In modern kernel versions, each CPU has its own ksoftirqd/n kernel thread (where n is the
+logical number of the CPU). Each ksoftirqd runs the ksoftirq() function which essentially
+executes the following loop:
+
+```c
+for(;;){
+   set_current_state(TASK_INTERRUPTIBLE);
+   schedule();
+   // now in task running state
+   while(local_softirq_pending()){
+      preempt_disable();
+      do_softirq();
+      preempt_enable();
+      cond_resched();
+   }
+}
+```
+
+
 
 # Tasklets
 
+
+Tasklets are the preferred way to implement deferrable functions in I/O drivers or in kernel
+modules. As already introduced, tasklets are built on top of two softirqs named HI_SOFTIRQ
+and TASKLET_SOFTIRQ, they differ only in priority since several tasklets may be associated
+with the same softirq, each carrying its own function.
+
+For using a tasklet you need to allocate the tasklet_struct by means of the macro
+DECLARE_TASKLET and then call one of the following functions to enable/disable it:
+
+- ```tasklet_enable(struct tasklet_struct *tasklet)```
+- ```tasklet_hi_enable( struct tasklet_struct *)```
+- ```tasklet_disable(struct tasklet_struct *tasklet)```
+- ```void tasklet_schedule(struct tasklet_struct *tasklet)```
+
+
+Unless a tasklet reactivates itself, every tasklet activation triggers at **most one** execution of
+the tasklet function. Management of tasklets is such that a tasklet of the same kind cannot be
+run concurrently on two different cores
+
+
+Tasklets are run using Soft IRQs. Enable functions are mapped to Soft IRQs lines:
+- tasklet_enable() mapped to TASKLET_SOFTIRQ
+- tasklet_hi_enable() mapped to HI_SOFTIRQ
+
+
+No real difference between the two, except that do_softirq() processes HI_SOFTIRQ before
+TASKLET_SOFTIRQ. All non-disabled Tasklets are executed, before the corresponding SoftIRQ
+action completes.
+Remember that they are run with HardIRQs enabled.
+
+**In the latest version of the kernel the Tasklets API is deprecated in favour of Threaded IRQs.**
+
+The Tasklet API (but also the SoftIRQ) will be removed because the top-half of an IRQ is
+executed in a kernel thread by using the function request_threaded_irq() for allocating a
+IRQ line.
+
+
 # Work Queues
+
+The worker queues have been introduced in Linux 2.6. They are similar to the deferrable
+functions, but they are run by ad-hoc kernel-level worker threads.
+
+Worker Queues always run in process context and they can perform blocking operations but
+this does not mean that they can access user address space (as the deferrable functions).
+Executing in process context is the only way for performing blocking operations (e.g.
+accessing data to disk), remind that no process switch can occur in interrupt context.
+
+
+A work queue is defined by the workqueue_struct whose field worklist points to a doubly
+linked list of pending functions.
+
+### Creating a queue
+
+The function create_workqueue(“foo”) allows to create a new work queue and also creates
+n worker threads (where n is the number of CPUs). You can use the function
+create_singlethread_workqueue() for creating a work queue with only one thread. You can
+destroy the queue with the function destroy_workqueue().
+
+After creating a queue you can use:
+- queue_work() for inserting a function (packaged in a work_struct) to the queue
+- queue_delayed_work() for inserting a function that will be executed when after the passed time delay
+
+A worker thread continuously loop inside the function worker_thread() that most of the time
+is sleeping if there is no function to be executed.
+Sometimes it may be necessary to wait until all pending functions are executed, in that case,
+the function flush_workqueue() can be used.
+
+In most cases, creating a whole set of worker threads in order to run a function is overkill.
+Therefore, the kernel offers a predefined work queue called events, which can be freely used
+by every kernel developer.
+
+To use the predefined queue you can use the following functions:
+![](img/work_queue_api.PNG)
