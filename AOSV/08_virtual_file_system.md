@@ -320,13 +320,342 @@ struct path { <---------------
 
 ## Operations
 
+Super block operations are described by the struct super_operations. They:
+
+- manage statistic of the file system
+- create and manage i-nodes
+- flush to the device updated information on the state of the file system
+
+**Some File Systems might not use some operations** (think of File Systems in RAM). Functions
+to access statistics are invoked by system calls statfs() and fstatfs().
+
+```c
+struct super_operations {
+   	struct inode *(*alloc_inode)(struct super_block *sb);
+	void (*destroy_inode)(struct inode *);
+	void (*free_inode)(struct inode *);
+
+   	void (*dirty_inode) (struct inode *, int flags);
+	int (*write_inode) (struct inode *, struct writeback_control *wbc);
+	int (*drop_inode) (struct inode *);
+	void (*evict_inode) (struct inode *);
+	void (*put_super) (struct super_block *);
+	int (*sync_fs)(struct super_block *sb, int wait);
+	int (*freeze_super) (struct super_block *);
+	int (*freeze_fs) (struct super_block *);
+	int (*thaw_super) (struct super_block *);
+	int (*unfreeze_fs) (struct super_block *);
+	int (*statfs) (struct dentry *, struct kstatfs *);
+	int (*remount_fs) (struct super_block *, int *, char *);
+	void (*umount_begin) (struct super_block *);
+
+	int (*show_options)(struct seq_file *, struct dentry *);
+	int (*show_devname)(struct seq_file *, struct dentry *);
+	int (*show_path)(struct seq_file *, struct dentry *);
+	int (*show_stats)(struct seq_file *, struct dentry *);
+#ifdef CONFIG_QUOTA
+	ssize_t (*quota_read)(struct super_block *, int, char *, size_t, loff_t);
+	ssize_t (*quota_write)(struct super_block *, int, const char *, size_t, loff_t);
+	struct dquot **(*get_dquots)(struct inode *);
+#endif
+	int (*bdev_try_to_free_page)(struct super_block*, struct page*, gfp_t);
+	long (*nr_cached_objects)(struct super_block *,
+				  struct shrink_control *);
+	long (*free_cached_objects)(struct super_block *,
+				    struct shrink_control *);
+};
+
+```
+
+```c
+struct inode_operations {
+	struct dentry * (*lookup) (struct inode *,struct dentry *, unsigned int);
+	const char * (*get_link) (struct dentry *, struct inode *, struct delayed_call *);
+	int (*permission) (struct inode *, int);
+	struct posix_acl * (*get_acl)(struct inode *, int);
+
+	int (*readlink) (struct dentry *, char __user *,int);
+
+	int (*create) (struct inode *,struct dentry *, umode_t, bool);
+	int (*link) (struct dentry *,struct inode *,struct dentry *);
+	int (*unlink) (struct inode *,struct dentry *);
+	int (*symlink) (struct inode *,struct dentry *,const char *);
+	int (*mkdir) (struct inode *,struct dentry *,umode_t);
+	int (*rmdir) (struct inode *,struct dentry *);
+	int (*mknod) (struct inode *,struct dentry *,umode_t,dev_t);
+	int (*rename) (struct inode *, struct dentry *,
+			struct inode *, struct dentry *, unsigned int);
+	int (*setattr) (struct dentry *, struct iattr *);
+	int (*getattr) (const struct path *, struct kstat *, u32, unsigned int);
+	ssize_t (*listxattr) (struct dentry *, char *, size_t);
+	int (*fiemap)(struct inode *, struct fiemap_extent_info *, u64 start,
+		      u64 len);
+	int (*update_time)(struct inode *, struct timespec64 *, int);
+	int (*atomic_open)(struct inode *, struct dentry *,
+			   struct file *, unsigned open_flag,
+			   umode_t create_mode);
+	int (*tmpfile) (struct inode *, struct dentry *, umode_t);
+	int (*set_acl)(struct inode *, struct posix_acl *, int);
+} ____cacheline_aligned;
+```
+
 # Pathname lookup
+
+When **accessing** **VFS**, the **path** to a file is used as the **“key”** to **access** a **resource** of interest.
+Internally, VFS uses inodes to represent a resource of interest. The **Pathname lookup** is the
+**operation** which **derives an inode from** the corresponding file **pathname**.
+
+Pathname lookup **tokenizes** the string:
+- the passed string is broken into a sequence of filenames
+- everything must be a directory, except for the last component
+
+During this procedure there are several aspects to take into account:
+- filesystem mount points
+- access rights
+- symbolic links (and circular references)
+- automount
+- namespaces (more on this later)
+- concurrency (while a process is navigating, other processes might make changes)
+
+
+The **main function** for **path name lookup** are ***vfs_path_lookup()***, ***filename_lookup()*** and
+***path_lookupat()***. The path walking is based on the *nameidata* data structure that is filled
+when the functions return.
+
+```c 
+struct nameidata {
+	struct path	path;
+	struct qstr	last;
+	struct path	root;
+	struct inode	*inode; /* path.dentry.d_inode */
+	unsigned int	flags;
+	unsigned	seq, m_seq, r_seq;
+	int		last_type;
+	unsigned	depth;
+	int		total_link_count;
+	struct saved {
+		struct path link;
+		struct delayed_call done;
+		const char *name;
+		unsigned seq;
+	} *stack, internal[EMBEDDED_LEVELS];
+	struct filename	*name;
+	struct nameidata *saved;
+	unsigned	root_seq;
+	int		dfd;
+	kuid_t		dir_uid;
+	umode_t		dir_mode;
+} __randomize_layout;
+```
+Lookup flags drive the pathname resolution:
+- LOOKUP_FOLLOW, if the last component is a symbolic link, interpret (follow) it
+- LOOKUP_DIRECTORY, the last component must be a directory
+- LOOKUP_CONTINUE, there are still filenames to be examined in the pathname
+- LOOKUP_PARENT, look up the directory that includes the last component of the pathname
+- LOOKUP_NOALT, do not consider the emulated root directory (useless in the 80x86 architecture)
+- LOOKUP_OPEN, intent is to open a file
+- LOOKUP_CREATE, intent is to create a file (if it doesn’t exist)
+- LOOKUP_ACCESS, intent is to check user’s permission for a file
+
+### The mount() system call
+
+```c
+int mount(const char *source, const char *target, const char *filesystemtype,
+          unsigned long mountflags, const void *data);
+```
+
+The mount() system call is used to mount a generic filesystem, its sys_mount() service
+routine acts on: a **pathname** of a device containing a filesystem (source e.g. /dev/<...>), a
+**pathname** of the directory on which the filesystem will be mounted (target), the filesystem
+**type**, a set of **flags** and a pointer to system dependent data (usually NULL). Flags are:
+- MS_NOEXEC: Do not allow programs to be executed from this file system.
+- MS_NOSUID: Do not honour set-UID and set-GID bits when executing programs from this file system.
+- MS_RDONLY: Mount file system read-only.
+- MS_REMOUNT: Remount an existing mount. This allows you to change the mountflags and data of an existing mount without having to unmount and remount the file system. source and target should be the same values specified in the initial mount() call; fs type is ignored.
+- MS_SYNCHRONOUS: Make writes on this file system synchronous
+
+Directories selected as the target for the mount operation become a “mount point”. This is
+reflected in struct dentry by setting in d_flags the flag DCACHE_MOUNTED.
 
 # Files
 
+The PCB has a member struct files_struct *files which points to the descriptor table defined in
+include/linux/fdtable.h.
+
+### Opening Files
+
+A file struct is allocated when a file is opened. The system call that allows a process to open a
+file is open() serviced by sys_open() that in the end calls do_sys_open(). The function is
+logically divided into two parts:
+
+1. a file descriptor is allocated, if available
+2. invocation of the intermediate function struct file *do_filp_open(int dfd, struct filename *pathname, const struct open_flags *op) which returns the address of the struct file associated with the opened file
+
+On kernel 5.11 do_sys_open() calls do_sys_openat2().
+
+### Closing Files
+
+The close() system call is defined in fs/open.c as:
+
+```SYSCALL_DEFINE1(close, unsigned int, fd)```
+
+This function basically calls (in fs/file.c):
+```c
+int close_fd(unsigned fd)
+```
+
+that:
+- retrieves the file struct associated with the file, and releases the file descriptor
+- calls ```c filp_close(struct file *filp, fl_owner_t id)```, defined in fs/open.c, which flushing the data structures associated with the file (struct file, dentry and i-node)
+
 # The /proc filesystem
 
+The /proc filesystem is an in-memory file system which provides information on:
+- active programs (processes)
+- the whole memory content
+- kernel-level settings (e.g. the currently mounted modules)
+
+Common files on proc are:
+- cpuinfo contains the information established by the kernel about the processor at boot time, e.g., the type of processor, including variant and features.
+- kcore contains the entire RAM contents as seen by the kernel.
+- meminfo contains information about the memory usage, how much of the available RAM and swap space are in use and how the kernel is using them.
+- version contains the kernel version information that lists the version number, when it was compiled and who compiled it.
+
+Then we have:
+
+- **net/** is a directory containing network information.
+  - net/dev contains a list of the network devices that are compiled into the kernel. For each device there are statistics on the number of packets that have been transmitted and received.
+  - net/route contains the routing table that is used for routing packets on the network.
+  - net/snmp contains statistics on the higher levels of the network protocol.
+- **self/** contains information about the current process. The contents are the same as those in the per-process information described later.
+- **pid/** contains information about process number pid. The kernel maintains a directory containing process information for each process.
+  - pid/cmdline contains the command that was used to start the process (using null characters to separate arguments).
+  - pid/cwd contains a link to the current working directory of the process.
+  - pid/environ contains a list of the environment variables that the process has available.
+  - pid/exe contains a link to the program that is running in the process.
+  - pid/fd/ is a directory containing a link to each of the files that the process has open.
+  - pid/mem contains the memory contents of the process.
+  - pid/stat contains process status information.
+  - pid/statm contains process memory usage information.
+
+
+### APIs
+
+To create a file in /proc you can use the function:
+```c
+struct proc_dir_entry *proc_create(const char *name, umode_t mode,
+                struct proc_dir_entry *parent,
+                const struct proc_ops *proc_ops)
+```
+
+It is essential to define the proc_ops in order to use the file.
+
+
 # The /sys filesystem
+
+Similar in spirit to proc, mounted to /sys, it is an alternative way to make the kernel export
+information (or set it) via common I/O operations
+
+Very simple API, more clear structuring. The VFS objects are mapped using the following
+scheme:
+
+| **internal** | **external** |
+|--------------|--------------|
+| Kernel Objects | Directories |
+| Object Attributes | Regular Files |
+| Object Relationship | Symbolic Links |
+
+
+### core APIs
+
+```c static inline int __must_check sysfs_create_file(struct kobject *kobj, const struct attribute *attr)  ```
+
+```c static inline void sysfs_remove_file(struct kobject *kobj, const struct attribute *attr) ```
+
+```c static inline int sysfs_rename_link(struct kobject *kobj, struct kobject *target, const char *old_name, const char *new_name) ```
+
+The functions uses the struct attribute declared as follows
+
+```c 
+struct attribute {
+    const char *name;
+    umode_t mode;
+}
+ ```
+
+Instead, the ```c struct kobject ``` represents the kernel object (next slide). /sysfs is tight inherently
+with the kobjects architecture.
+
+### Kobjects architecture
+
+A **kobject** is an object of **type struct kobject**. Kobjects have a **name** and a **reference count**
+(kref). A kobject also has a **parent** pointer (allowing objects to be arranged into hierarchies), a
+specific type, and, usually, a representation in the sysfs virtual filesystem.
+
+Kobjects are generally not interesting on their own; instead, they are usually **embedded**
+within some other structure which contains the stuff the code is really interested in
+(remember container_of).
+
+**No structure should EVER have more than one kobject embedded within it**. If it does, the
+reference counting for the object is sure to be messed up and incorrect, and your code will be
+buggy. So do not do this.
+
+A **ktype** is the type of object that embeds a kobject. Every structure that embeds a kobject
+needs a corresponding ktype. The ktype controls what happens to the kobject when it is
+created and destroyed.
+
+A **kset** is a group of kobjects. These kobjects can be of the same ktype (classic kset) or belong
+to different ktypes (i.e. a subsystem). The kset is the basic container type for collections of
+kobjects. Ksets contain their own kobjects, but you can safely ignore that implementation
+detail as the kset core code handles this kobject automatically.
+
+When you see a sysfs directory full of other directories, generally each of those directories
+corresponds to a kobject in the same kset.
+
+### APIs
+
+```c void kobject_init(struct kobject *kobj); ```
+
+```c int kobject_set_name(struct kobject *kobj, const char *format, ...); ```
+
+```c struct kobject *kobject_get(struct kobject *kobj); ```
+
+```c void kobject_put(struct kobject *kobj); ```
+
+
+
+```c void kset_init(struct kset *kset); ```
+
+```c int kset_add(struct kset *kset); ```
+
+```c int kset_register(struct kset *kset); ```
+
+```c void kset_unregister(struct kset *kset); ```
+
+```c struct kset *kset_get(struct kset *kset); ```
+
+```c void kset_put(struct kset *kset); ```
+
+```c kobject_set_name(my_set->kobj, "The name"); ```
+
+
+### Hooking into sysfs
+
+An initialized kobject will perform reference counting without trouble, but it will not appear in
+sysfs. To create sysfs entries, kernel code must pass the object to kobject_add():
+
+```c int kobject_add(struct kobject *kobj); ```
+
+As always, this operation can fail. The function:
+
+```c void kobject_del(struct kobject *kobj); ```
+
+will remove the kobject from sysfs.
+
+There is a kobject_register() function, which is really just the combination of the calls to
+kobject_init() and kobject_add(). Similarly, kobject_unregister() will call
+kobject_del(), then call kobject_put() to release the initial reference created with
+kobject_register() (or really kobject_init())
 
 # Device management
 
