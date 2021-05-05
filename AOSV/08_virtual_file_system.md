@@ -858,6 +858,125 @@ The Request Interface is associated with a queue of pending requests towards the
 
 ## Devices and VFS
 
+### Linking Devices and the VFS
+
+The member **umode_t** *i_mode* in **struct** *inode* tells the type of the inode:
+- directory
+- file
+- char device
+- block device
+- (named) pipe
+
+
+The kernel function ```sys_mknod()``` creates a generic inode. If the iinode represents a device, the
+operations to manage the device are retrieved via the device driver database.
+
+In particular, the inode has the **dev_t** *i_rdev* member
+
+### The mknod() system call
+
+```c int mknod(const char *pathname, mode_t mode, dev_t dev) ```
+
+Where
+- **mode** specifies **permissions** and **type** of **node** to be created, permissions are filtered via the umask of the calling process (mode & umask)
+- different macros can be used to define the node type: S_IFREG, S_IFCHR, S_IFBLK, S_IFIFO.
+- When using S_IFCHR or S_IFBLK, the parameter dev specifies Major and Minor numbers of the device file to create, otherwise it is a don’t care
+
+### Opening Device Files
+In fs/devices.c there is the generic chrdev_open() function. This function needs to find the
+dev-specific file operations. Given the device, number, kobject_lookup() is called to find a
+corresponding kobject. From the kobject we can navigate to the corresponding cdev. The
+device-dependent file operations are then in cdev->ops. This information is then cached in
+the i-node
+
+![](img/op_dev_file.PNG)
+
 ## Classes
 
+Devices are organized into "classes", and a device can belong to multiple classes.
+
+The device class membership is shown in /sys/class/. Block devices for example are
+automatically placed under the "block" class, this is done automatically when the gendisk
+structure is registered in the kernel. To each class is associated a class object.
+
+Most devices don't require the creation of new classes.
+
+```c 
+
+struct class {
+	const char		*name;
+	struct module		*owner;
+
+	const struct attribute_group	**class_groups;
+	const struct attribute_group	**dev_groups;
+	struct kobject			*dev_kobj;
+
+	int (*dev_uevent)(struct device *dev, struct kobj_uevent_env *env);
+	char *(*devnode)(struct device *dev, umode_t *mode);
+
+	void (*class_release)(struct class *class);
+	void (*dev_release)(struct device *dev);
+
+	int (*shutdown_pre)(struct device *dev);
+
+	const struct kobj_ns_type_operations *ns_type;
+	const void *(*namespace)(struct device *dev);
+
+	void (*get_ownership)(struct device *dev, kuid_t *uid, kgid_t *gid);
+
+	const struct dev_pm_ops *pm;
+
+	struct subsys_private *p;
+};
+```
+### APIs
+```c 
+
+static struct class sbd_class = {
+    .name = "class_name",
+    .class_release = release_fn
+};
+
+int class_register(struct class *cls);
+void class_destroy(struct class *cls);
+struct class *class_create(struct module *owner, const
+char *name, struct lock_class_key *key)
+```
+
+Devices can be added to classes with the following function:
+
+```c  struct device *device_create(struct class *class, struct device *parent, dev_t devt, void *drvdata, const char *fmt, ...) ```
+
+And removed with:
+
+```c void device_destroy(struct class *class, dev_t devt)```
+
+Specify attributes for the classes, and functions to "read" and "write" the specific class
+attributes.
+
+``` CLASS_DEVICE_ATTR(name, mode, show, store); ```
+
+This is expanded to a structure called dev_attr_name where we have (as kobjects):
+- ```c ssize_t (*show)(struct class_device *cd, char *buf); ```
+- ```c ssize_t (*store)(struct class_device *, const char *buf, size_t count); ```
+
+
+
 ## udev
+
+udev is the userspace Linux device manager, it manages device nodes in /dev. It also handles
+userspace events raised when devices are added/removed to/from the system. The
+introduction of udev has been due to the degree of complexity associated with device
+management. It is highly configurable and rule-based.
+
+##### Rules
+Udev in userspace looks at /sys to detect changes and see whether new (virtual) devices are
+plugged. Special rule files (in /etc/udev/rules.d) match changes and create files in /dev
+accordingly. Syntax tokens in syntax files:
+- KERNEL: match against the kernel name for the device
+- SUBSYSTEM: match against the subsystem of the device
+- DRIVER: match against the name of the driver backing the device
+- NAME: the name that shall be used for the device node
+- SYMLINK: a list of symbolic links which act as alternative names for the device node
+
+KERNEL=="hdb", DRIVER=="ide-disk", NAME="my_spare_disk", SYMLINK+="sparedisk", MODE="0644"
