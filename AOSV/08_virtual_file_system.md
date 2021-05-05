@@ -659,9 +659,202 @@ kobject_register() (or really kobject_init())
 
 # Device management
 
+The **essential part** of a computer is the **internal
+communication structure** which allows all the
+essential components to communicate. The internal
+communication is built upon data path which are
+called buses. Any **computer** has a system **bus** that
+**connects** most of the **internal hardware devices** (e.g.
+PCI, SCSI, USB). Since several buses may exists they
+are linked together by hardware devices called
+bridges (northbridge and southbridge).
+
+Any I/O device is hosted by one and only one bus. The data path that connects a CPU to an I/O
+device is generally called a I/O bus.
+
+The essential components of the I/O architecture are:
+- **I/O Ports** -> Each device has its own set of I/O addresses which are called I/O ports accessible through special assembly instructions (e.g. in, out)
+- **I/O Interfaces** -> That are hardware circuits between a group of I/O ports and the corresponding device controller, they acts as interpreter translating data and also issuing interrupts
+- **Device Controllers** -> They have two important roles:
+  - interpreting high level commands from I/O ports to electrical signals to the device
+  - converts electrical signals from the device and updates status registers
+
+### The Device Driver Model
+
+In the early days devices were very different to each other, and offering a unified view made
+no sense. With years and standards the need of a unified model of devices arose. Different
+devices have more or less the same set of functionalities that regards:
+- power management
+- plug and play
+- hot-plugging
+
+To implement these kind of operations **Linux** **offers** a set of **data structures** and **functions** that
+**unify view of all buses**, **devices and devices drivers**. This framework is called the **Device Driver Model**. Its main components are:
+- Devices
+- Drivers
+- Buses
+- Classes
+
+### Devices
+Device are representation is stored in the *device* object, but in the Linux kernel they are also
+represented by special files called ***device files*** (in the folder /dev), thus the same system calls
+used to interact with regular files can be used.
+
+According to the characteristics of the underlying drivers, device files can be of two types:
+- **block devices**, they allow data to be accessed randomly, in blocks and in relative small time (e.g. hdd, dvd)
+- **character devices**, they cannot allow data to be accessed randomly and character by character (i.e. bit by bit) (e.g. sound card)
+
+### Numbers
+
+Each device is associated with a couple of numbers: **MAJOR** and **MINOR**:
+- **MAJOR** is the key to access the device driver as registered within a driver database
+- **MINOR** identifies the actual instance of the device driven by that driver (this can be specified by the driver programmer)
+
+There are different tables to register devices, depending on whether the device is a char device or a block device:
+- fs/char_dev.c for char devices
+- fs/block_dev.c for block devices
+
+```bash 
+[gpm@fedora-works ~]$ ls -l /dev/sda /dev/ttyS0
+brw-rw----. 1 root disk 8, 0 Apr 20 08:37 /dev/sda
+crw-rw----. 1 root dialout 4, 64 Apr 20 08:37 /dev/ttyS0
+ |                         |  |     
+device type            Major  Minor
+```
+
+In general, the same major can be given to both a character and a block device! Numbers are
+"assigned" by the Linux Assigned Names and Numbers Authority (http://lanana.org/) and kept
+in Documentation/devices.txt. Defines are in include/uapi/linux/major.h
+
+### The Device Database
+**Char** and **Block** devices behave **differently**, but they are **organized** in **identical** **databases** which
+are handled as **hashmaps**. They are referenced as cdev_map and bdev_map.
+
 ## Char devices
 
+```c
+struct cdev { <-------------------------------
+	struct kobject kobj;                     |
+	struct module *owner;                    |
+	const struct file_operations *ops;       |
+	struct list_head list;                   |
+	dev_t dev;                               |                   
+	unsigned int count;                      |
+} __randomize_layout;                        |
+                                             |
+static struct char_device_struct {           |
+	struct char_device_struct *next;         |
+	unsigned int major;                      |
+	unsigned int baseminor;                  |
+	int minorct;                             |
+	char name[64];                           |
+	struct cdev *cdev;		/* will die */ ---
+} *chrdevs[CHRDEV_MAJOR_HASH_SIZE];
+
+```
+The struct char_device_struct is used to manage device number allocation to drivers.
+
+### Registering Char Device
+ **see slide page 75 block 08**
+
 ## Block devices
+
+The structure corresponding to cdev for a block device is struct gendisk in
+include/linux/genhd.h.
+
+```c
+struct gendisk {
+	/* major, first_minor and minors are input parameters only,
+	 * don't use directly.  Use disk_devt() and disk_max_parts().
+	 */
+	int major;			/* major number of driver */
+	int first_minor;
+	int minors;                     /* maximum number of minors, =1 for
+                                         * disks that can't be partitioned. */
+
+	char disk_name[DISK_NAME_LEN];	/* name of major driver */
+
+	unsigned short events;		/* supported events */
+	unsigned short event_flags;	/* flags related to event processing */
+
+	/* Array of pointers to partitions indexed by partno.
+	 * Protected with matching bdev lock but stat and other
+	 * non-critical accesses use RCU.  Always access through
+	 * helpers.
+	 */
+	struct disk_part_tbl __rcu *part_tbl;
+	struct block_device *part0;
+
+	const struct block_device_operations *fops; <------------------------
+	struct request_queue *queue;                                        |
+	void *private_data;                                                 |
+                                                                        |
+	int flags;                                                          |
+	unsigned long state;`                                               |
+#define GD_NEED_PART_SCAN		0                                       |
+	struct kobject *slave_dir;                                          |
+                                                                        |
+	struct timer_rand_state *random;                                    |
+	atomic_t sync_io;		/* RAID */                                  |
+	struct disk_events *ev;                                             |
+#ifdef  CONFIG_BLK_DEV_INTEGRITY                                        |
+	struct kobject integrity_kobj;                                      |
+#endif	/* CONFIG_BLK_DEV_INTEGRITY */                                  |
+#if IS_ENABLED(CONFIG_CDROM)                                            |
+	struct cdrom_device_info *cdi;                                      |
+#endif                                                                  |
+	int node_id;                                                        |
+	struct badblocks *bb;                                               |
+	struct lockdep_map lockdep_map;                                     |
+};                                                                      |
+                                                                        |
+                                                                        |
+struct block_device_operations { -----------------------------------------
+	blk_qc_t (*submit_bio) (struct bio *bio);
+	int (*open) (struct block_device *, fmode_t);
+	void (*release) (struct gendisk *, fmode_t);
+	int (*rw_page)(struct block_device *, sector_t, struct page *, unsigned int);
+	int (*ioctl) (struct block_device *, fmode_t, unsigned, unsigned long);
+	int (*compat_ioctl) (struct block_device *, fmode_t, unsigned, unsigned long);
+	unsigned int (*check_events) (struct gendisk *disk,
+				      unsigned int clearing);
+	void (*unlock_native_capacity) (struct gendisk *);
+	int (*revalidate_disk) (struct gendisk *);
+	int (*getgeo)(struct block_device *, struct hd_geometry *);
+	int (*set_read_only)(struct block_device *bdev, bool ro);
+	/* this callback is with swap_lock and sometimes page table lock held */
+	void (*swap_slot_free_notify) (struct block_device *, unsigned long);
+	int (*report_zones)(struct gendisk *, sector_t sector,
+			unsigned int nr_zones, report_zones_cb cb, void *data);
+	char *(*devnode)(struct gendisk *disk, umode_t *mode);
+	struct module *owner;
+	const struct pr_ops *pr_ops;
+};
+
+```
+
+In block/genhd.c we find the following functions to register/deregister the driver:
+- int register_blkdev(unsigned int major, const char * name, struct block_device_operations *bdops)
+- int unregister_blkdev(unsigned int major, const char * name)
+
+**As far as regard the block device operations we have neither read nor write!**
+
+### Block Devices Handling
+
+For **char devices** the management of **read/write** **operations** is in **charge** of the **device** **driver**.
+This is not the same for **block devices** **read/write operations** on block devices are **handled** via a
+single **API related to buffer cache operations**.
+
+The actual implementation of the buffer cache policy will determine the real execution
+activities for block device read/write operations.
+
+######  Request Queues
+Request queues (strategies in UNIX) are the way to operate on block devices. Requests
+encapsulate optimizations to manage each specific device (e.g. via the elevator algorithm).
+The Request Interface is associated with a queue of pending requests towards the block device
+
+![](img/block_dev_handling.PNG)
+
 
 ## Devices and VFS
 
