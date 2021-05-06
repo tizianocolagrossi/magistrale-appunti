@@ -311,12 +311,314 @@ immediately in the parent process.
 
 ## Kernel Threads
 
+See slide
+
 # Out Of Memory (OOM) Killer
+It is implemented in mm/oom_kill.c. This module is **activated** (if enabled) when the **system runs out of memory**.
+
+There are three possible actions:
+- kill a random task (bad)
+- let the system crash (worse)
+- try to be smart at picking the process to kill
+
+
+The OOM Killer picks a "good" process and kills it in order to reclaim available memory.
+
+Entry point of the system is **out_of_memory()**. It **tries** to **select** the "**best**" **process** checking for different conditions:
+
+
+- if a process has a **pending** **SIGKILL** or is **exiting**, this is automatically **picked** (check done  by task_will_free_mem())
+- **Otherwise**, it issues a call to **select_bad_process()** which will return a process to be killed:
+  - the picked process is then killed
+  - if no process is found, a panic() is raised
+
+### select_bad_process()
+
+This **iterates** over all available **processes** calling oom_evaluate_task() on them, until a killable process is found. **Unkillable** **tasks** (i.e., kernel threads) are **skipped**, oom_badness() implements the heuristic to pick the process to be killed by computing the "score" associated with each process, the higher the higher the score the higher the probability of getting killed.
+
+##### oom_badness()
+
+A score of zero is given if:
+- the task is unkillable
+- the mm field is NULL
+- if the process is in the middle of a fork
+
+The score is then computed proportionally to the RAM, swap, and pagetable usage
+
+```
+points = get_mm_rss(p->mm) + get_mm_counter(p->mm, MM_SWAPENTS) + mm_pgtables_bytes(p->mm) / PAGE_SIZE;
+```
+
+
 
 # Process Starting
 
+We all know how to launch the compiled program: './program'
+
+The question is: **why does all this work**? What is the convention used between kernel and user space?
+
+### starting a program from bash
+
+```c
+static int execute_disk_command (char *command, int pipe_in, int pipe_out, int async, struct fd_bitmap *fds_to_close) {
+    pid_t pid;
+    pid = make_child (command, async);
+    if (pid == 0) {
+        shell_execve (command, args, export_env);
+    }
+}
+```
+
+```c
+pid_t make_child (char *command, int async_p) {
+    pid_t pid;
+    int forksleep;
+    start_pipeline();
+    forksleep = 1;
+    while ((pid = fork ()) < 0 && errno == EAGAIN && forksleep < FORKSLEEP_MAX) {
+        sys_error("fork: retry");
+        reap_zombie_children();
+        if (forksleep > 1 && sleep(forksleep) != 0)
+            break;
+        forksleep <<= 1;
+    }
+    
+    /* ... */
+    return (pid);
+}
+```
+
+```c
+int shell_execve (char *command, char **args, char **env) {
+    execve (command, args, env);
+    
+    READ_SAMPLE_BUF (command, sample, sample_len);
+    
+    if (sample_len == 0)
+        return (EXECUTION_SUCCESS);
+    if (sample_len > 0) {
+        if (sample_len > 2 && sample[0] == '#' && sample[1] == '!')
+            return (execute_shell_script(sample, sample_len, command, args, env));
+        else if (check_binary_file (sample, sample_len)) {
+            internal_error (_("%s: cannot execute binary file"), command);
+            return (EX_BINARY_FILE);
+        }
+    }
+    longjmp(subshell_top_level, 1);
+}
+```
+
+### exec*
+
+exec*() changes the program file that an existing process is running:
+- it first **wipes** out the memory state of the calling process
+- it then goes to the filesystem to **find** the **program** file **requested**
+- it **copies** this file into the program's memory and initializes register state, including the PC
+- It **doesn't alter** most of the other fields in the PCB. The process calling exec*() (the child 
+copy of the shell, in this case) can, e.g., change the opened files
+
+Let’s see how exec*() is implemented.
+
+### struct linux_binprm
+
+The struct linux_binprm is in charge of keeping information about a binary file.
+
+
+```c
+struct linux_binprm {
+    char buf[BINPRM_BUF_SIZE];
+    struct page *page[MAX_ARG_PAGES];
+    unsigned long p; /* current top of mem */
+    int sh_bang;
+    struct file* file;
+    int e_uid, e_gid;
+    kernel_cap_t cap_inheritable, cap_permitted, cap_effective;
+    int argc, envc;
+    char *filename; /* Name of binary */
+    unsigned long loader, exec;
+};
+```
+
+### do_execve()
+
+vedi slide per codice
+
+### search_binary_handler()
+
+The function scans a list of binary file handlers registered in the kernel. If no handler is able to  recognize the image format, syscall returns the ENOEXEC error (“Exec Format Error”).
+
+For ELF files we have in fs/binfmt_elf.c:
+- load_elf_binary(), the function:
+  - loads image file to memory using mmap;
+  - reads the program header and sets permissions accordingly
+  - elf_ex = *((struct elfhdr *)bprm->buf);
+
+
 ## The ELF Format
+
+VB base
+
+ELF: Executable and Linking Format
+
+ELF defines the format of binary executables. There are four different categories:
+
+- **Relocatable**, created by compilers and assemblers. Must be processed by the linker  before being run.
+- **Executable**, all symbols are resolved, except for shared libraries’ symbols, which are resolved at runtime.
+- **Shared object**, a **library** which is shared by different programs, contains all the symbols’ information used by the linker, and the code to be executed at runtime.
+- **Core file**, a core dump.
+
+
+ELF files have a twofold nature
+- compilers, assemblers and linkers handle them as a set of **logical** sections;
+- the system loader handles them as a set of **segments**.
+
+### Relocatable File
+
+A relocatable file or a shared object is a collection of sections. Each section contains a single kind of information, such as executable code, read-only data, read/write data, relocation entries, or symbols.
+
+
+Each symbol’s address is defined in relation to the section which contains it. For example, a function’s entry point is defined in relation to the section of the program which contains it
+
+### Section Header
+
+```c
+typedef struct {
+    Elf32_Word sh_name; /* Section name (string tbl index) */
+    Elf32_Word sh_type; /* Section type */
+    Elf32_Word sh_flags; /* Section flags */
+    Elf32_Addr sh_addr; /* Section virtual addr at execution */
+    Elf32_Off sh_offset; /* Section file offset */
+    Elf32_Word sh_size; /* Section size in bytes */
+    Elf32_Word sh_link; /* Link to another section */
+    Elf32_Word sh_info; /* Additional section information */
+    Elf32_Word sh_addralign; /* Section alignment */
+    Elf32_Word sh_entsize; /* Entry size if section holds table */
+} Elf32_Shdr;
+```
+
+#### Types and Flags
+
+Types:
+- PROGBITS: The section contains the program content (code, data, debug information).
+- NOBITS: Same as PROGBITS, yet with a null size.
+- SYMTAB and DYNSYM: The section contains a symbol table.
+- STRTAB: The section contains a string table.
+- REL and RELA: The section contains relocation information.
+- DYNAMIC and HASH: The section contains dynamic linking information.
+Flags:
+- WRITE: The section contains runtime-writeable data.
+- ALLOC: The section occupies memory at runtime.
+- EXECINSTR: The section contains executable machine instructions.
+
+#### Examples
+
+- .text: contains program’s instructions
+  - Type: PROGBITS
+  - Flags: ALLOC + EXECINSTR
+- .data: contains pre-initialized read/write data
+  - Type: PROGBITS
+  - Flags: ALLOC + WRITE
+- .rodata: contains pre-initialized read-only data
+  - Type: PROGBITS
+  - Flags: ALLOC
+- .bss: contains uninitialized data. Will be set to zero at startup.
+  - Type: NOBITS
+  - Flags: ALLOC + WRITE
+
+
+### Executable Files
+
+Usually, an executable file has only few segments:
+- A read-only segment for code.
+- A read-only segment for read-only data.
+- A read/write segment for other data.
+
+Any section marked with flag ALLOC is packed in the proper segment, so that the operating  system is able to map the file to memory with few operations.
+
+If .data and .bss sections are present, they are placed within the same read/write segment.
+
+### Program Header
+
+```c
+typedef struct {
+    Elf32_Word p_type; /* Segment type */
+    Elf32_Off p_offset; /* Segment file offset */
+    Elf32_Addr p_vaddr; /* Segment virtual address */
+    Elf32_Addr p_paddr; /* Segment physical address */
+    Elf32_Word p_filesz; /* Segment size in file */
+    Elf32_Word p_memsz; /* Segment size in memory */
+    Elf32_Word p_flags; /* Segment flags */
+    Elf32_Word p_align; /* Segment alignment */
+} Elf32_Phdr;
+```
+
+### Static relocation
+
+A symbol can be:
+- **strong**, a strong symbol replaces a weak one and if two strong symbols have the same  name the linker resolves in favour of the first; by default every symbol is strong
+- **weak**, more modules can have a symbol with the same name of a weak one, the  declared entity cannot be overloaded by other modules; It is useful for libraries which  want to avoid conflicts with user programs.
 
 ## Dynamic Linking
 
+The main() function is not the actual entry point for the program. glibc inserts auxiliary functions. The actual entry point is called _start.
+
+
+The **Static** Relocation **works** at **linking** **time** but you obviously **do not want to include all the  libraries** that you use in your program in your executable file, this **because eats up memory**  and almost all the programs use the same set of libraries (e.g. the stdlib). Symbols that are not  included in the final executable file are resolved with the Dynamic Linking that is performed by the kernel when the program starts. 
+
+
+The Kernel starts the dynamic linker which is stored in the .interp section of the program (usually /lib/ld-linux.so.2). If no dynamic linker is specified, control is given at address specified in e_entry.
+
+
+Initialization steps:
+- Self initialization
+- Loading Shared Libraries
+- Resolving remaining relocations
+- Transfer control to the application
+
+
+The **most important data structures** which are filled are:
+- **Procedure Linkage Table (PLT)**, used to call functions whose address isn't known at link time
+- **Global Offsets Table (GOT)**, similarly used to resolve addresses of data/functions
+
+#### Data Structures
+
+- .dynsym: a minimal symbol table used by the dynamic linker when performing relocations
+- .hash: a hash table that is used to quickly locate a given symbol in the .dynsym, usually in one or two tries.
+- .dynstr: string table related to the symbols stored in .dynsym
+
+**These tables are used to fill the GOT table, that is populated upon need (lazy binding).**
+
+The first PLT entry is special. Other entries are identical, one for each function needing resolution.
+1. A jump to a location which is specified in a corresponding GOT entry
+2. Preparation of arguments for a resolver routine
+3. Call to the resolver routine, which resides in the first entry of the PLT
+
+The first PLT entry is a call to the **resolver** located in the dynamic loader itself.
+
+#### steps
+
+When func is called for the **first time**:
+1. PLT[n] is called, and jumps to the address pointed to it in GOT[n]
+2. This address points into PLT[n] itself, to the preparation of arguments for the resolver.
+3. The resolver is then called, by jumping to PLT[0]
+4. The resolver performs resolution of the actual address of func, places its actual address into GOT[n] and calls func
+
+![](img/lazy_bind1.PNG)
+![](img/lazy_bind2.PNG)
+
 ## Initial Steps of Programs’ Life
+
+So far the dynamic linker has loaded the shared libraries in memory. GOT is populated when the program requires certain functions. Then, the dynamic linker calls _start
+
+![](img/start.PNG)
+
+### Userspace Life of a Program
+
+![](img/uspace_life_prog.PNG)
+
+### **Stack Layout at Program Startup**
+
+![](img/stack_layout_start.PNG)
+
+
+
