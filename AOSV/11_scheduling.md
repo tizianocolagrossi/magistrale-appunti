@@ -225,6 +225,8 @@ woken up by the kernel when some condition becomes true.
 Wait Queues changed many times in the history of the kernel. In the earlier version they
 suffered from the "Thundering Herd" performance problem.
 
+> In computer science, the thundering herd problem occurs when a large number of processes or threads waiting for an event are awoken when that event occurs, but only one process is able to handle the event. When the processes wake up, they will each try to handle the event, but only one will win. All processes will compete for resources, possibly freezing the computer, until the herd is calmed down again.
+
 For solving the Thundering Herd problem the
 kernel defines two kinds of sleeping processes:
 - **exclusive**, are selectively woken up by the kernel
