@@ -486,6 +486,84 @@ These are not just linked list, they are **pointers to ```c struct prio_array```
 
 The ```c struct prio_array``` maintains an array of *list_head* for each possible value of the priority, so 140 linked lists and a bitmap.
 
+```c
+struct runqueue {
+    /* number of runnable tasks */
+    unsigned long nr_running;
+    ...
+    struct prio_array *active;
+    struct prio_array *expired;
+    struct prio_array arrays[2];
+}
+
+struct prio_array {
+    int nr_active;
+    unsigned long bitmap[BITMAP_SIZE];
+    struct list_head queue[MAX_PRIO];
+};
+```
+
+###### The job of the scheduler
+The idea behind the **two sub-runqueues**, is simple: when a **task** on the **active** runqueue **uses** **all** of its **time slice** it’s **moved** to the expired runqueue. During this move the **time slice is recalculated** (and so its **priority**). 
+
+If **no task** exists on the **active runqueue** the **pointers** for the active and the expired runqueues are **swapped**.
+
+The scheduler always **chooses the task on the highest priority list to execute**. To make this process efficient, a bitmap is used to defined when tasks are on a given priority list. Therefore, on most architectures, the instruction find_first_bit_set() is used to find the highest priority bit set in one of five 32-bit words.
+
+As a consequence, the **time** it takes to find a task to execute **depends** not on the number of active tasks but instead on the **fixed number of priorities**.
+
+###### Prioritization
+
+To prevent tasks from hogging the CPU and thus starving other tasks that need CPU access, the O(1) scheduler can dynamically alter a task's priority. It does so by penalizing tasks that are bound to a CPU and rewarding tasks that are I/O bound. I/O-bound tasks commonly use the CPU to set up an I/O and then sleep awaiting the completion of the I/O. This type of behavior gives other tasks access to the CPU.
+
+Because **I/O-bound** tasks are viewed as **altruistic** **for CPU access**, their priority is decreased (a reward) by a maximum of five priority levels. CPU-bound tasks are punished by having their priority increased by up to five levels. Tasks are determined to be I/O-bound or CPU-bound based on an **interactivity heuristic**. A task's interactiveness metric is calculated based on how much time the task executes compared to how much time it sleeps. Note that because I/O tasks schedule I/O and then wait, an I/O-bound task spends more time sleeping and waiting for I/O completion. This increases its interactive metric.
+
+### Cross-CPU Scheduling
+Once a task lands on a CPU, it might use up its time slice and get put back on a prioritized queue for rerunning -- **but how might it ever end up on another processor**?
+
+If all the tasks on CPU_i exit, the CPU_i stand idle while another CPU_j round-robins three, ten or several dozen other tasks. The 2.6 scheduler must, on occasion, see if cross-CPU balancing is needed. Every 200ms a CPU checks to see if any other CPU is out of balance and needs to be balanced with that processor. If the processor is idle, it checks every 1ms so as to get started on a real task earlier. 
+
+### Staircase Scheduler
+The Staircase scheduler was proposed by Con Kolivar, 2004 but none of its schedulers have been merged in the Kernel tree
+
+The **goal** of the staircase scheduler is to **increase "responsiveness"** and **reduce the complexity of the O(1) Scheduler**. It is mostly based on dropping the priority recalculation, replacing it with a simpler rank-based scheme.
+
+It is supposed to work better up to ~10 CPUs (tailored for desktop environments).
+
+The **expired array is removed** and the **staircase data structure is used instead**. 
+
+An expired process will be put back into the staircase, but at the next lower rank. It can, thus, continue to run, but at a lower priority. When it exhausts another time slice, it moves down again. And so on. The following little table shows how long the process spends at each priority level:
+
+
+When a process reaches the end of the staircase (iteration 2), it gets the previous base priority -1 but with one more timeslice. If a process sleeps (i.e., an interactive process) it gets back up in the staircase.
+
+This approach favors interactive processes rather CPU-bound ones.
+
+### The Completely Fair Scheduler (CFS)
+###### From v2.6.23
+
+The Completely Fair Scheduler has been merged in October 2007. This is since then the default Scheduler. The CFS models an "ideal, precise multitasking CPU" on real hardware.
+
+It is based on a red-black tree, where nodes are ordered by process execution time in nanoseconds. A maximum execution time is also calculated for each process.
+
+The **main idea** behind the CFS is to **maintain balance** (fairness) in **providing processor time to tasks**. This means processes should be given a fair amount of the processor. When the time for tasks is out of balance (meaning that one or more tasks are not given a fair amount of time relative to others), then those out-of-balance tasks should be given time to execute
+
+###### The Virtual Runtime
+
+To determine the balance, the CFS maintains the amount of time provided to a given task in what’s called the **virtual runtime**. The smaller a task’s virtual runtime - meaning the smaller amount of time a task has been permitted access to the processor - the higher its need for the processor. The CFS also includes the concept of sleeper fairness to ensure that tasks that are not currently runnable (for example, waiting for I/O) receive a comparable share of the processor when they eventually need it.
+
+But rather than maintain the tasks in a run queue, as has been done in prior Linux schedulers, the CFS **maintains a time-ordered red-black tree**. A red-black tree is a tree with a couple of interesting and useful properties. First, it’s self-balancing, which means that no path in the tree will ever be more than twice as long as any other. Second, operations on the tree occur in O(log n) time (where n is the number of nodes in the tree). This means that you can insert or delete a task quickly and efficiently
+
+
+
+
+
+With tasks stored in the time-ordered red-black tree, tasks with the gravest need for the processor (lowest virtual runtime) are stored toward the left side of the tree, and tasks with the least need of the processor (highest virtual runtimes) are stored toward the right side of the tree. The scheduler then, to be fair, picks the left-most node of the red-black tree to schedule next to maintain fairness. The task accounts for its time with the CPU by adding its execution time to the virtual runtime and is then inserted back into the tree if runnable. In this way, tasks on the left side of the tree are given time to execute, and the contents of the tree migrate from the right to the left to maintain fairness. Therefore, each runnable task chases the other to maintain a balance of execution across the set of runnable tasks
+
+
+###### Where have the priorities gone?
+
+CFS doesn’t use priorities directly but instead **uses them as a decay factor** for the time a task is permitted to execute. Lower-priority tasks have higher factors of decay, where higher-priority tasks have lower factors of delay. This means that the time a task is permitted to execute dissipates more quickly for a lower-priority task than for a higher-priority task. That’s an elegant solution to avoid maintaining run queues per priority.
 
 
 
