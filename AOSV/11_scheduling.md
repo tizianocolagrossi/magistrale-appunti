@@ -411,5 +411,84 @@ asmlinkage void schedule(void) {
 }
 ```
 
+###### The Goodness function
+The goodness is computed as follows:
+```
+goodness (p)    = 20 - p->nice (base time quantum)
+                + p->counter (ticks left in the time quantum)
+                + 1 (if page table is shared with the previous process)
+                + 15 (if SMP and p was last running of the same CPU)
+```
+
+Possible values:
+- **-1000** **never select** this process to run
+- **0** **out of time slice** (p->counter == 0)
+- **>0** the goodness value, the **higher the better**
+- **+1000** **real-time process, always select**
+
+###### Epoch management
+
+```c
+...
+/* Do we need to re-calculate counters? */
+if (unlikely(!c)) {
+    struct task struct *p;
+    spin_unlock_irq(&runqueue_lock);
+    read_lock(&tasklist_lock);
+
+    for_each_task(p)
+        p->counter = (p->counter >> 1) + NICE_TO_TICKS(p->nice);
+
+    read_unlock(&tasklist_lock);
+    spin_lock_irq(&runqueue lock);
+
+    goto repeat_schedule;
+}
+...
+```
+
+###### Analysis
+
+Disadvantages:
+- a **non-runnable task** is also **searched** to determine its **goodness**
+- **mixture** of **runnable/non-runnable** tasks into a **single** **runqueue** in any epoch
+- Performance problems on SMP, as the length of critical sections depends on system load
+
+Advantages:
+- **perfect Load Sharing**
+- **no CPU underutilization** for any workload type
+- **no** (temporary) **binding** of threads to CPUs
+
+
+###### Contention on SMP
+
+![](img/cont_smp.PNG)
+
+
+### **The O(1) scheduler**
+###### From kernel 2.6.8
+
+The O(1) scheduler has been introduced from version 2.6.8 by Ingo Molnàr. The principal
+characteristic of the algorithm is that schedules tasks in **constant time**, independently of the
+number of active processes.
+
+It introduced:
+- the global priority scale which we discussed;
+- **early preemption**: if a task enters the TASK_RUNNING state its priority is checked to see whether to call schedule();
+- **static priority** for **real-time** tasks;
+- **dynamic** **priority** for **other tasks**, recalculated at the end of their timeslice (increases interactivity).
+
+###### Runqueues
+As we already discussed, **each CPU has its own struct runqueue**, the concept has been
+introduced with this scheduler. However, this data structure keeps **two pointers** (to 2
+sub-runqueues): one to the **list of active** processes and one to the **list of expired** processes.
+These are not just linked list, they are **pointers to ```c struct prio_array```**.
+
+The ```c struct prio_array``` maintains an array of *list_head* for each possible value of the priority, so 140 linked lists and a bitmap.
+
+
+
+
+
 
 # Context Switch
