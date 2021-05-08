@@ -275,6 +275,141 @@ These instead only TASK_INTERRUPTIBLE
 
 ## Scheduler Entry Point
 
+Scheduling can be activated in 2 ways: when a task goes to sleep (or yield the CPU) or by a
+periodic mechanism.
+
+![](img/sche_act.PNG)
+
+### scheduler entry point
+
+The entry point for the scheduler is schedule(void) in kernel/sched.c.
+This is called from several places in the kernel:
+
+- **Direct Invocatio**n: an explicit call to *schedule()* is issued
+- **Lazy Invocation**: some hint is given to the kernel indicating that *schedule()* should be called soon (see need_resched)
+
+These invocations can be triggered by the **Main** **Scheduler** or the **Periodic** **Scheduler**.
+
+In general **schedule()** entails **3 distinct phases**, which depend on the scheduler implementation:
+1. some **checks** on the current process (e.g., with respect to signal processing)
+2. **selection** of the process to be activated
+3. **context switch**
+
+The function *scheduler_tick()* is **called** **from** *update_process_times()*, **called at every tick** of the current CPU (remind the Time Management chapter).
+
+This function has two goals:
+- managing scheduling-specific statistics
+- calling the scheduling method of the class
+
+### Main scheduler
+The **main scheduler function** (*schedule()*) is **invoked** directly in **many points** in the **kernel** to allocate the
+CPU to a process other than the currently active one. **After returning from system calls the kernel also
+checks whether the flag TIF_NEED_RESCHED** of the current process is set (by the Periodic Scheduler for
+example), and if it is checked *schedule()* is called
+
+![](img/sched_call.PNG)
+
+
+### Task states
+
+The state field in the PCB tracks the current state of the process/thread. Values are defined in include/linux/sched.h:
+
+- **TASK_RUNNING** the process is either executing on CPU or waiting to be executed
+- **TASK_INTERRUPTIBLE** the process is sleeping until some condition becomes true
+- **TASK_UNINTERRUPTIBLE** like TASK_INTERRUPTIBLE but they can be only woken up by the kernel, not by external signals
+- **TASK_STOPPED** process has stopped (after signal SIGSTOP, SIGTSTP)
+- TASK_PARKED
+- TASK_DEAD
+- **TASK_WAKEKILL** is designed to wake the process on receipt of fatal signals
+- TASK_WAKING
+- TASK_NOLOAD
+- **TASK_NEW** the task has been just created
+- TASK_STATE_MAX
+
+Convenience macros for the sake of set_current_state:
+- #define **TASK_KILLABLE** (TASK_WAKEKILL | TASK_UNINTERRUPTIBLE)
+- #define **TASK_STOPPED** (TASK_WAKEKILL | __TASK_STOPPED)
+- #define **TASK_TRACED** (TASK_WAKEKILL | __TASK_TRACED)
+- #define **TASK_IDLE** (TASK_UNINTERRUPTIBLE | TASK_NOLOAD)
+
+Convenience macros for the sake of wake_up():
+- #define TASK_NORMAL (TASK_INTERRUPTIBLE | TASK_UNINTERRUPTIBLE)
+
+All the PCBs registered in the runqueue are TASK_RUNNING
+
+![](img/task_state_transition.PNG)
+
+### **TASK_*INTERRUPTIBLE**
+
+In case an operation cannot be completed immediately (think of a read()) the task goes to
+sleep in a wait queue. While doing this, the task enters either the TASK_INTERRUPTIBLE or
+TASK_UNINTERRUPTIBLE state. At this point, the kernel thread calls schedule() to effectively
+put to sleep the currently-running one and pick the new one to be activated.
+
+Dealing with TASK_INTERRUPTIBLE can be difficult when the syscall is interrupted for example:
+- at kernel level, understand that the task has been resumed due to an interrupt
+- clean up all the work that has been done so far
+- return to userspace with -EINTR
+- userspace has to understand that a syscall was interrupted (bugs here!)
+
+Conversely, a TASK_UNINTERRUPTIBLE might never be woken up again (the dreaded D state in
+ps). TASK_KILLABLE is handy for this (since 2.6.25), same as TASK_UNINTERRUPTIBLE except
+for fatal sigs.
+
+### Waking up sleeping tasks
+
+The event a task is waiting for calls one of the **wake_up*()** functions on the corresponding
+wait queue. A task is set to runnable and put back on a runqueue.
+
+**If** the **woken** up **task** has a **higher priority than the other tasks** **on** the **runqueue**,
+**TIF_NEED_RESCHED** is **flagged**.
+
+
 ## Scheduler Algorithms
+
+### Brief History
+- **v1.2**: **circular queue** for runnable task management that operated with a **round-robin**
+**scheduling policy**. This scheduler was efficient for adding and removing processes (with a
+lock to protect the structure)
+- **v2.2**: **introduced** the idea of **scheduling classes**, permitting **scheduling policies** for
+**real-time tasks**, **non-preemptible tasks**, and **non-real-time tasks**. The 2.2 scheduler also
+included **support** for **symmetric multiprocessing** (SMP)
+- **v2.4**: relatively simple scheduler that **operated in O(N)** time (*as it iterated over every
+task during a scheduling event*), time divided into **epochs**, **inefficient for real-time tasks**
+- **v2.6**: **O(1) scheduler**, was designed to **solve many of the problems with the 2.4**
+scheduler—namely, the scheduler was **not required to iterate the entire task list to
+identify the next task to schedule**, very **efficient** **but** the **code base was gigantic** and
+obscure with magic constants, **difficult to maintain**. Due to the pressure of these
+problems and **another proposal** for a scheduler **by Con Kolivas** (the **Rotating Staircase
+Deadline Scheduler**), the **O(1)** was **replaced** by the **CFS** (in **v2.6.23**), that is **today** in the
+**stable branch** of the kernel.
+
+
+### **The O(n) scheduler**
+###### Up to kernel 2.6.7
+
+The scheduling algorithm used in earlier versions of Linux was quite **simple**: at every process switch the **kernel** **scanned** the **entire list of runnable processes** (O(n)), **computed** their **priorities** and **selected** the “**best**” **process** to run.
+
+For running the algorithm, the time is divided into epochs, at the end of an epoch, every process has run once, using its own quantum if possible. If a process did not use the whole quantum, they have half of the remaining time slice added to the new timeslice.
+
+```c
+asmlinkage void schedule(void) {
+    int this_cpu, c; /* weight */
+    ...
+    repeat_schedule:
+    /* Default process to select.. */
+    next = idle_task(this_cpu);
+    c = -1000; /* weight */
+    list_for_each(tmp, &runqueue_head) {
+            p = list_entry(tmp, struct task_struct, run_list);
+            if (can_schedule(p, this_cpu)) {
+                int weight = goodness(p, this_cpu, prev->active_mm);
+                if (weight > c)
+                    c = weight, next = p;
+        }
+    }
+}
+```
+
 
 # Context Switch
