@@ -62,6 +62,34 @@ order to free the page and come link to the list where all the page belongs.
 # System Calls / Interrupts
 
 ## Discuss how parameters are passed to system calls in Linux, also explaining how the used approach helps at kernel portability.
+System calls are special function. The parameters are alway passed trought the CPU register because the system calls are function that 
+cross user and kernel space, and for this reason neighter the user mode stack nor the kerner stack can be used. The syscall dispathcer 
+then copies the paramethers from the CPU registers into the kernel stack.  In a X86 machine the register are used followind this order
+here: eax, ebx, ecx, edx, esi, edi and ebp. And this is usefoul for portability because the dispatcher then place the register in the 
+right spot in the stack and this help for portability reason.
+
+
+
+
+
+
+## Discuss the Linux system call invocation path on the different flavors of x86 architectures. Describe how the kernel source base allows for kernel portability to different architectures of the system call interface
+On the x86 architecture the syscalls can be invoked using the INT 0x80 instruction or the SYSENTER instruction 
+(supported from the kernel 2.6 after pentium II). The handlers for the two methods are system_call() and sysenter_entry(). 
+The INT 0x80 instruction is registered as a trap gate and this instruction is slow because need to perform all the security check for 
+an interrupt. Instead the sysenter instruction is more fast (is also called Fast System Call by intel) because it provides a faster way 
+to switch from user mode and kernel mode using three MSR register. Obviously a libc wrapper can call the sysenter instruction only if the 
+CPU and the kernel support it and in order to doing that the libc invoke the __kernel_vsyscall() in the vsyscall page where is placed at 
+boot time the more performant way to invoke a syscall.
+When a User mode process invoke a syscall the CPU switch to Kernel mode and start the execution of a kernel function. Both the INT 0x80
+and the sysenter instruction end with a jump to the syscall handler (dispatcher). Each syscall is identified by a number (in x86 in eax register) 
+the dispatcher use this identifier by searching in the syscall table to identify the right syscall routine. The syscall handler is similar 
+to other exception handler. The syscall handler forst store the context of most of the register, then via a call invoke the C function 
+(syscall service routine find by the dispatcher searching into the syscall table) then after the syscall ser routine and the execution 
+the user mode context is Restored with in eax the output of the syscall. The paramether of the syscall are passed all (up to 6) in the CPU
+register because the syscall is a function that cross user and kernel mode and so neighter the user nor kernel stack can be used. This
+is usefoul also for portability reason because only a little portion of the code change from changing the architecture of the machine
+(the portion of store and restore the registers) 
 
 
 
@@ -70,7 +98,22 @@ order to free the page and come link to the list where all the page belongs.
 
 
 ## Describe the hardware and software architecture used for interrupt delivery and management on modern Linux/x86 systems. Explain how Inter-Processor Interrupts are explicitly handled in this context, emphasizing on the differences with respect to standard interrupt management.
-
+HW point of view: Each HW device capable of issuing interrupt REQ usually has a single output line designated ad Interrupt Request Line
+This line basically has two state. All these line are connected to the input pins of an circuit called Programmable Interrupt Controller
+wich perform the action needed to control the IRQs. It monitor the line and is a signal is raised in a IRQ line the signal is elaborated
+and than is send to the INTR pin of the CPU, the PIC waits until the CPU ack the signal. In the SW point of view instead the interrupt signal
+are controlled after each asm instruction and if a signal is raised then create a switch (if we are in user mode ) to kernel mode and is handled
+the Interrupt ( we can have also a nested excution when a non critical section of an interrupt handler is interrupted from another IRQs).
+The interrupt handler is selected similarly to the syscall handler. But due to the fact that in this case more device can share the same IRQ line 
+the CPU runs at cascade all the handler of the devices that uses that IRQ line Till the CPU execute the right handler. Before some control 
+must be done for security reason where the CPL and segment DPL and gate DPL are checkedin order to procede. (CPL < seg DPL or gate DPL < CPL). 
+The interrupt handler run at the expenses of the user process interrupted and since the interrupt can come at any time the interrupt handling 
+must ho out as soon as possible. For this the interrupt handling process is always split in two part a critical part and a deferrable part. 
+IPIs are some particular interrupts. Since nowdays we have multiple core in a CPU the IPIs are some interrupt created in order to propagate 
+interrupt to other cores. they are syncronous at the sender but asyncrhonous at the receiver. The main role for the IPIs is to startup core,
+forcing a core to run a function, invalidate a tlb line and other. Each core has a Local APIC (advanced interrupt controller) with this apic
+the i/o interrupt can be managed using a round robin fashon or a smarter way, sending the interrupt to the core that are sunning the lower 
+proority task. The Ipis can be send to all core or sended only to a subset or a single core. 
 
 
 
@@ -78,14 +121,17 @@ order to free the page and come link to the list where all the page belongs.
 
 
 ## Discuss what are the different types of interrupts supported by x86 CPUs. Illustrate how Linux supports the management of these interrupts.
-
-
-
-
-
-
-
-## Discuss the Linux system call invocation path on the different flavors of x86 architectures. Describe how the kernel source base allows for kernel portability to different architectures of the system call interface
+There are two kind of interrupt synch (generated after instruction or error) and async (i/o int) these interrupt are generally electrical signal.
+Each device that can generate an interrupt request has an interrupt line, all the line of the devices are connected to the PIC Programmable Interrupt
+Controller that receive the interrupt and than propagate the high priority interrupt to the INTR pin of the CPU than need to ACK the signal in order
+to permit to lower the signal by the PIC and can raise another signal. There are I/O interrups and loval interrupts. The local interrupt (IPI) are handled
+by the local APIC that each core has. 
+The CPU control if a signal is raised after each instruction (id the interrupt are not disabled by CLI and renabled by STI). Than the CPU runs all the 
+handler associated to that IRQ line till it find the device that has generated that interrupt. before some check must be done to check if the CPL < seg DPL
+or if is a gate if gate DPL < than CPL. 
+the i/o interrupt can be handled or in a round robin fashon by the core or can be selected the core that is running the task with lower priority.
+the ipis are handled by the APIc that are Advanced PIC present on each core in the cpu. The IPIs can be used to force the scheduled of a function in a core, 
+or wake up a core, or flish a tlb line and more. This kind of interrups (IPIs) can be send to all the cores or a subset of the cores in the CPU.
 
 
 
@@ -97,19 +143,24 @@ order to free the page and come link to the list where all the page belongs.
 
 # Concurrency
 
-## Describe how Linux supports per-CPU variables. What are the benefits of relying on this programming facility? What are the problems a programmer must face in order for their code to be correct?
-
-
-
-
-
-
-
 # FS
 
 ## Illustrate the differences between character and block devices. Discuss how the Linux kernel allows userspace applications to interact with these classes of devices in a homogeneous way.
 
+The main difference from the char and the block devices is that a char device can be accessed only as a stream of sequential data,
+one byte after another. Instead the block devices can be accessed as chunk of fixed data that can be randomly accessed (not seq).
+A kar deivices is like a serial port instead a block devices is like an HDD. The write and the read from a block devices are handled
+by the driver of the dcevices. The char and the Block devices are mapped into the VFS (Virtual file system) The VFS is an unified way
+to handle the FS. the main idea of the VFS is the Common File System, this means that each physical implementation
+must translate its representation into the VFS's common model. The common model consist of 4 main objects. 
 
+Superblock, that is the object that contains thee info and the dtriver of the FS
+
+Inode, is the objects that represent all the file, directory etc
+
+File, is the representation od the open Inode, so the interaction from the inode to a process
+
+Dentry, stores info anout the linking of a directory entru (its a special inode)
 
 
 
@@ -128,8 +179,15 @@ order to free the page and come link to the list where all the page belongs.
 # Scheduling
 
 ## Discuss the main differences between the CPU scheduling algorithms in Linux 2.4 and Linux 2.6.
-
-
+from the 2.4 and the 2.6 in the linux kernel has changed the cheduler algorithm. The main difference is that in the 
+2.4 version the schediler operate in O(N) instead in the 2.6 version the scheduler operate in O(1) (so constant time).
+This because has changed the main data structure and how the priority is calculated. In the O(N) was used a LL and the 
+scheduler in order to select the right task to schedule need to scan and calculate the priority of all the process in 
+the LL (for this we have O(N), so a linear algo), insead in the O(1) version of the scheduler the data structure
+used i a RB three and the node are ordered by its 'priority' even is the priority are no more used ad in the O(N).
+The priority are used to calcilate the **virtual runtime** so the task insithe the RB are ordered using the virtual
+priority (left lowest vruntime, right high runtime). And the scheduler schedule the lefter node in the tree. The
+evaluation of the vruntime is done in the descheduing procedure.
 
 
 
