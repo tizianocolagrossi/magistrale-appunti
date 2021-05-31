@@ -169,7 +169,9 @@ Dentry, stores info anout the linking of a directory entru (its a special inode)
 # Userspace / Process Management
 
 ## Illustrate what are the steps undertaken by the Linux kernel to startup a new process, following the invocation of an execve() syscall.
-
+The execve create a new process cloning the father process that called the execve syscall than replace the entire userspace of the process 
+with the userspace of the new pocess. if some page are shared this pages are shared till the new process doesn't try to write on one of them
+because Linux implement the Copy on write. 
 
 
 
@@ -196,17 +198,14 @@ evaluation of the vruntime is done in the descheduing procedure.
 # Virtualization
 
 # Security
-
-## Describe the ring model on x86 CPUs. Illustrate what are the steps required to enable and use it, and the way modern operating systems rely on it to enforce internal security from userspace applications
-
-
-
-
-
-
-
 ## Describe the methodologies which allow to enhance the security of modern operating systems.
-
+The basic security in an OS is the reuired authentication (if was set) in irder to access to the system. And also the 
+system of permission inside the OS, like rwx and are set for user group and others. Than for the part of process
+therea are some thecniques like ASLR (enabled by PIE), NX flag for the stack, canaries and RELRO tecniques. Than are
+present also dome HIDS (that are IDS but developed in order to see the endpoint of a network aka the machine). 
+And for the network security is based ion the concept of the ACL (access control list), wich are a list of access rule 
+based in address of user allowed. And there are also the implementation of namespace that can isolate some processes
+in order to create a safe environment.
 
 
 
@@ -214,7 +213,13 @@ evaluation of the vruntime is done in the descheduing procedure.
 
 
 ## Describe what are the reasons behind the development of the Linux kpatch system, and illustrate how it works
-
+The developement of the Linux Kpathc system is user in industrial environment where the OS cannot be shutdown and so
+there is the need for a way to patch the system live (so with the OS running). The Kpatch system is based on ftrace.
+In order to apply the patch first is needed to load the new function in memory, then is needed to **link** the new 
+function into kernel and then patch the function using ftrace. Ftrace redirect the calling to the oldest function
+into the new function by placing in the landing point of the call if the deprecated fucntion a new call tho ftrace that
+will return to the new function (execute ) and than proceder with the flow of operation. Obviously this kind of operation
+can be done multiple times. 
 
 
 
