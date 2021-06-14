@@ -1,7 +1,7 @@
 
 # Le regole principali del GDPR
 
-Le questioni di protezione dei dati secondo il diritto dell'UE hanno principalmente a che fare con la trasparenza della raccolta, dell'elaborazione e dell'uso dei dati. Gli individui hanno il diritto di sapere perché i loro dati vengono elaborati, così come il diritto di accedere a tali dati e di farli rettificare. 
+Le questioni di protezione dei dati secondo il diritto dell'UE hanno **principalmente** a che fare con la **trasparenza della raccolta**, dell'**elaborazione** e dell'**uso** dei **dati**. Gli individui hanno il diritto di sapere perché i loro dati vengono elaborati, così come il diritto di accedere a tali dati e di farli rettificare. 
 
 Nella formulazione dell'articolo 8(2) della Carta dei diritti fondamentali dell'UE, "tali dati devono essere trattati in modo equo ... e sulla base del consenso della persona interessata o di un'altra base legittima prevista dalla legge". 
 
@@ -11,11 +11,11 @@ Questo diritto generale all'informationelle selbst-bestimmung degli individui in
 
 All'interno di questo quadro generale, il GDPR ha sostanzialmente mantenuto l'architettura della direttiva 95/46/CE, che era ampiamente basata sulle linee guida sulla privacy "informazione e consenso" dell'Organizzazione per la cooperazione e lo sviluppo economico (OCSE) del 1980.
 
-In breve, l'obiettivo del GDPR è quello di rafforzare sia i diritti dell'individuo che i poteri delle autorità europee, rafforzando al contempo gli obblighi e le responsabilità dei controllori dei dati attraverso uno strumento di hard law direttamente applicabile sotto forma di un regolamento UE. Questa triplice dimensione del GDPR è evidente in alcune delle sue regole principali, tra cui: 
+In breve, l'**obiettivo del GDPR è quello di rafforzare sia i diritti dell'individuo che i poteri delle autorità europee**, rafforzando al contempo gli obblighi e le responsabilità dei controllori dei dati attraverso uno strumento di hard law direttamente applicabile sotto forma di un regolamento UE. Questa triplice dimensione del GDPR è evidente in alcune delle sue regole principali, tra cui: 
 
-- Articoli 21 e 22 sull'autodeterminazione individuale e il processo decisionale automatizzato, ad esempio, il profiling; 
-- L'articolo 33 sulle notifiche delle violazioni dei dati personali all'autorità di controllo "competente ai sensi dell'articolo 55", insieme ai poteri di quest'ultima di imporre sanzioni amministrative ai sensi dell'articolo 83; 
-- l'articolo 17 sul diritto alla cancellazione, o diritto all'oblio, e l'articolo 20 sulla portabilità dei dati, come nuova serie di doveri e obblighi per i responsabili del trattamento
+- Articoli 21 e 22 sull'**autodeterminazione individuale** e il **processo decisionale automatizzato**, ad esempio, il **profiling**; 
+- L'articolo 33 sulle **notifiche delle violazioni dei dati personali** all'autorità di controllo "competente ai sensi dell'articolo 55", insieme ai poteri di quest'ultima di imporre sanzioni amministrative ai sensi dell'articolo 83; 
+- l'articolo 17 sul diritto alla **cancellazione**, o diritto all'oblio, e l'articolo 20 sulla **portabilità dei dati**, come nuova serie di doveri e obblighi per i responsabili del trattamento
 
 
 Su questa base, si tratta quindi di verificare se e in che misura la generazione e il trattamento in tempo reale dei Big Data personali siano compatibili con le disposizioni, cioè le regole e i principi primari del nuovo quadro giuridico, come il principio di limitazione delle finalità e la minimizzazione dei dati. 
@@ -30,7 +30,7 @@ In realtà, il nuovo quadro giuridico prevede due possibili soluzioni.
 
 Il primo modo per rendere la raccolta e l'uso dei Big Data compatibile con i principi del GDPR riguarda l'uso di tecniche di pseudonimizzazione.
 
-Nella formulazione dell'articolo 4, paragrafo 5, ciò significa che i dati personali sono trattati in modo tale che i dati personali non possano più essere attribuiti a uno specifico interessato senza l'uso di informazioni aggiuntive, a condizione che tali informazioni aggiuntive siano conservate separatamente e siano soggette a misure tecniche e organizzative per garantire che i dati personali non siano attribuiti a una persona fisica identificata o identificabile.
+Nella formulazione dell'articolo 4, paragrafo 5, ciò significa che i dati personali sono trattati in modo tale che i **dati personali non possano più essere attribuiti a uno specifico interessato senza l'uso di informazioni aggiuntive**, a **condizione** che **tali informazioni** aggiuntive siano **conservate separatamente e siano soggette a misure tecniche e organizzative per garantire che i dati personali non siano attribuiti a una persona fisica identificata o identificabile**.
 
 La seconda soluzione ha a che fare con l'esenzione del trattamento dei dati a fini statistici, ai sensi degli articoli 5(1)(b) ed (e),14(5)(b),17(3)(d), 21(6) e 89 del GDPR. 
 
@@ -50,7 +50,7 @@ Per migliorare la nostra comprensione delle regole primarie del GDPR, passiamo o
 
 # Le regole secondarie del GDPR
 
-Come menzionato sopra nell'introduzione, le regole secondarie del diritto comprendono le regole di riconoscimento, di aggiudicazione e di cambiamento. 
+Come menzionato sopra nell'introduzione, le **regole secondarie del diritto comprendono le regole di riconoscimento, di aggiudicazione e di cambiamento**. 
 
 Le regole di riconoscimento sono le meta-regole con cui tutte le altre regole del sistema sono identificate e intese come valide, vale a dire, ciò che conta come una legge valida all'interno di quel sistema. Le regole di aggiudicazione prescrivono un rimedio per tutti i casi in cui una regola è stata violata, ad esempio, le procedure che le autorità di controllo dovrebbero seguire ai sensi dell'articolo 36, o 83, del GDPR. Infine, le regole di cambiamento permettono di creare, modificare o sopprimere le regole primarie del sistema.
 
