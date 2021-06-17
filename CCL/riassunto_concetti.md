@@ -58,13 +58,19 @@ padroneggiati ancora, nel convincimento che quello che verrà è il prodotto di 
 
 In questa visione il futuro è la concretizzazione pre-calcolabile dei fatti che accadranno.
 
+Nella rete incide una ragione quantitativa che fa credere che all'aumentare della quantita aumenti la qualita.
+La qualita consiste nell'immaterialita dell'esercizio dell libero arbitrio.
+
+Nella civilta dei dati il dominio della quantita sulla qualita si afferma con l'emarginazioe della vita 
+interiore, trasmutata in una delle tante esoterizzare e poddibili fonti di dati che essendo trattate da algoritmi 
+trasformano tutto in entuta quantitative misurabili dal denaro.
 
 ## piattaforme
 La piattaforma produce un certo spazio che rende possibile l'interazione tra gli utenti, pero la ragione creativa 
 (di chi a creato la piattaforma) non consiste nel perseguire le interazioni relazionali degli uomini, ma sfruttare 
 i loro accessi e paddroneggiare i lori dati.
 
-## denaro come scopo e misura  (elevare mezzo allo scopo)
+## denaro come scopo e misura della liberta  (elevare mezzo allo scopo)
 tra la diverse piattaforme digitali e il denaro c'è l'analogia consistente nell elevare il mezzo allo scopo.
 
 Nelle piattaforme come facebook lo scopo del comunicare viene sostituito dal rimanere connessi dal mezzo.
@@ -85,6 +91,24 @@ la tecnica del mercato, il denaro si affermano nel convincimento che ogni soddis
 al possesso di una certa somma. I dati hanno la medesima struttura del denaro, come il denaro si affermano come quei mezzi
 dominanti che oscurano la riflessione e la ricerca sui fini degli atti umani, diventi strumentali al successo dei mezzi (piattaforme).
 
+Solo per gli uomini c'è l'istituzione del denaro, strumento che consente la commercializzazione dei beni del mercato e 
+frutto dell'attivita creativa dell'io e del tu. **che pero si trasforma in uno scopo dell'esistenza umana**
+
+Mentre la comunicazione consente la comparazioe di ipotesi, visioni di senso e la distinzione di mezzi/scopi, nelle 
+connessioni i giudizi sono prodotti dagli algorimi privi di vita interiore e di una consapevole differenziazione mezzo/scopo.
+L'assenza di tale distinzione oscira la qualita, ridotta in quantita, perche la qualita emerge nella coscienza che gli scopi
+sono principali ed orientati rispetto alla quantita dei mezzi.
+
+La qualita invece si illumina nella persona ed è mesa in gioco nella formazione della sua personalita.
+Nella rete invece incide una ragione quantitativa che fa credere che all'aumentare della quantita aumenti la qualita.
+La qualita consiste nell'immaterialita dell'esercizio dell libero arbitrio.
+
+La chiarificazione dei mezzi elevati a scopi si ha nell analisi del denaro che costituisce la struttura mercantile
+della rete e della connessione che prende posto della comunicazione.
+
+Nel denaro le persone sono quantitativamente equivalenti in quanto trattare senza riguardo alla loro vita interiore.
+Solo il riconoscimento interpersonale compone in armonia l'uguaglianza delle persone e la differenza esistenziale 
+della personalita. Ma la personalita non puo essere numerizzata.
 
 
 # rapporti relazionali (connessioni)
@@ -154,6 +178,8 @@ Con la mediazione delle videochiamate l'interezza dei dialoganti nei loro cinque
 
 Il riconoscimento tra gli uomini e gli algoritmi non puo avere senso perche l'io non si ritrova in alcun tu.
 
+La vita interiore viene rimossa sostituendo la relazione di riconoscimento con i rapporti mercantili che
+si concretizzano grazie al denaro.
 
 ## liberta 
 La liberta è connessa alla responsabilità e all imputabilità, riferita a quanto si lega all'atto rischiato, non anticipabile.
@@ -218,6 +244,11 @@ i naviganti in rete entrano in rapporto con gli algoritmi edeguendo un percorso 
 Nei congegni macchinici (anche quelli intelligenti con autoapprendimento flessibile) è assente la distinzione
 tra mezzo e fine, dinstinzione che apre lo spazio per la liberta.
 
+Alla riflessione della persona e alla sua personalita si ritiene di poter sostituire con maggiore oggettivita
+e certezza l'elaborazione algoritmica dei dati estratti dalla rete, che libererebbe la persona dalla 
+consapevolezza incerta e dal rischio della liberta. Sostituendo l'avventura della liberta con la corretta predizione.
+
+
 
 ## robogiudice robolegislatore
 La selezione degli scopi di un sistema giuridico non deve essere demandata ai robolegislatori, che con i loro 
@@ -243,6 +274,14 @@ mendiante l'arte dell'intepretazione.
 
 nell'interpretazione le parole diversamente dai numeri, comunicano alche il non-detto affiche l'altro partecipi
 all'opera interpretativa.
+
+Nel diritto l'arte dell'interpretazione non puo esere lasciata  alla programmazione e al successo funzionale degli algoritmi
+poiche "anche gli algoritmi hanno dei limiti, non sanno come ci si sente umani", una dimensione essenziale per
+poter effettuare un'opera di interpretazine perche il giurista nel fare cio si riferisce alle intenzioni sia del
+legislatore sia dell'imputato. 
+
+Solo esseri umani possono incontrare come tali la vita interiore altrui secondo la struttura empatica delle comunicazioni
+dialogiche.
 
 
 
@@ -270,6 +309,16 @@ li trattano come oggetti di dominio esercitando la violenza del disconoscimento 
 giuridica.
 
 Si dovrebbe predere atto che gli utenti non paiono essere delel cose dei congegni macchinici ma sono incarne ed ossa.
+
+L'utente invece è costretto dai padroni a essere una qualcosa e non un qualcuno, disperdendolo nel profilo che gli viene 
+assegnato, perche computazionalmente piu utile per accrescere i profitti dei padroni.
+
+Alla riflessione della persona e alla sua personalita si ritiene di poter sostituire con maggiore oggettivita
+e certezza l'elaborazione algoritmica dei dati estratti dalla rete, che libererebbe la persona dalla 
+consapevolezza incerta e dal rischio della liberta. Sostituendo l'avventura della liberta con la corretta predizione.
+
+E questa liberazione della liberta si concretizza in un fattuale assoggettamento al dominio sei signori della rete 
+mediante la profilazione.
 
 ## resposabilita
 
