@@ -327,7 +327,7 @@ se riferito alle macchine, le quali non possono essere descritte come soggetti d
 perche non hanno una volota orientata ad essere piu potente nell'avere maggiore denaro da investire secondo 
 ipotesi creative nuove o prospettive mercantili piu vantaggiose.
 
-
+## equivalenza e uguaglianza
 
 ## determinismo e libero arbitrio
 
