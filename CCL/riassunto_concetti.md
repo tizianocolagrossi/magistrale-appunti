@@ -137,6 +137,24 @@ Il predominio dei mezzi sui fini, non investe solo i sigoli scopi ma addirittura
 Il quale (l'uomo) viene allontanato da se stesso e tra lui e la sua parte piu autentica si frappongono gli strumenti, le capacita
 e conquiste tecniche.
 
+Le analisi sulla struttura del denaro mostrano le analogie tra la civilta dei dati e il denaro.
+Dati e denaro nascono come mezzi, che diventano scopi consolidando il trapasso della qualita alla quantita.
+
+Mentre per gli esseri umani la Qualita è il mezzo per giungere ad uno scopo di qualita.
+La quantita è materiale, la qualita immateriale. Gli uominisono consumatori de elementi necessari alla vita, 
+ma anche produttori creativi di progetti che eseguono degli scopi e non si arrestano ai mezzi.
+
+Solo gli uomini hanno una memoria-ripetizione che si compone con la creazione.
+
+Dati e denaro essendo insuperabilmente mezzi incidono in modo da non esigere l'attivarsi dello sguardi sulla formazione
+creativa degli scopi e possono anzi consigliare gli uomini all'abitualita dal ripetere, liberandoli negativamente
+dall'impegno della non ripetizione e della creazione.
+
+Le persone non esauriscono pero la loro esistenza nell'operare come agenti informazioneli interconnessi poiche in tale
+condizioni non vi è nulla della peculiarita unama della relazione di riconoscimento, comunicazione rischiata nel dialogo.
+
+
+
 
 # rapporti relazionali (connessioni)
 Nell'infosfera i rapporti relazionali tra un IO e la collettività assumono una niova configurazione.
@@ -207,6 +225,8 @@ Il riconoscimento tra gli uomini e gli algoritmi non puo avere senso perche l'io
 
 La vita interiore viene rimossa sostituendo la relazione di riconoscimento con i rapporti mercantili che
 si concretizzano grazie al denaro.
+
+
 
 ## liberta 
 La liberta è connessa alla responsabilità e all imputabilità, riferita a quanto si lega all'atto rischiato, non anticipabile.
@@ -318,6 +338,18 @@ di Luhmann
 
 celebrativa del fondamentalismo funzionale e della riduzione degli scopi nei mezzi, in quanto viene meno la selezioe
 degli scopi.
+
+Per non essere lasciato alla cieca fattialita della forza il superamento delle controversie esige il trattamento del 
+legislatore e del giudice, terzi e imparziali, che garantiscono che le parti condividano secondo una giusta legalita
+il loro mondo, affermando il principio di uguaglianza, garanzia del diritto alla formazione delle personalita.
+
+Gli atti esigono l'arte dell'interpretazione che in quanto arte e non tecnica eccede il calcolo delle macchine
+inidonee ad emettere un giudizio giuridico.
+
+Porre problemi e ricercare il senso esige di infrangere ogni automazione prendendone distanza per far luce sui
+sensi del contenuto e su scelte e decisioni.
+
+
 
 
 
@@ -446,22 +478,220 @@ condotte e programmi.
 La dialettica servo-Signore di Hegel, le figure non trovano piu spazio perche subentra la figura della macchina che oltrepassa
 le figure, impone agli esseru umani la governabilita computazionale trasformadoli in dati tra altri dati.
 
-
-
-
-## determinismo e libero arbitrio
-
-## civilta dei dati
-
-## giustizia e legge
-
 ## Língiustizia non é un calcolo mal riuscito ma é un atto imputabile alla liberta giuridica
+Il relazionarsi con il denaro riduce ogni essere al suo quantum numerico. La ragione funzionale della rete si concretizza
+nel generare profitto e determina uno squilibrio insuperabile perche oggi nessuno vuole rinunciare alla rete e in ogni suo 
+accesso c'è una abituale non pensata sottomissione a regole non scelte democraticamente.
+
+Il senso delle comunicazioni non è automatizzabile, ma costituisce la specificita dell'apprendimento umano, mai riducibile 
+all'addomesticamento dei viventi unumani o alla programmazione macchinica, perche comporta simultaneamente il conoscersi
+e il distanziarsi da cio che viene conosciuto, e in questo distanziamento si sollecita la dignita degli atti liberi, nel 
+dubbio, del rischio delle decisioni.
+
+Il primato dell'automazione comporta che nelle relazioni l'informazione sui dati prevalga sulla comunicazione delle idee.
+Il comunicare avvia il movimento dialogico del domandare e rispondere tra le intenzioni dell'io e dell tu.
+
+L'intelligenza artufuciale non è confondibile con quella umana, legata al libero arbitrio. La differenza tra i due tipi
+di intelligenza puo essere compresa nel considerare le loro qualificazioni temporali.
+
+Quella umana si volge verso il futuro, si concretizza nel rischio creativo di una originale svolta di senso, la creativita, 
+consapevolezza, il ritrivarsi dinnazi ad un aut aut, le scelte, gli atti liberi di cui si è imputabili sono dimensioni
+riferibili solo all'intelligenza umana, il cui nucleo è il questionare dialogicamente sul senso.
+
+Nell'intelligenza artificiale il nucleo è sostituito dalle connessioni digitali dei dati numerizzati, dimensioni in 
+cui l'io è ridotto ad essere esclusivamente una entita personale, che esiste in terza persona, senza discuterne il senso.
+
+L'intelligenza artificiale e gli agloritmi operano secondo schemi che hanno successo peerche non si interrogano sul senso
+delle loro operazioni, ma unicamente funzionano ad alta velocita senza intervalli per dubitare.
+
+L'intelligenza umana e quella artificiale sono separate da una differenza ummedicabile, la prima non è automatizzabile
+in quanto l'intenzione dell'io non è precalcolabile. l'io e le azioni, l'elogio, la deplorazione, sono elementi 
+strutturali del diritto, della giustizia. Sono dimensioni che aprono la possibilita delle controversie giuridiche tra
+le persone, contriversie che non sono l'esito di un calcolo mal riuscito, di una disfunzione nell'integrale 
+automatizzazione della civilta dei dati e pertanto non possono essere risolte dal potere computazionale di un robogiudice
+perche non trattabili come i dati dall'intelligenza artificiale idonea ad interpretare l'intenzione degli atti umani e 
+qualificarla.
+
+La qualita dimensione importantissima del diritto, non è quatificabile, esemplarmente l'arte dell'interpretazione
+del giurista non è demandata al trattamento computazionale perche concerne la qualita delle intenzioni, irriducibile 
+alla quantita dei dati, è concretizzata da persone, giuristi, e destinata ad altre persone, non è il prodotto delle 
+macchine per altre macchine, costutivamente estranee al pathos e alla vita inferiore.
+
+Una macchina non interpreta ma produce informazioni.
+
+Analigamente un robot non puo fare compagnia perche non avverte il sentimento della solitudine che nasce dallo spegnimento
+delle comunicazioni.
+
+l'interpretazione come la relazione discorsiva che puo superare il dolore della solitudine sono ambiti che so presentano nella 
+luminosita del desiderio e la ricerca del senso, assente nelle macchine, e sono ambiti radicati nelle relazioni dialogiche di riconoscimento.
+
+Le due tesi:
+> "la funzione della funzione è la funzione" Luhmann
+
+> "il desiderio è desiderio di desiderio e desiderio dell'altro" Lacan
+
+consentono di valutare l'attuale societa dei dati.
+
+Affermando la prima tesi si sosiene che principale ed orientante è il successo funzionale, centrato sulla trasmutazione della comunicazione
+in connessione, e sulla prioritarieta della velocita di trasmissione, con un assenza di riflessione sullo scopo della funzione 
+al di la del suo stesso funzionale.
+
+Affermando la seconda, il desiderio non si riduce a un successo funzionale, non si interroga sigli scopi esaurendosi in un successo 
+computazionale depersonalizzato ma il desiderio si mantiene inesauribilmente aperto alla ricerca del senso esistenziale, 
+è desiderio di senso, ossia ricerca di mantenersi impegnati nella formazione della personalita grazie al desiderio 
+dell'altro ossia aperti all'accoglienza creativa e originale del tu che meraviglia e sollecita il desiderio di senso
+che consente il movimento delle domande e delle risposte.
+
+I dati e le persone oggi sono considerati indistintamente come elementi di un calcolo che puo essere anche giusto o ingiusto
+avendo presente pero che l'ingiustizia non è piu riferibile a un atto libero e umano ma a un calcolo mal riuscito. 
+In questa direzione il superamento dell'ingiustizia deVe essere affidato all'automatizzazazione del diritto che funzionera
+con successo incontrando la gente solo come dati in un "calcolo ben riuscito".
+
+**L'esercizio della volonta e la liberta non è delegabile, altrimenti tutto sarebbe immocente, privo di responsabilita**
+esisterebbe un mondo mancante del diritto nella sua dimensione terza e imparziale e non ci sarebbero piu le controversie
+disciplinate dal diritto poiche la parti sarebbero esaminate automatizzandole riducendo le differenze esistenziali a 
+equivalenze funzionali.
 
 
 
-## Automatizzazione e liberta giuridica
+## liberta giuridica
 
-## Ragione e automatizzazione
+Ci si convince come dice Floridi che il nostri comportamenti e le nostre scelte possano essere manipolati e previsti
+dalle tecnoligie, che sembra ci conoscano meglio di noi stessim alludendo alle macchine predittive, ritenute idonee a
+anticipare mediante l'elaborazione dei datila formazione dei nostri pensieri, privandoci dell'originalita.
 
-## impatto della tecnologia e dei big data
+I signori della rete infatti riducono il nostro desiderio a una catena di appetiti oggettivabili in computazione di
+dati. 
 
+## livellamento dei dati
+il questa epoca della medieta e del livellamento dei dati nelle procedure dell'assoluta automatizzazione si manifesta
+il nucleo della dittatura del si.
+
+come dice Heidegger, si dice ,si pensa, 
+> "ogniuno è gli altri, nessuno è se stesso, il Si prescrive anche l'imterpretazione del mondo e dell'essere del mondo"
+
+Il si descritto da Heidegger aquista i tratti imposti da che detiene il potere di estrarre e di elaborare  i dati circolanti
+in rete, usati per costruire dei profili prescritti dai naviganti.
+Naviganto costretti in una medieta livellantem profili esclusivi al servizio di un Si ch si presenta come l'orizzonte anonimo
+di una quotudianeita media, esaurito in una ripetizione senza partecipazione.
+
+Ma il Si oggi è imposto da una potenza per sfruttare la sporporzione che si genera tra servi e signori?
+
+Nell'immediatezza sembra che la potenza maggiore si quella dei padroni che impongono ai servi la profilazione,
+ma dobbiamo ricordare che anche i sognori son oasserviti al fondamentalismo funzionale.
+
+La signoria dei dati sognoreggia andhe le tradizionali figure dei signori, che si mostrano svolgere solo una 
+funzione esecutiva del potere computazionale.
+
+L'infosfera nasce nel mondo umano ma tende a sostituirlo con un ambiente che si impone sia ai servi che ai padroni
+della rete che cercano di assoggetare dli altrui oscurando la liberta crativa nell'esecuzione impersonale, come avviene
+negli animali che ripetono le loro memorie biologiche.
+
+Il mercato dei dati trasforma il mondo aperto degli uomini nell'ambiente chiuso della computazione, che si impone 
+alle figure servo/sognore trattandole come dati.
+
+Per cio che riguard ail diritto si afferma la tendenza a ridurre le aspettative degli esseri umani a ricevere informazioni
+e servizi con l'esito che anche gli stessi diritti fondamentali possano consistere un servizi come dei dati trattati come 
+altri.
+
+**il diritto della persona perde la sua incondizionatezza** si oscurano i siritti prima degli esseri umani, la loro non 
+commerciabilita, il loro non poter essere trattati secondi i poli propri del mercato attuale.
+
+il superamento della condizione attuale potrebbe avvenire con una riflessione istituente una diversa disciplina giuridica
+della proprieta dei dati.
+
+L'istituzione di una nuova discipline giuridica dell'estrazione dei dati muove da lconsiderare che si è davanti a nuovi beni
+che nel rispetto dei diritti umani non devono generare squilibri tra che ne ha la proprieta e chi non ha nessun tipo
+di partecipazione ad istiuzioni democratiche in modo da non generare sproporzioni giuridiche.
+
+Si devono proggettare modalita di relazione che non consolidano situazioni di assoggettamento e padronanza.
+**Tuttavia è inevitabile vedere che oggi il potere computazionale padroneggia anche il padrone**
+
+Ma considerando anche l'irrinunciabilita agli elementi dell'infosfera, ambiente della nostra esistenza, ci
+ritriviamo dinnanzi all'imoegno per riaffermare il momento piu iniziale della dignita umana, che nella 
+comunita dei dati è rispettata con l'impegho alla libaerazione dai processi spersonalizzanti de automazione,
+nucleo del potere computazionale che registrano la riduzione sia della sognoria che della servitu.
+
+## autonomia umana
+L'autonomia umana non è automatizzabile e riducibile ad una autonomia digitale. L'autonomia umanaha come 
+dimensione principale il futuro, mentre quella digitale la successione du un momento dopo l'altro, di un 
+presente seguito da un altro presente denza svolte di senso.
+
+Buber ritiene che negli esseri umani "all'inizio è la relazione" distinguendo la relazione tra io e tu, 
+propria della relazione dialogica in cui mendiante le parole di dice piu di quel che si dice, si comunica
+un senso.
+
+Ma nelle connessioniin rete la parola viene impegnata come un numero e non come una parola che frena il flusso
+dei dati e contrasta il fondamentalismo funzionale.
+
+Oggi la condizione dell'essere alienato  consiste nella riduzione sell'uomo a un esso, ad un insieme di dati.
+viene imposto un modello di rapporti analogo a quello del feudatario e i servi, nella consapevolezza che oggi
+i beni piu importanto sono i dati. Il feudo si trasforma nella quantita dei dati che generano altri dati e 
+impongono la profilazione coattiva dei naviganti. 
+
+Ma la prodizione e la mercificazione dei dati sonoelementi nascenti dall'attivita creativa da che ha realizzato
+la infosfera e il fondamentalismo informazionale, negativamente orientato per oalla riduzione dell'ampiezza della 
+creativita umana nei confini di una merce quantificabile col denaro.
+
+I signori della rete mercificando i naviganti, mercificano anche le proprie esistenze, perche si chiudono
+nella dimensione univoca del'profitto, cosi da non poter accedere alla gratuita del dono di senso.
+
+Il potere dei dati non nasce dai dati ma dalle persone, da delle elita che operano costruendo il loro potere 
+signoreggiando la rete con la negazione dei principi di riconoscimento di uguaglianza ma solo in virtu dell'
+utile, oscurando il dialogo e la gratuita.
+
+**Sfera dialogica e infosfera hanno distinte qualificazioni temporali**
+
+Solo nella prima (dialogica) c'è l'imputabilita, responsabilita, il diritto e il giudizio giuridico, perch l'uomo
+risponde del situarsi ruflettente della sua coscienza savanti ai contenuti delal coscienza, in questa situazione
+si formani le questioni che nella vita interiore dell'io sorgono.
+
+Nella seconda (infosfera) di hanno solo operazioni esecutive che no nchedono il dubbio, la scelta, in una esteriorita
+assoluta senza l'io.
+
+Heidegger dice che l'uomo è cio che è perche riesce a sottrarsi, cioè a aquisire consapevilezza dell'impossibilita
+mediantge la scienza di oggettivare il senso della gratuita del donarsi tra l'io e il tu.
+
+Questo sottrarsi incide sull'esistenza e la coesistenza degli uomini,mostrando l'irriducibilita delel parole ai numeri.
+Nella civilta dei dati il sottrarsi consiste nel non lasciarsi automatizzare come correbbe il potere automatizzante.
+
+gli uomini si sottraggohno reciprocamente nelle loro attivita dialoganti confermando la plurivocita delle parole 
+che esige l'arte dell'interpretazione, e la univocita dei numeri che esigono l'esecuzione automatica.
+
+Nella situazione attuale c'è il pericolo che le parole acquisicano la struttura numerica dei dati.
+
+## automazione e liberta giuridica
+> "la scienza non pensa" Heidegger
+
+Heidegger coglie nell'uomo il movimento per sottrarsi alla conoscienza scientifica oggettivante, movimento che oggi 
+riguarda la riberazione dell'uomo da in perdersi nel trattamento escusivo dei dati.
+
+Si possono individiare varie tipologie di liberta. La liberta giuridica compone la dimensione personale, individuale a 
+quella interpersonale, sociale e no nconsiste nella liberta dell'io che finisce dove inizia quella del tu perche entrambi
+esercitano la loro liberta nella reciproca sollecitazione, attivata mediante la comunicazione dialogica che li accomuna.
+
+Nessuno puo pretendere l'adempimento coattivo alal promessa in una relazione amicale, sentimentale, qualora una persona
+non rispetti le obligazioni assunte nei nostri confronti. 
+
+Gli atti della liberta umana esercitata nelle relazioni giuridiche comportano il sorgere della pretesa all'adempimento
+di quanto liberamente convenuto secondi le leggi vigenti tra le parti rivolgendo la pretesa al terzo giudice affiche 
+si pronunci per superare una condizione conflittuale.
+
+**Oggi vi è la tendenza a perseguire l'automazione, che si sostutuisce agli atti liberi**
+
+gli automatismi si presentano certi e capaci di ovviare  il richio dell'avventura della liberta umana.
+
+Si riflette sul convincimento che la situazione  di finitudine umana comporti i limiti nell'estrarre e elaborare 
+integralmente i dati, limiti che verrebbero superati da macchine intelligenti e predittive che predumono di calcolare
+le nostre scelte.
+
+Se si potesse concepire il trovarsi dinnanzi a un'unica combinatoria di dati, ci si troverebbe dinnazi ad un sapere
+assoluto, non distinti saperi parziali, e in assenza di pluralita si interpretazioni discorsive non si avrebbero
+neppure le contriversie e prederebbe senso anche il dibattimento nelle aule del tribunale.
+
+gli algoritmi e le macchine non abitano un mondo, funzionano unicamente secondi necessita ma mai accedono alla 
+possobilita, che non è materiale, che anzi l'automazione consiste nel liberarsi di essa.
+
+Nella possibilita l'uomo è autore si scelte, selezioni che mai una macchina puo compiere e tantomeno giudicare.
+
+## raagione e automatizzazione
