@@ -20,6 +20,20 @@ i loro dati, utilizzati come benicommerciali da trattare secondo la funzionalita
 non c'è relazione di riconoscimento reciproco e incondizionato nel rispetto fella liberta giuridica e si afferma un
 rapporto di sproporzione.
 
+Nella situazione attuale i cittadini della civilta dei dati non possono esercitare il diritto alla formazione
+e utilizzo della rete. 
+
+Il potere degli algoritmi e delle macchine non è democratico ma elitario, ristretti gruppi decidono autoritariamente
+i profili da imporre, la interiorita digitale da imporre per sostituire quella personale dei consumatori, al fine 
+di accrescere il profilo.
+
+Il senso del navigare conincide all'opposto con successo funzionale della navigazione online perche si oscura la 
+comunicazione dialogica e la liberta umana della scelta dinnanzi ad un aut aut. 
+
+Gli enti inumani si esauriscono nell eseguire le leggi del loro finzionamento, nella noia della ripetizione.
+Ma all'umanita appartiene la dignita, l'impegno creativo del lavoro, mediante la memoria che ci permettee di
+non ricominciare mai da zero del compimento di un atto ma attivando a una memoria che costudisce i contenuti
+gia risultati efficaci per la selezione e il raggiungimento dello scopo.
 
 
 ## dati come merce
@@ -109,6 +123,19 @@ della rete e della connessione che prende posto della comunicazione.
 Nel denaro le persone sono quantitativamente equivalenti in quanto trattare senza riguardo alla loro vita interiore.
 Solo il riconoscimento interpersonale compone in armonia l'uguaglianza delle persone e la differenza esistenziale 
 della personalita. Ma la personalita non puo essere numerizzata.
+
+Attualmente lo strumento assume priorita e oscura lo scopo. La connessione (strumento) rende insignificante la 
+comunicazione (scopo) (vedi ws temporalita ascincrona nelle relazioni dialogiche).
+
+Se lo strumento per superare la distanza oscura lo scopo di vicinanza con gli altri, allora si consolida la tendenza
+che realizza una liberta intesa come liberazione dagli altri, incontrati come entita da dominare e usare per un beneficio
+informazionale e mercantile.
+
+> "l'euforia per i trionfi dei nuovi strumenti tecnologici di comunicazione ci fa dimenticare che cio che conta è il delle cose comunicate" Simmel
+
+Il predominio dei mezzi sui fini, non investe solo i sigoli scopi ma addirittura il fulcro di essi in cui convergono, l'uomo. 
+Il quale (l'uomo) viene allontanato da se stesso e tra lui e la sua parte piu autentica si frappongono gli strumenti, le capacita
+e conquiste tecniche.
 
 
 # rapporti relazionali (connessioni)
@@ -283,6 +310,17 @@ legislatore sia dell'imputato.
 Solo esseri umani possono incontrare come tali la vita interiore altrui secondo la struttura empatica delle comunicazioni
 dialogiche.
 
+In una societa automatica sono privi di segnificato i magistrati e i dibbattimenti processuali,ma residua solo
+la successione sistemica di strutturazioni numeriche ne giuste/ingiuste ne mirali/immorali e si afferma la tesi
+di Luhmann
+
+> "la funsione della funzione è la funzione" Lumann
+
+celebrativa del fondamentalismo funzionale e della riduzione degli scopi nei mezzi, in quanto viene meno la selezioe
+degli scopi.
+
+
+
 
 
 ## profilazione (Elter ego)
@@ -327,7 +365,89 @@ se riferito alle macchine, le quali non possono essere descritte come soggetti d
 perche non hanno una volota orientata ad essere piu potente nell'avere maggiore denaro da investire secondo 
 ipotesi creative nuove o prospettive mercantili piu vantaggiose.
 
-## equivalenza e uguaglianza
+## Principio di uguaglianza & equivalenza e uguaglianza
+Il principio di uguaglianza ha il nucleo nelle relazini di riconoscimento, dove gli uomini si riconoscono
+nel rispetto dell'uguaglianza (**non consistente in equivalenza**). 
+
+Nella societa attuale si afferma invece l'equivalenza, principio strutturato come il denaro, poiche 
+entranbi trattano i beni, i dati, valutandoli solo secondi le quantita, in modo calcolatore, senza attenzione alla qualita.
+
+Il principIo di ugualglianza non ha la stessa configurazione del denaro.
+ 
+## rischio della liberta creativa-imputabile, certezza delle operazioni esecutive-innocenti
+Nelle persone la ripetizione dei contenuti mnemonici gia dati (mezzi, passati) esin interseca e rimane
+connessa e differenziata rispetto alla creazione di nuovi contenuti (scopi, futuro).
+Questo tipo di legame tra mezzi/scopi e memoria-ripetizione e memoria-creazione differenzia gli uomini
+da ogni altro ente, in cui non c'è la separazione mezzo/scopo in quanto è assente la vita interiore, 
+ma si danno solo operazioni vitali macchinali in cui è esclusa la riflessione del senso, che vivifica la storia, 
+assente nel mindo inumano, confinato in un mutare provo di storicita.
+
+Nella condizione conteporanea la ricerca del senso e degli scopi è oscurata dall'eseguire memorie presenti
+nelle reti e i mezzi assorbiscono gli scopi.
+
+Nella metafisica Aristotele distingue 4 tipi di causa:
+- materiale
+- formale
+- efficiente
+- finale
+
+che consentono di cogliere il rapporto e le differenze tra memorie umane (creazione-ripetizione) e memorie
+macchiniche (ripetizione-esecuzione). 
+Queste 4 cause permangono distinte unicamente nella volonta, consapevolezza, liberta della vita interiore unana,
+mentre sono sempre indifferenziate negli enti non umani.
+
+Negli esseri umani la causa finale si radica nel desiderio, non confindibile con appetire un qualcosa, oggettivato
+quantificato dal denaro che puo essere saziato e spento da un quanlcosa.
+
+Nessun essere umano esiste da solo, la formazione della sua personalita so concretizza nella trasformazione del 
+mondo abitato anche da altri, in una filiazione non biologica ma sapienzale aperta e vivificata nella sociata libera 
+e non discriminante.
+
+Nella civilta dei dati il desiderio non si illumina piu nello scopo ma si tramuta nel successo della calcolabilita
+predittiva. Viene negata la liberta e l'uguaglianza.
+
+il desiderio e l'appetire di cui parla Lacan mutano dell civilta dei dati. Il desiderio si trasmuta in appetire, 
+presentandosi in una condizione in cui si dirige a trovare una informazioe che possa appagare l'attesa e saziarla.
+
+Il trattamento automatizzato dei dati genera altri dati e sembra che cio si analogo all'apertira insaziabile del desiderio,
+ma in realta bisogna notare che gli utenti permangono avviati ad ulteriori modalia dell'essere saziati da un complesso dei dati
+**mantenutosi estranei al complesso dialogico** del senso e del desiderio.
+
+Il desiderio si dispiega nella qualita delal relazione discorsiva con l'altro che riattiva il desiderare,
+l'appetire invece si dispiega sull ordine della quantita e del rapporto con le cose idonee a saziare.
+
+Il desiderio no npio essere automatizzato, quel che rigiarda l'appetire si.
+
+Questo so compie solo secondo il passato e pemane assente l'attenzione al futuro. Gli oggetti descritti conferiscono
+alla rete dei dati del passato e il **futuro viene trattato come una ripetizione di cio che è gia accaduto**, e non 
+come la formazione di un ipotesi.
+
+> Faggin scrive che per molti scenziati la conoscienza non è necessaria per ottenere un comportamento intelligente,
+> una macchinapuo esserloaddirittura piu dell'uomo, il cui sapere è purificato dal riscio e dall`incertezza del libero arbitrio
+
+La differenza tra gli uomini e le macchine è che le persone hanno idee originali, espressione che nomina la peciliarita 
+dell'intelligenza umana e indica il suo eccedere. La ripetizione di memorie programmi che si concretizzano in operazioni
+esecutive, l'originalita delle idee umane si illumina nel confronto discorsivo con quelle degli altri, senza i quali
+non si potrebbe avere al  consapevolezza che le nostre idee sono originali, l'io sarebbe in io che passivamente vede accadere
+dei processi nella sua esistenza senza coglierne l'originalita.
+
+riceviamo informazionei che sono moediate e generate da strutture impersonali dove è essenziale il successo delle operazioni
+algoritmiche e dei softwareoperando in terza persona **le quali non stabiliscono un dialogo tra due persone ma si esauriscono** 
+**nel fornirci informazioni**.
+
+grazie alla tesi di Simmel si comprende che il passaggio dell'uomo dalla prima persona al confinamento in una vita consumatata
+in terza persona no nfa tanto trasmutarlo in una quantita anonima ma umana della massa dellepersone, ma oggettivato e trattato
+come una cosa/dato tra le altre/o cose/dati mediante la potenza macchinica dei dati.
+
+I padroni della rete non assumono come principio ne la trailita del logos ne la terzieta del diritto, ma concretizzano la regola
+unica e contro giuridica della disuguaglianza e sproporzione, tra loro e gli utenti a cui è imposta una esecuzione servile di 
+condotte e programmi.
+
+La dialettica servo-Signore di Hegel, le figure non trovano piu spazio perche subentra la figura della macchina che oltrepassa
+le figure, impone agli esseru umani la governabilita computazionale trasformadoli in dati tra altri dati.
+
+
+
 
 ## determinismo e libero arbitrio
 
@@ -337,7 +457,7 @@ ipotesi creative nuove o prospettive mercantili piu vantaggiose.
 
 ## Língiustizia non é un calcolo mal riuscito ma é un atto imputabile alla liberta giuridica
 
-## Principio di uguaglianza 
+
 
 ## Automatizzazione e liberta giuridica
 
