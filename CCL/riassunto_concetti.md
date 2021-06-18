@@ -695,3 +695,23 @@ possobilita, che non è materiale, che anzi l'automazione consiste nel liberarsi
 Nella possibilita l'uomo è autore si scelte, selezioni che mai una macchina puo compiere e tantomeno giudicare.
 
 ## raagione e automatizzazione
+nella transizione dello stato umano creativo a quello esecutivo, l'uomo subisce violenza alla sua liberta 
+giuridica e al rispetto dovuto alla sua dignita, irriducibile alla mercificazione dei numeri e del denaro
+affermando cosi una disuguaglianza.
+
+Nel concretizzarso delle smart cities si afferma la ragione automattizzante che si va a sostituire alla
+originalita decisionale delle persone.
+
+Non c'è più necessità del giudizio e della valutazione, del partecipare alla costruzione democraticamente 
+di una situazione giuridico politica in una definita comunità umana. Ci si convince che quanto ruota attorno 
+alla libertà, al rischio degli atti scelti e decisi dagli esseri umani, sia divenuto tale da poter essere 
+integralmente sostituito con il trattamento algoritmico dei dati, giungenda alla certezza senza lacune.
+
+La ragione automatizzante si sostutuisce alla ragione dialogica, i numeri alle parole che diventano funzionanti.
+
+L'integrale automatizzazione della società da luogo all'inessenzialità degli uomini e fa prefigurare un mondo 
+dove le macchine continuano a funzionare nella loro autonomia automatizzante anche in assenza dell'uomo in un 
+mondo di macchine intelligenti senza persone dialoganti.
+
+Siamo in uno stadio di evoluzione storica di eliminazione di tutto cio che non è tecnico. L'ingiustizia è 
+un calcolo mal riuscito. Ma l'essere umano è l'unico ad esistere nella ricerca del senso.
