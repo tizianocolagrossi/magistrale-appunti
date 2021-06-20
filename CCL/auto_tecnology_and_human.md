@@ -1,4 +1,4 @@
-Tecnologia autonoma e ausiliari umani
+## Tecnologia autonoma e ausiliari umani
 
 Se il danno è causato da una tecnologia autonoma usata in un modo funzionalmente equivalente all'impiego di ausiliari umani, la responsabilità dell'operatore per l'uso della tecnologia dovrebbe corrispondere al regime di responsabilità vicaria altrimenti esistente di un committente per tali ausiliari.
 
