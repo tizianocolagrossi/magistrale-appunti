@@ -77,4 +77,87 @@ d. Esclusivamente a sue spese; ed e. Per una durata illimitata";
 
 
 
+"Nella formulazione della Corte, il diritto dell'UE "deve essere interpretato nel senso che impedisce a un giudice nazionale di emettere un'ingiunzione contro un fornitore di servizi di hosting che gli impone di installare un sistema di filtraggio".
+"Più recentemente, l'8 aprile 2014, un verdetto simile è stato emesso in relazione alla direttiva UE del 2006 sulla conservazione dei dati (cause riunite C-293/12 e C- 5 94/12)".
+
+
+"I giudici di Lussemburgo hanno dichiarato quest'ultima invalida, perché la D-2006/24/CE ha violato il principio di proporzionalità colpendo "tutte le persone e tutti i mezzi di comunicazione elettronica, nonché tutti i dati sul traffico senza alcuna differenziazione, limitazione o eccezione"
+"essendo fatta alla luce dell'obiettivo della lotta contro le forme gravi di criminalità" (op. cit., % 56)".
+
+
+"Inoltre, nessun "criterio oggettivo" è stato previsto nella direttiva per determinare chi può accedere ai dati conservati conformemente alla direttiva 24 del 2006 e farne uso e "ciò che è strettamente necessario alla luce dell'obiettivo perseguito" (op. cit., % 62)". 
+"Come si è verificato nel caso Netlog, non è stato necessario alcun bilanciamento
+per dichiarare invalide tali disposizioni. 
+Tuttavia, trattando
+la legittimità di quanto lontano le norme di automazione giuridica
+possono spingersi, non dovremmo saltare alle conclusioni".
+
+
+"Mentre è possibile rimuginare su sistemi di filtraggio a buon mercato che non finiscono "in una grave violazione della libertà del fornitore di servizi di hosting", o su tecnologie più intelligenti e auto-applicative che distinguono adeguatamente il contenuto illegale dalle comunicazioni legali delle persone, dove dovremmo legalmente tracciare la linea tra i pro e i contro dell'automazione legale appare ancora più difficile. La prossima sezione mira a spiegare perché questo è il caso".
+
+
+"Non è ancora chiaro quale tipo di automazione legale sarebbe alla fine legittimo nel diritto dell'UE. Due esempi sono fruttuosi per illustrare il punto. In primo luogo, alcune disposizioni controverse del Digital Economy Act (DEA) britannico del 2010 ci riportano alle incertezze e ai dilemmi che finiscono con la sentenza preliminare nel caso Netlog". 
+"La DEA stabilisce un "codice di obblighi iniziali" che dovrebbe imporre agli ISP il dovere di notificare agli abbonati le segnalazioni di violazione del copyright ricevute dai proprietari dei diritti d'autore, e di fornire liste di violazione dei diritti d'autore ai proprietari dei diritti d'autore, oltre agli "obblighi tecnici", alcuni dei quali includono un "codice di obblighi tecnici". 
+"Alcuni ISP, come British Telecom, hanno sostenuto che tali disposizioni sono illegittime secondo il diritto comunitario".
+
+
+"Tuttavia, due tribunali britannici hanno avallato l'opinione di alcuni potenti titolari di diritti di copia e hanno semplicemente ignorato la giurisprudenza della Corte di giustizia dell'UE. Nella formulazione della Corte d'appello di Londra, il 6 marzo 2012, "una certa quantità di energia è stata spesa prima di noi sulla recente sentenza della Corte di giustizia in Scarlet... che riguardava la compatibilità con la direttiva sulla privacy e le comunicazioni elettroniche e altre direttive di un'ingiunzione del tribunale contro un ISP che gli imponeva di installare un sistema di filtraggio delle comunicazioni elettroniche al fine di identificare e bloccare il trasferimento di file che violavano il copyright".
+
+
+"Sia l'avvocato generale che la Corte hanno fatto riferimento a Promusicae, in termini che a mio parere non gettano una grande luce su quella sentenza; ma non vedo nulla nel caso per sostenere la portata limitata che i ricorrenti cercano di dare alla sentenza in Promusicae" (CI/2011/1437, n. 82)".
+"In secondo luogo, la Corte di Giustizia UE ha cambiato idea con la sentenza in Google v. AEPD, cioè il famoso caso sul diritto all'oblio del 13 maggio 2014 (C-131/12)".
+
+
+"Qui, per motivi dichiaratamente politici, i giudici di Lussemburgo hanno stabilito che i motori di ricerca, come quello di Google, devono essere concepiti come "responsabili del trattamento dei dati" (op. cit., %% 33 e 34), annullando così quanto era stato dichiarato nel caso Google v. Louis Vuitton del 23 marzo 2010". 
+"In quest'ultima occasione, l'opinione era che la responsabilità dei fornitori di servizi di referenziamento online dipende in ultima analisi "dalle condizioni effettive in cui il servizio viene fornito".
+
+
+
+
+"In altre parole, secondo i giudici di Lussemburgo, bisognava determinare, almeno fino al 13 maggio 2014, "se il ruolo svolto da tale fornitore di servizi è neutro, nel senso che il suo comportamento è meramente tecnico, automatico e passivo, il che indica una mancanza di conoscenza o di controllo dei dati che conserva" (% 114 della decisione)". 
+"Alcuni ritengono che, ribaltando questa idea e sostenendo che gli algoritmi dei motori di ricerca non sono più neutrali, la Corte ha anticipato ciò che la Commissione ha proposto con l'articolo 17 del nuovo regolamento UE sulla protezione dei dati dal gennaio 2012, cioè una nuova serie di doveri e obblighi per gli ISP in nome del diritto all'oblio". 
+"Eppure, nel novembre 2013 e successivamente, nel marzo 2014, il Parlamento Ue ha approvato una serie di emendamenti che ridisegnano questo insieme di regole, tanto che persino il riferimento al diritto all'oblio è stato messo tra parentesi nel nuovo testo".
+
+
+"Alla luce di questi esempi, ciò che appare chiaro è l'urgenza di una presa di posizione normativa con cui affrontare le sfide di rendere automatico il ragionamento giuridico e l'applicazione delle norme". 
+"Questo richiede intelligenza e, inoltre, non può essere direttamente subordinato all'automazione giuridica". 
+"Piuttosto, la posta in gioco riguarda decisioni critiche nei confronti della salvaguardia dei diritti giuridici fondamentali, tanto quanto le scelte di dipendenza tecnologica e di delega, che devono accertare il buon mix tra automazione giuridica e deliberazione pubblica. Approfondiamo questo complesso insieme di questioni nella parte finale dell'articolo".
+
+
+"La delega di decisioni a sistemi automatizzati deve affrontare una duplice grandezza di complessità". 
+"Insieme all'obiettivo di incorporare i vincoli normativi nella tecnologia, l'attenzione dovrebbe essere rivolta all'interazione tra diritto e tecnologia e, inoltre, all'intento del diritto di governare il processo di innovazione tecnologica in modo tale che la regolamentazione giuridica non debba né ostacolare l'avanzamento della tecnologia, né richiedere una revisione troppo frequente per affrontare un tale EJRR |2016progresso". 
+"Quest'ultima prospettiva sulle finalità regolative del diritto non deve essere confusa con la tecno-regolamentazione, cioè come gli attuali progressi della tecnologia hanno obbligato i legislatori e i politici a forgiare modi più sofisticati di pensare all'applicazione del diritto".
+
+
+"La delega di decisioni a sistemi automatizzati deve affrontare una duplice grandezza di complessità". 
+"Insieme all'obiettivo di incorporare i vincoli normativi nella tecnologia, l'attenzione dovrebbe essere rivolta all'interazione tra legge e tecnologia e, inoltre, all'intento della legge di governare il processo di innovazione tecnologica in modo tale che la regolamentazione giuridica non debba né ostacolare l'avanzamento della tecnologia, né richiedere una revisione troppo frequente per affrontare tale EJRR |2016progresso". 
+"Quest'ultima prospettiva sulle finalità regolative della legge non deve essere confusa con la tecno-regolamentazione, cioè con il modo in cui gli attuali progressi della tecnologia hanno obbligato i legislatori e i policy maker a forgiare modi più sofisticati di pensare all'applicazione della legge".
+
+
+"Nel caso della legge che regola l'innovazione tecnologica, cioè la legge concepita come una "meta-tecnologia "2 0 , l'attenzione si concentra sui diversi scopi normativi che la legge può avere, compreso quello che gli studiosi spesso doppiano come la "neutralità tecnologica" della legge. Per esempio, secondo Chris Reed 2 1, dovremmo distinguere tra (a) l'indifferenza tecnologica, cioè norme giuridiche che si applicano in modo identico, qualunque sia la tecnologia, come il diritto di autorizzare la comunicazione di un'opera al pubblico nel campo del diritto d'autore; 
+(b) la neutralità dell'implementazione, per cui le regolamentazioni sono per definizione specifiche a quella tecnologia e tuttavia non favoriscono una o più delle sue possibili implementazioni, per esempio la firma dei documenti elettronici; e, 
+(c) neutralità potenziale della legge che stabilisce un particolare attributo di una tecnologia, sebbene i legislatori possano redigere il requisito legale in modo che anche le implementazioni non conformi possano essere modificate per diventare conformi".
+
+"In alternativa, Bert-Jaap Koops ha proposto di distinguere quattro scopi legislativi principali, quali: 
+(a) il raggiungimento di particolari effetti, ad esempio impedire che si verifichino comportamenti generatori di danni, o diminuirne l'impatto, attraverso l'automazione legale;
+(b) l'equivalenza funzionale tra attività online e offline, ad esempio le misure di sicurezza per gli impianti di impianti atomici e i loro sistemi informatici; 
+(c) non discriminazione tra tecnologie con effetti equivalenti; e, 
+(d) l'impermeabilità al futuro della legge che dovrebbe essere compatibile con il progresso della tecnologia, in modo da non essere spesso rivista per tenere il passo di tale innovazione".
+
+
+"I modi diversi e persino opposti in cui possiamo cogliere le finalità normative del diritto come metatecnologia consigliano di ampliare la nostra visione. 
+Proponiamo quattro passi di analisi. In primo luogo, un approccio meta-normativo al campo dell'automazione giuridica dovrebbe permetterci di determinare se, e in che misura, i legislatori non devono (o non possono) delegare decisioni a sistemi automatizzati".
+
+
+In secondo luogo, ci si dovrebbe concentrare sull'impatto della tecnologia sui formalismi del diritto, e come quest'ultimo compete con ulteriori sistemi normativi". 
+"In terzo luogo, dobbiamo prestare attenzione ai principi e ai valori che sono in gioco con la delega delle decisioni ai sistemi automatizzati, vale a dire la dimensione istituzionale del diritto con questioni di interpretazione e deliberazione". 
+
+
+"Quarto, la distinzione tra decisioni automatiche e non automatiche del diritto, e la loro legittimità, può comportare una classe di problemi giuridici, cioè i casi difficili del diritto, dove il disaccordo può ruotare intorno alla semantica, o al ragionamento giuridico, o al ruolo e alla logica dei principi nel sistema. 
+Ognuno di questi temi è approfondito nelle quattro parti di questa sezione sui limiti dell'automazione giuridica (IV1); i sistemi normativi concorrenti (IV.2); la dimensione istituzionale del diritto (IV 3 ); e i suoi casi difficili (IV4). Poi, i tempi saranno maturi per le conclusioni di questo articolo".
+
+
+
+
+
 
