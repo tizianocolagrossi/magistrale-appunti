@@ -317,18 +317,163 @@ After the boot the mem_init() function frees all the memory to the buddy allocat
 ---
 
 ## What is the ZONE Wathermarks
+The zone wathermarks are a sort of indicator of  the level of usage of the ZONE MEM.
+These wathermarsk are used by the daemon kswapd in order to function correctrly.
+
+Each ZONE (LOW NORMAL HIGH) has three wathermarks that kelp to keep track the pressure of 
+a zone is under. The three wathermarks are:
+- pages low: the daemon kswapd is woken up by the buddy allocator
+- pages min: the allocator will do the kswapd work in a synchronous fashion
+- pages high: at this level the pages are balanced and the daemon kswapd is put on sleep.
 
 ## Buddy System
+The buddy allocator is an allocator that try to solve the external fragmentation problem.
+The buddy system allocator keeps all the free pages grouped into 11 list of block with 
+the same size of contiguous frames (1,2,4,8,16,32,64,128,256,512,1024) each frame correstpond to 4MB.
+
+The data structures used by the algorithm are:
+- the **mem_map array**, that is the **core map**. Actually, each zone is concerned with a subset of the mem_map elements
+- an **array of eleven elements of free_area_t**, one for each group size. 
+
+##### Allocation
+Suppose that you want to allocate 256 contiguous page frames, the algorithm check if there is
+a free 256 block, if not it checks in the list of 512. If it exists it allocates 256 pages for satisfying
+the request and the other 256 are added into the list of free 256-page-frame blocks. If there is
+no free 512-page block the kernel looks for next larger block, 1024. If it exists, it allocates 256
+of the 1024 page frames to satisfy the request, then inserts the first 512 of the remaining 768
+into the list of free 512-page-frame blocks and the last 256 pages frames into the list of free
+256-page-frame blocks.
+##### Deallocation
+When freeing memory, the kernel attempts to merge a pair of buddy blocks of size b together
+into a single block of size 2b. Only if (i) they have the same size, (ii) they are contiguous, (iii)
+the physical address of the first block is multiple of 2 ⨉ b ⨉ 2^12.
+
+
+
+
 
 ## What is the High Memory
+On x86 the kernel directly maps only ZONE_DMA and ZONE_NORMAL for a total of 896MB. But we have 
+more than 4GB of RAM and in a sistem with 32-bit addressing 4GB is the limit. So we have more 
+physical memory than the virtual addressable one. And there was the need to introduce the hughmem.
 
-## How iS done the Memory finalization
+In the kernel address space (on IA-32 sys) there is a section called persistent mappings for mappings
+pages from zone highmem. This is the solution to map all the memory that exceed the 896MB of the zone 
+normal into the persistent mappings area (that is not persistent). 
+
+The kernel virtual address spaces from address PKMAP_BASE to FIXADDR_START is reserved
+for a PKMap, namely a Persistent Kernel Map located near the end of the address space.
+There are about 32MB of page table space for mapping pages from high memory into the
+usable space.
+
+For mapping pages, a simple PT of 1024 entries is stored at the beginning of the PKMap area
+to allow the temporary (very short time) mapping of up to 1024 pages from high mem with
+functions kmap() and kunmap().
+
+
+
+
+
+## How is done the Memory finalization
+The finalization of memory management is done within the function mem_init() which is in
+charge of destroying the bootmem allocator, calculating the dimensions of low and high
+memory and printing out an informational message to the user.
+
+The free_all_bootmem is called by each NUMA node and in the end it calls
+free_all_bootmem_core which does the following For each unallocated pages known to the allocator of that node:
+- clears the PG_RESERVED bit
+- set usage count to 1
+- call __free_pages() so that the buddy allocator can build its free lists
+
+Free all pages used for the bitmap and give them to the buddy allocator.
+When free_all_bootmem returns all the pages in ZONE_NORMAL have been given to the buddy
+allocator, the rest of free_pages_init initializes the high memory.
+
+At this point, the boot memory allocator is no longer required, and the buddy allocator is the
+main physical page allocator for the system. Note also that not only is the data for the boot
+allocator removed, but also all code that was used to bootstrap the system.
 
 ## FAST Allocators (Quicklist and SLAB)
+Generally in the kernel, fixed size data structures are very often allocated and released. And in this
+situation the buddy system does not scale. the Buddy system on each numa node is protected by a spinlock
+and internal fragmentation can rise too much in this kind of situation.
+
+So for allocating this fixed structures that requires a frequent allocation and deallocation, for 
+example the allocation or release of page tables the function that does that relies on Kernel-level
+fast allocators.
+
+There are two kind of fast allocator:
+- **Quicklist** used only for paging
+- **SLAB allocator**
+
+##### Quicklists
+The Quicklists are used for inplementing the page table function (pgd,pmd/pte_alloc). We have three quicklist
+for each CPU. And generally the implementation are the same for all the arch.
+
+One method is the one of using the LIFO (Last-In First-Out) approach. During the allocation,
+one page is popped off the list, and during free, one is placed as the new head of the list. This
+is done while keeping a count of how many pages are used in the cache.
+If a page is not available in the cache, then it will be allocated by using the Buddy System.
+##### SLAB 
+The main idea of the SLAB is to have chaces of the commonly used objects kept in a initialied state.
+The SLAB allocator consists of a variable number of caches, linked together by a doubly linked list called cache chain.
+Each cache manage its own kind of objects. And each cache mantains a block of cotiguous pages in memory called slabs.
+
+The SLaB try to: (1) allocating small blocks of memory to help eliminate internal fragmentation, (2) caching commonly 
+used blocks so that the system does not wait time allocating, initializing and destroying object and (3) better usage 
+of L1 and L2 caches by aligning objects.
+
+##### 1 small blocks to eliminate internal fragmentation
+Two sets of caches are maintained for allocating objects from 2^5 (32KB) to 2^17 (131’072KB)
+bytes. One for DMA and one for standard allocation. One for DMA and one for standard allocation.
+These caches are called size-N (or size-N(DMA)), where N is the size of the allocation and they 
+are allocated with the function kmalloc().
+##### 2 caching commonly used blocks
+When a new slab is created a number of objects are packed into it and initialized using a
+constructor if available. When an object is free’d, it is left in a initialized state so the next
+allocation will be faster
+##### 3 better usage of L1 and L2 caches (coloring)
+If there is space left over after objects packed into a slab, the remaining space is used to color
+the slab. Coloring is used for having objects in different line of CPU caches which helps ensure
+that objects from the same slab cache will unlikely flush each other.
+
+
+
+
 
 ## CPU caches and False Sharing problem
+Caches lines are generally small (32/64 bits), the macro L1_CACHE_BYTES sets the number of bytes for the L1 cache.
+
+Independently of the mapping scheme, close addresses fall in the same line but cache-aligned
+addresses fall in different lines. We need to cope with cache performance issues at the level of
+kernel programming (typically not of explicit concern for user level programming).
+
+In some processors between a slower memory and a High speed register is placed a cache (High speed memory). When a read to this slower memory 
+is requested a portion of this memory is stored inside the cache (this in order to optimize the time for reading on the same spot of memory).
+The false cache sharing problems occurs when in the same cache line there are two value (eg fst and snd in a struct) that are not logically 
+relate one to the other and so, for example if we have on the same line a costant value and a counter even if the costant value is the same
+during the time of the execution of the program whenever the counter is updated the cache line is uotdated and so alco the value of the 
+costant value. so even if the costant value is the same each time need to be reloaded from memory when is read after that the counter is 
+updated. The solution for this is project well the data structure and place as distant as possible two value that are no logically related.
 
 ## Large Allocations and vmalloc (vmalloc and kmalloc)
+It is preferable when dealing with large amounts of memory to use physically contiguous pages in memory both for cache-related 
+and memory-access-latency reasons. But due to external fragmentation problems with the buddy allocator, this is not always possible.
+
+Linux provides a mechanism through vmalloc() where non-contiguous physical memory can be used that is contiguous in virtual memory.
+In the kernel address space there are a space limited to 128MB for vmalloc.
+##### vmalloc vs kmalloc
+Allocation size:
+- Bounded for kmalloc (cache aligned): the boundary depends on the architecture and the Linux version. Current implementations handle up to 8KB
+- 64/128 MB for vmalloc
+  
+Physical contiguousness
+- Yes for kmalloc
+- No for vmalloc
+
+Effects on TLB
+- None for kmalloc
+- Global for vmalloc (transparent to vmalloc users)
 
 ---
 fst day 
