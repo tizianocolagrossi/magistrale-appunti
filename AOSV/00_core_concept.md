@@ -483,12 +483,106 @@ fst day
 ---
 
 ## What are the System Calls and how works (also dispatcher and parameter in x86 trough register)
+The system calls are a way that Linux offer to user mode processes to interacting with HW devices.
+So the System calls are interfaces to interact with HW devices. This has several advantages: 
+making programming easier, increasing system security, increasing the programs portability.
+
+There is a difference between an API and a system call. Since the former is and function definition 
+that wrap the syscall and the latter is an explicit request to the kernel made via a software interrupt.
+The POSIX standard only refers to API and not to system calls, a system that is POSIX compliant offers 
+the set of POSIX APIs.
+
+##### Syscall handler (dispatcher)
+When a User Mode process invokes a system call the CPU switches to Kernel Mode and starts
+the execution of a kernel function. In the 8086 system calls can be invoked in two ways but
+both end with a jump to an assembly language function that is called the system call handler.
+Each system call is identified by a system call number which must be expressed by the user
+mode process before starting the invoking process. This must usually be passed in the EAX
+register. (the kernel does not set errno, that is set by wrapper routines)
+The system call handler is very similar to other exception handlers.
+
+The system call handler, when invoked:
+1. saves the content of most registers in the Kernel Mode stack
+2. handles the system call by invoking a corresponding C function called system call service routine (via a call)
+3. after completing the execution of the system call the registers are loaded with the values saved in the Kernel Mode stack and the CPU is switched back to User Mode
+
+To associate each system call number with its corresponding to the corresponding service
+routine the kernel uses a system call dispatch table, which is stored in a fixed size array called
+sys_call_table array and has NR_syscall entries (289 in v2.6).
+Remind that NR_syscall is not the actual number of implemented system calls, is only the size
+of the possible maximum number of system calls, therefore there are free slots.
+
+System calls are special function. The parameters are alway passed trought the CPU register because the system calls are function that 
+cross user and kernel space, and for this reason neighter the user mode stack nor the kerner stack can be used. The syscall dispathcer 
+then copies the paramethers from the CPU registers into the kernel stack.  In a X86 machine the register are used followind this order
+here: eax, ebx, ecx, edx, esi, edi and ebp. And this is usefoul for portability because the dispatcher then place the register in the 
+right spot in the stack and this help for portability reason.
+
+
+
+
 
 ## How the syscall can be invoked in x86 (int 0x80 and sysenter)
+On the x86 architecture the syscalls can be invoked using the INT 0x80 instruction or the SYSENTER instruction 
+(supported from the kernel 2.6 after pentium II). The handlers for the two methods are system_call() and sysenter_entry(). 
+The INT 0x80 instruction is registered as a trap gate and this instruction is slow because need to perform all the security check for 
+an interrupt. Instead the sysenter instruction is more fast (is also called Fast System Call by intel) because it provides a faster way 
+to switch from user mode and kernel mode using three MSR register. Obviously a libc wrapper can call the sysenter instruction only if the 
+CPU and the kernel support it and in order to doing that the libc invoke the __kernel_vsyscall() in the vsyscall page where is placed at 
+boot time the more performant way to invoke a syscall.
+When a User mode process invoke a syscall the CPU switch to Kernel mode and start the execution of a kernel function. Both the INT 0x80
+and the sysenter instruction end with a jump to the syscall handler (dispatcher). Each syscall is identified by a number (in x86 in eax register) 
+the dispatcher use this identifier by searching in the syscall table to identify the right syscall routine. The syscall handler is similar 
+to other exception handler. The syscall handler forst store the context of most of the register, then via a call invoke the C function 
+(syscall service routine find by the dispatcher searching into the syscall table) then after the syscall ser routine and the execution 
+the user mode context is Restored with in eax the output of the syscall. The paramether of the syscall are passed all (up to 6) in the CPU
+register because the syscall is a function that cross user and kernel mode and so neighter the user nor kernel stack can be used. This
+is usefoul also for portability reason because only a little portion of the code change from changing the architecture of the machine
+(the portion of store and restore the registers) 
+
+
+
+
 
 ## Kernel can call a syscall? why cannot use the same approach as in the user mode (kernel wrapper routines)
+##### from kernel threads
+Although system calls are used mainly by User Mode processes, they can also be invoked by
+kernel threads, which cannot use library functions. To simplify the declarations of the
+corresponding wrapper routines, Linux defines a set of seven macros called _syscall0
+through _syscall6, where the number in the name is the number of the pass-able
+parameters (excluding the system call number) (_syscallX(type, name, type1, arg1, ....)).
+
+The wrapper routine to the fork() system call could be _syscall0(int, fork)
+
+##### in kernel
+System calls are, as stated above, interaction points between userspace and the kernel.
+Therefore, system call functions such as sys_xyzzy() or compat_sys_xyzzy() should only be
+called from userspace via the syscall table, but not from elsewhere in the kernel. 
+
+
+
+
 
 ## What is the vsyscall page and the vDSO 
+The vsyscall page had several limitations:
+- it was fixed in size
+- it was allocated always at the **same address in processes**
+  
+The vDSO that stands for Virtual Dynamic Shared Object has been introduced for solving the
+security issues of the vsyscall architecture. The vDSO is dynamically allocated which solves
+security concerns. The vDSO links are provided via the glibc library. The linker will link in the glibc
+vDSO functionality, provided that such a routine has an accompanying vDSO version, such as
+gettimeofday system call. When your program executes, if your kernel does not have vDSO
+support, a traditional syscall will be made.
+The vDSO is a small shared library that the kernel automatically maps into the address space
+of all user-space applications. Applications usually do not need to concern themselves with
+these details as the vDSO is most commonly called by the C library. This way you can code in
+the normal way using standard functions and the C library will take care of using any
+functionality that is available via the vDSO.
+
+
+
+
 
 ---
 **end s 04**
