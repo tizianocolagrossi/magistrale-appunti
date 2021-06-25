@@ -38,6 +38,10 @@ So each process in Linux is a fork of init.
 The targets represent the state of the machine within the context of systemd. Before the use of systemd
 they were also called runlevels and they where identified by numbers.
 Every target has associated a set of programs or services that needs to be run.
+ 
+
+
+
 
 ## Real Mode and Protected Mode (X86)
 ##### Real Mode
@@ -57,6 +61,10 @@ This is done using the CR0 register. The CR0 register is a control register of t
 modifying the bit in thos register we can modify the basic operation of the processor.
 In order to enable the protected mode we need to set the 0 bit to 1 and for enabling paging
 the 31th bit must be set to 1.  
+
+
+
+
 
 ## Segmented Memory
 Starting from the intel 8086 the adressing memory is segmented. This means that a memory location 
@@ -84,6 +92,10 @@ In Linux kernel the segmentation is not used but sice the segmentation canno be 
 specified code_user code_kernel data_user data_kernel have base 0 and limit max.
 therefore all processes may use the same logical addresses and coincide with the linear addresses.
 
+
+
+
+
 ## Difference between BIOS/UEFI
 Both BIOS/UEFI can be used at startup of the computer to initialize the HW and to load the 
 chosen Kernel. **BIOS** work by using the first sector of the hard drive (MBR limited to 512 bytes) 
@@ -96,6 +108,10 @@ boot time, making sure that no malware can be loaded at computer startup. The UE
 - Ability to use large disks partitions (over 2 TB) with a GUID Partition Table (GPT)
 - 32-bit (for example IA-32, ARM32) or 64-bit (for example x64, AArch64) pre-OS environment
 - Modular design
+
+
+
+
 
 ## What BIOS does (including stage 1 and 2 bootloader)
 At the startup the CPU starts executing instructions located at a precise memory called **the reset vector**.
@@ -121,9 +137,15 @@ in a specific FAT32 partition that must be created ad hoc (ESP - EFI System Part
 
 
 
+
+
 ## What is the MBR
 The first sector of an hdd (512 bytes) contain the MBR, wich store **executable code** to function as a loader for the 
 installed operating system, and the partition table of the disk. We have only a 384 bytes program for starting the OS!
+
+
+
+
 
 ## Privileges and Protection how it works and how are implemented (DPL CPL RPL, Gates)
 The privilege in the CPU is represented as a number from 0 (high priv) to 3 (low priv). 
@@ -146,6 +168,10 @@ Gates are represented again by descriptors. There are different kinds of gates d
 
 These descriptors are referenced by the Interrupt Descriptor Table (IDT), pointed by the IDTR register
 
+
+
+
+
 ## Paging Memory (and TLB Translation Lookaside Buffer, Little of long mode in X86_64) (TEORY)
 The paging is a strategy that represent the memory as a set of pages of foxed size (usually 4kb).
 A page is a set of contiguous linear address. In order to enable paging, that is required before 
@@ -161,6 +187,10 @@ Every process have its own page directory, But there is no need to allocate all 
 
 Since the translation from linear to physical address can take time in order to save time we have the 
 TLB (Translation Lookaside Buffer) that store the Virtual page number to the physical page number.
+
+
+
+
 
 ## Multi Core (LAPICs and APIC Bus)
 For legacy reasons, startup code is always sequential and it is executed by a single core (the master).
@@ -192,7 +222,11 @@ After the decompression of the kernel the true image of the kernel can run and t
 startup_32() (now in the kernel decompressed). This function set the environment for first linux process.
 It initialize the segmentation register, clear again the bss, build the page table, enable paging, create 
 the final IDT, and finally jump to arch dependent kernel entry point (start_kernel()).
- 
+
+
+
+
+
 ## Kernel Page tables (how are set, where, and what are their particularities)(initialization and bootstrapping)(PRACTICAL)
 During the initialization the steady-state kernel must take control of the available physical memory. 
 When starting the kernel must have an early organization setup out of the box. And so the kernel use a 
@@ -212,11 +246,17 @@ compilation, while the provisional Page Tables are initialized by startup_32().
 
 Suppoding that all the kernel segment, the privisional page table and the dynamica area fits 8 MB
 ew need 2 pages of 4MB. The objective of this phase of paging is to allow these 8MB of RAM to be easily
-addressed both in real mode and protected mode (bootstrapping).
+addressed both in real mode and protected mode (bootstrapping). That memory area the physical address 
+must be equal to the virtual one. This strategy is realized by declaring statically 4 entries in the swapper_pg_dir:
+- Entry 0 and 0x300 (768) point to pg0
+- Entry 1 and 0x301 (769) point to pg1
 
 **The main data structures for memory management in the kernel are:**
 - Kernel Page Tables: keeps the memory mapping for kernel level code and data
 - Core Map: keeps the status information for any frame (or page) of the physical memory and the free memory frames for any NUMA node
+
+
+
 
 
 ## How physical memory is managed (including the main struct, NUMA architectures)(see also s3)
@@ -230,6 +270,9 @@ by the kernel and for X86 start from 896MB to the end of the avaiable memory. (p
 The fundamantal data structure used for physical frame allcoation is the **struct page**(mem_map_t), this struct is associated to each physical frame 
 avayable in the system. In this struct are present the flag if the page (if locked, dirty etc..), the usage counter that need to be zero in 
 order to free the page and come link to the list where all the page belongs. 
+
+
+
 
 
 ## Bootmem vs Memblock allocator ( see also book )
@@ -250,6 +293,24 @@ may differ from the physical memory. Then there are the reserved memory, that ar
 the physmem that is the representation of all the physical memory. 
 After the boot the mem_init() function frees all the memory to the buddy allocator.
 
+
+
+
+
+## main operation of start_kernel()
+1. setup_arch() that initializes the architecture
+2. build_all_zonelists() - **builds the memory zones**
+3. page_alloc_init() / mem_init() - the steady state allocator (**Buddy System**) is **initialized** and the boot one removed
+4. sched_init() - initializes the **scheduler**
+5. trap_init() - the final **IDT** is built
+6. time_init() - the **system time** is **initialized**
+7. kmem_cache_init() - the **slab allocator** is initialized
+8. arch_call_rest_init() / rest_init() - prepares the environment
+   1. kernel_thread(kernel_init) - starts the kernel thread for process 1 is created
+      1. kernel_init_freeable() -> prepare_namespace() -> initrd_load() - **mountsthe initramfs**, a temporary filesystem used to start the init process
+      2. run_init_process() -> kernel_execve() - **Execute /bin/init**
+   2. cpu_startup_entry() -> do_idle() - starts the **idle process**
+
 ---
 **end s 02**
 
@@ -265,9 +326,9 @@ After the boot the mem_init() function frees all the memory to the buddy allocat
 
 ## FAST Allocators (Quicklist and SLAB)
 
-## CPU cacheS and False Sharing problem
+## CPU caches and False Sharing problem
 
-## Large Allocations and vmalloc
+## Large Allocations and vmalloc (vmalloc and kmalloc)
 
 ---
 fst day 
