@@ -178,12 +178,77 @@ single, all, or a subset of cores.
 ---
 
 ## What the kernel does in its initial life
+The Stage 2 Bootloader (or UEFI) loads in RAM the image of the kernel. This image is really different 
+from the one that we have at steady state (CPU start in real mode with 1MB of RAM).
+The first fetched istruction is a jump to start_of_setup. During this time the kernel 
+set up a stack, zeroes the bss section and then call the main(). The goal of the main is to prepare
+the machine to enter in protected mode. So enable the A20 line, setup the IDT and the GDT, and setup 
+the memory. It ask to the bios the avaiable memory to create a physical address map. At the end of the main
+it call the go_to_protected_mode() that setup the PE in CR0 and setup the data segment and a temporary stack.
+Then jump to startup_32() #primary (in protected mode) here set the segment to known value, load a new stack,
+clear again the bss, locate the actual position in memory and call extract_kernel().
 
+After the decompression of the kernel the true image of the kernel can run and this is done with a ljump to 
+startup_32() (now in the kernel decompressed). This function set the environment for first linux process.
+It initialize the segmentation register, clear again the bss, build the page table, enable paging, create 
+the final IDT, and finally jump to arch dependent kernel entry point (start_kernel()).
+ 
 ## Kernel Page tables (how are set, where, and what are their particularities)(initialization and bootstrapping)(PRACTICAL)
+During the initialization the steady-state kernel must take control of the available physical memory. 
+When starting the kernel must have an early organization setup out of the box. And so the kernel use a 
+set of statically generated page tables.
+
+On 32bit architecture, the process address space is divided in two parts: user/kernel (first 3GB)
+kernel only (last 1GB from 0xc0000000). What should be kept in mind is that addresses lower than 
+0xc0000000 (value often referred as PAGE_OFFSET) depend on the specific process, the others are 
+the **same for every process and equal to the corresponding entries of the Master Kernel Page General Directory**.
+
+After the system initialization this set of pages tables (Master Kernel Page Global Directory) is never 
+used by any process or kernel thread, but the highest entries will be the reference model for the
+corresponding entries of the Page Global Directories of every regular process in the system.
+
+A provisional Page Global Directory (PGD) is initialized statically during the kernel
+compilation, while the provisional Page Tables are initialized by startup_32().
+
+Suppoding that all the kernel segment, the privisional page table and the dynamica area fits 8 MB
+ew need 2 pages of 4MB. The objective of this phase of paging is to allow these 8MB of RAM to be easily
+addressed both in real mode and protected mode (bootstrapping).
+
+**The main data structures for memory management in the kernel are:**
+- Kernel Page Tables: keeps the memory mapping for kernel level code and data
+- Core Map: keeps the status information for any frame (or page) of the physical memory and the free memory frames for any NUMA node
+
 
 ## How physical memory is managed (including the main struct, NUMA architectures)(see also s3)
+Today the architecture of a computer  allow to organize memory in nodes (NUMA NODES). This representation is because the memory access latency
+heavely depends on the distance between CPU and the memory bank. So for example if we have more than one CPU, each CPU should use the memory node
+closer to the CPU. In the linux kernel each node is represented by the struct pg_data_t and all nodes are kept into a linked list NULL terminated.
+The physical memory is divided in three areas: the ZONE_DMA, the ZONE_NORMAL and the ZONE_HIGHMEM. The ZONE_DMA is mapped by the kernel in the 
+lower part of the memory and is destinarted to ISA (Indistry Standard Architecture) devices (in X86 is the first 16MB). Then The ZONE_NORMAL is 
+direclty mapped by the kernel into the upper region of the memory (for X86 from 16MB to 896MB). Finally the ZONE_HIGHMEM is not directly mapped 
+by the kernel and for X86 start from 896MB to the end of the avaiable memory. (page table is usually located at the top begining of ZONE_NORMAL)
+The fundamantal data structure used for physical frame allcoation is the **struct page**(mem_map_t), this struct is associated to each physical frame 
+avayable in the system. In this struct are present the flag if the page (if locked, dirty etc..), the usage counter that need to be zero in 
+order to free the page and come link to the list where all the page belongs. 
+
 
 ## Bootmem vs Memblock allocator ( see also book )
+### What is the role of the bootmem allocator?
+The bootmem allocator is needed durindg the boot phase in order to allocate portion of the memory when the proncipal memory allocator aka
+Buddy allocator or the SLAB allocator are not alredy loaded and initialized. It uses a bitmap to see wich 4kb pages are free or busy. 
+So even if is not as performant as the buddy and the SLAB is used ad bootime when there are only few request for allocating memory. 
+Is required because it's unpractical to initialize all the core kernel data structure at compile time (only the memory map of the 
+initial kerne image is initialized at compile time). 
+After the boot the mem_init() function frees all the memory to the buddy allocator.
+The bootmem allocator was replaced with the memblock allocator (from version 5+).
+### What is the role of the Memblock allocator?
+The memblock allocator is a method to manage the region at the early boot time. When the user kernel memory allocator (SLAB and Buddy)
+are not alredy running. the memblocl dofferently to the bootmem doesn't uses a bitmap but uses collection of memory region to keep track
+of allocated memory regions. Memblock sees the memory syystem as a set of continuous regions. And there are different types of this regions.
+There are collection for **memory** for **reserved** and **physmem** regions. The memory regions contains the memory avauable to the kernel
+may differ from the physical memory. Then there are the reserved memory, that are the memory regions alredy allocated. And then there are 
+the physmem that is the representation of all the physical memory. 
+After the boot the mem_init() function frees all the memory to the buddy allocator.
 
 ---
 **end s 02**
