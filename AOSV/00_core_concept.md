@@ -1275,13 +1275,43 @@ remove it from sysfs.
 
 
 
+## Devices
+Device are representation is stored in the device object, but in the Linux kernel they are also
+represented by special files called device files (in the folder /dev), thus the same system calls
+used to interact with regular files can be used.
+
+According to the characteristics of the underlying drivers, device files can be of two types:
+- block devices
+- character device
+
+Each device is associated with a couple of numbers: MAJOR and MINOR:
+- MAJOR is the key to access the device driver as registered within a driver database
+- MINOR identifies the actual instance of the device driven by that driver
+
+In general, the same major can be given to both a character and a block device!
+
+
+
+
+
 ## Char vs Block devices
+Char and Block devices behave differently, but they are organized in identical databases which
+are handled as hashmaps. They are referenced as cdev_map and bdev_map.
+
 The main difference from the char and the block devices is that a char device can be accessed only as 
 a stream of sequential data, one byte after another. Instead the block devices can be accessed as 
 chunk of fixed data that can be randomly accessed (not seq). A char deivices is like a serial port 
-instead a block devices is like an HDD. The write and the read from a block devices are handled
-by the driver of the dcevices. The char and the Block devices are mapped into the VFS (Virtual file system) 
-The VFS is an unified way to handle the FS. the main idea of the VFS is the Common File System, this means 
+instead a block devices is like an HDD. 
+
+For char devices the management of read/write operations is in charge of the device driver.
+This is not the same for block devices read/write operations on block devices are handled via a
+single API related to buffer cache operations.
+Request queues (strategies in UNIX) are the way to operate on block devices. Requests
+encapsulate optimizations to manage each specific device (e.g. via the elevator algorithm).
+The Request Interface is associated with a queue of pending requests towards the block device
+
+The char and the Block devices are mapped into the VFS (Virtual file system).The VFS is an 
+unified way to handle the FS. the main idea of the VFS is the Common File System, this means 
 that each physical implementation must translate its representation into the VFS's common model. 
 
 The common model consist of 4 main objects. 
@@ -1292,14 +1322,65 @@ The common model consist of 4 main objects.
 4. Dentry, stores info anout the linking of a directory entru (its a special inode)
 
 
+
+
+
 ---
 **end s 08**
 
 ---
 
-## runlevels and targets
+## runlevels 
+The runlevel describes the mode according to which the machine started, only one runlevel is
+executed (they are not executed in order). The machine for example started in runlevel 5 when
+rebooting enters in runlevel 6. Runlevels actions and services may depend on the particular
+Linux distribution installed.
 
-## systemd 
+Runlevels exists from the System V standard (latest version of UNIX). The actual scripts are
+located at /etc/rc.d/init.d/. In this folder we have the declaration of startup services.
+
+The services can be managed from the shell with the commands:
+- chkconfig <script> on|off
+- service <script> start|stop|restart
+
+##### The file /etc/inittab
+Describes which processes need to be run at which runlevel
+The file format is: id:rl:action:process
+
+- id: uniquely identifies entry
+- rl: what runlevels the entry applies to
+- action: the type of action to execute
+- process: process command line
+
+2:23:respawn:/sbin/getty 38400 tty2
+
+
+
+
+
+## systemd and targets
+Systemd is progressively replacing the System V init architecture but it maintains the
+compatibility with it, since the init scripts can still be read and used.
+
+Systemd is based on the notion of "units" and "dependencies". However, systemd also offers
+other services beyond the init system: (some are)
+- **journald**, systemd-journald is a daemon responsible for event logging
+- **logind**, systemd-logind is a daemon that manages user logins and seats in various ways
+- **networkd**, networkd is a daemon to handle the configuration of the network interfaces
+- udevd, udev is a device manager for the Linux kernel, which handles the /dev directory and all
+   user space actions when adding/removing devices
+
+Regarding the init, the concept of "runlevel" is mapped to "targets" in systemd jargon.
+Runlevel is defined through a symbolic to one of the runlevel targets, for example:
+- Runlevel 3 is mapped to /lib/systemd/system/multi-user.target
+- Runlevel 5 is mapped to /lib/systemd/system/graphical.target
+
+For changing runlevel you need to remove current link /etc/systemd/system/default.target
+and add a new link to the desired runlevel
+
+
+
+
 
 ---
 **end s 09**
