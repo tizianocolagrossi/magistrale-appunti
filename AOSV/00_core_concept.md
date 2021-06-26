@@ -903,10 +903,104 @@ are guaranteed to never be run concurrently on more than one CPU.
 ---
 
 ## What are the main Clock and Time Circuits
+The kernel mantain two way to keep track of the time:
+1. keeping the current time and date
+2. maintaining timers, mechanisms that are able to notify the kernel or a user program that a certain interval of time has elapsed
 
-## How Work the Timer Wheel
+Time measurements are performed by hardware circuits based on oscillators.
+In the 8086 architecture the CPU interacts with clock circuits that keep track of the time of day
+and timer circuits, programmed by the kernel so that they issue interrupts at a desired time.
+
+We have:
+- Real Time Clock (RTC), independent of all the other chips and keeps track of the time of day, ticking even if the PC is off
+- Timestamp Counter (TSC) it is a counter incremented from an external oscillator
+- Programmable Interval Timer (PIT) its role is similar to an alarm clock it issues an interrupt at the wnd of the time
+- CPU Local Timer (in the LAPIC) is similar to PIT but local to the processor.
+- High Precision Event Timer (HPET) provides a number of programmable timers.
+
+The Linux timekeeping architecture is a set of data structures and functions related to the flow
+of time. There are some differences in time keeping between a multi and a single processor
+architecture:
+- in a **single-processor** system **all** time-keeping activities are triggered by interrupts **raised by a global timer**
+- in a **multi-processor** system **general activities** (e.g. software timers) are triggered by the
+   **global timer** but **CPU-specific activities** (e.g. monitoring the execution time of the
+   current process) are triggered by the **local APIC timer**
+
+Today we have only high-resolution timers (low-resolution timers or timer wheel timers are based
+on the high-resolution timers)
+
+The Clock Events are the foundation of periodic events. High Resolution Timers are based on
+the Clock Events abstraction, whereas the low-resolution mechanism can come or from a
+low-resolution clock device or from the high resolution subsystem. Two important tasks for
+which low-resolution timers assume the responsibility are:
+- handling the global jiffies counter
+- perform per-process accounting
+
+The jiffies variable is a counter that stores the number of elapsed ticks since the system was
+started. It is increased by one when a timer interrupts occurs.
+
+
+
+
+
+## How Work the Timer Wheel (low-resolution timers)
+Timers allow a generic function to be activated at a later time, they can be dynamically
+created and destroyed. Timers are associated with deferrable functions Linux does not 
+guarantee that activation takes place at exact time
+
+Earlier versions of the kernel used a single timer list sorted according to the expiration time.
+This was significantly unreliable and inefficient. Newer versions of the kernel introduced the
+so-called Timer Wheel a nested structure for efficiently retrieving timers.
+
+We have multiple bucket. Bucket #0 contains timers that expires in 0~2^8 ticks
+Bucket #1 contains timer that expires in 2^8 ~ 2^8+6 ticks Bucket #2 contains
+timer that expires in 2^8+6 ~ 2^8+6x2 ticks.
+
+2^8 = 256
+2^6 = 64
+
+The Bucket #0 contains 256 ticks (and linked list of timer that elapses for each tick)
+the Bucket #1 contains another array of timers but this time is 64 item and each item has
+2^8 ticks. A pointer is incremented each tick and point from 0 to the 255 position on 
+bucket 0. When it reaches the 255 the pointer in the bucket 0 return to point to 0 
+and the bucket 0 is filled with the timers contained in the first position of the 
+array in the 1 bucket than the pointer in the 1 bucket will point to the next position
+on the array and so on.
+
+![](img/timer_wheel.PNG)
+![](img/timer_wheel2.PNG)
+
+
+
+
+
+## Generic Time Subsystem
+There are three main abstractions for providing time in the kernel:
+- **Clock Sources** are the backbox of time management each clock provides a monotonically increasing counter with read only access
+- **Clock event devices** add the possibility of equipping clocks with events that occurs in the future.
+- **Tick Devices** extend the clock event sources to provide a continuous stream of tick events that happen periodically.
+
+There are then two kinds of clocks:
+- **global clock** that is responsible for providing the periodic tick for updating jiffies
+- **local clock** one for each CPU for performing process accounting, profiling and high-resolution timers
+
+The handling of timer interrupts are handled according to the top/bottom half paradigm
+The top half executes the following actions:
+- registers the bottom half
+- increments jiffies
+- checks whether the CPU scheduler needs to be activated, and in the positive case flags need_resched
 
 ## Watchdogs
+A watchdog is a component that monitors a system for “normal” behaviour and if it fails, it
+performs a system reset to hopefully recover normal operation.
+This is a last resort to maintain system availability or to allow sysadmins to remotely log after
+a restart and check what happened. In Linux, this is implemented in two parts:
+- a kernel-level module which is able to perform a hard reset
+- a user-space background daemon that refreshes the timer
+
+At kernel level, this is implemented using a Non-Maskable Interrupt (NMI). The userspace
+daemon will notify the kernel watchdog module via the /dev/watchdog special device file that
+user space is still alive.
 
 ---
 snd day
