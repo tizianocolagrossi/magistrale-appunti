@@ -1009,13 +1009,138 @@ snd day
 
 ---
 
-## Memory barriers
+## Kernel Preemption and When Synchronization is Necessary
+Preemption is managed with three counters, if the sum is greater than zero the preemption is
+disabled:
+- the kernel is executing an Interrupt Service Routine
+- deferrable functions are disabled
+- preemption has been explicitly disabled (preempt_disable())
 
-## Spinlocks and Seqlocks
+A **race condition** can occur when the outcome of the computation depends on how two or
+more interleaved kernel control path are nested.
+
+Suppose that **two different interrupt handlers need to access the same data structure**, all
+statements that access the data structure **must be put in a critical region**. On a single CPU 
+you can disable the interrupts and the preemption, but this is not enough in a multi-processor
+system.
+
+We can recap some circumstances that do not require synchronization:
+- critical parts of the interrupt handlers, which runs with interrupt disabled
+- interrupt handlers, softirqs and tasklets are all non-preemptable
+- a kernel control path performing interrupt handling cannot be interrupted by a kernel
+  control path for running a deferrable function or a system call service routine
+- softirqs and tasklets are not interleaved on a given CPU
+- the same tasklet cannot be executed simultaneously on several CPUs
+
+Therefore:
+- code interrupt handlers and softirqs as reentrant functions
+- use per-CPU variables in softirq and tasklets since they do not require synchronization
+- a data structure used in only one kind of tasklet does not require synchronization
+
+
+
+
+
+## Memory barriers
+Compilers may reorder assembly instructions differently from the C code for optimization
+reasons. However, when dealing with synchronization this mechanism must be avoided.
+
+An optimization barrier primitive ensures that the assembly language instructions
+corresponding to C statements placed before the primitive are not mixed by the compiler with
+asm instructions corresponding to C statements placed after the primitive.
+
+The macro barrier() expands to asm volatile(“” ::: “memory”). This does not ensure
+that the asm instructions will not be mixed by the CPU. For this necessity we can define a
+memory barrier, that ensures that the operations placed before the primitive are finished
+before starting the operations placed after the primitive.
+
+In the 8086 architecture, the following instructions act as memory barriers:
+- all instructions that operates on I/O ports (eg. in, out)
+- all instructions prefixed by lock
+- all instructions that write into control/system/debug registers (even cli, sti, etc.)
+- a few special assembly instructions, like iret
+
+The kernel implement some facilities to using memory barrier. like mb() rmb() wmb()
+
+
+
+
+
+## Spinlocks, Read/Write Spinlocks and Seqlocks
+##### Spinlocks
+Spinlocks are a special kind of locks designed to work in a multiprocessor environment. If the
+kernel control path finds a lock open it acquires the lock and continues the execution,
+otherwise it “spins” around repeatedly executing a instruction loop. Therefore the kernel
+control path remains running on the CPU (and it can be preempted), kernel preemption is
+disabled during the critical region.
+
+##### Read/Write Spinlocks
+They allow several kernel control paths to simultaneously read the same data
+structure, as long as no kernel control path modifies it. For writing we need to acquire the
+write version of the lock.
+When using r/w spinlocks, requests issued by the kernel control path have all the same
+priority: readers must wait until the writer has finished and the vice versa.
+
+##### Seqlocks
+Seqlocks are similar to r/w spinlocks, except that they give much higher priority to writers: a
+write can proceed even if readers are active. Therefore a writer never waits but a reader may
+be forced to read the same data until it gets a valid copy.
+
+
+
+
 
 ## Semaphore
+A semaphore implements a locking primitive that allows waiters to sleep until the desired
+resource becomes free. Linux offers two kinds of semaphores:
+- Kernel Semaphores, which are used only by kernel control path
+- System V IPC Semaphores, which are used by user space processes
+
+A kernel semaphore is similar to a spinlock in that it does not allow a control path to proceed
+unless the lock is open. However, differently from a spinlock when a kernel control path tries
+to acquire the lock the process is suspended. For this reason, semaphores can be used only
+within a process context (obv. Interrupt handlers and deferrable functions cannot use them).
+##### Read/Write Semaphores
+Read/Write semaphores are exactly like the spinlock counterpart but the process is allowed to
+sleep.
+
+
+
+
 
 ## RCU
+RCU is another synchronization technique designed to protect data structures that are mostly
+accessed for reading by several CPUs. RCU allows many readers and many writers to proceed
+concurrently (an improvement over seqlocks which allows only one writer to proceed) and it is
+lock-free. The keys idea consist of limiting the scope of RCU:
+- only data structures that are dynamically allocated and referenced by means of pointer
+  can be protected by RCU
+- no kernel control path can sleep inside a critical region protected by RCU
+
+In general, writers perform updates by creating new copy, readers read from the old copy
+therefore multiple copies allows readers and writers to read data concurrently. This is achieved
+with three fundamental mechanisms:
+
+1. publish-subscribe for insertion
+2. wait for pre-existing RCU readers to complete for deletion
+3. maintain multiple versions of RCU-updated objects for read
+
+But how long do we have to wait before its safe to reclaim an old version?
+we just need to wait for readers who might be reading the version we want 
+to reclaim.
+
+An old version of a data structure can be still accessed by readers. It can be freed only after
+that all readers have called rcu_read_unlock().
+
+A writer cannot waste to much time waiting for this condition, for this reason call_rcu()
+registers a callback function to free the old data structure.
+
+Callbacks are activated by a dedicated SoftIRQ action (if you remember there was one with
+RCU in the name).
+
+
+
+
 
 ---
 **end s 07**
