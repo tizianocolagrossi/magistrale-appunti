@@ -1148,14 +1148,149 @@ RCU in the name).
 ---
 
 ## Common File Model
+The VFS representation has a two fold nature, one in RAM and one on disk. In RAM we have a
+partial or full representation of the current structure and the content of the FS. On the device
+we have the full representation of of the current structure and the content of the FS but
+possibly outdated.
+
+any filesystem object that can be a directory, a device or a file is
+represented in RAM via specific data structures. Each data structure keeps a reference to the
+functions that talks directly to the device, if any. That reference is reached by means of a
+kernel API interface (like read(), write(), etc.). Function pointers are used to reference
+actual drivers' functions.
+
+The key idea behind the VFS is to introduce a common file model capable of representing all
+the possible filesystems. This means that each physical filesystem implementation must
+translate its physical organization into the VFS’s common file model.
+
+The Common File Model consists of the following “object” types:
+- **superblock** Stores the information concerning a mounted filesystem. Corresponds to a
+   filesystem control block stored on disk
+- **inode** Stores general information about a specific file. Corresponds to to a file control block
+   stored on disk, each inode has a unique number associated to it
+- **file** Stores the information about the interaction between an open file and a process, this
+   **exists only in kernel memory** when a process opens a file
+- **dentry** Stores the information about the linking of a directory entry with the corresponding file,
+   each FS stores this information in its own particular way.
+
+##### inode
+Each inode can always appear in one of the following circular doubly linked lists:
+- list of valid unused inodes they are not dirty and i_count is 0
+- list of in-use inodes mirroring on disk and used by some process, not dirty and i_count > 0
+- list of dirty inodes
+
+inodes objects are also **included in a hash table** that speeds up the search of the
+inode object when the **kernel** **knows** both the **inode number and the address of the superblock**
+corresponding to the FS that includes the file.
+
+In the PCB, struct fs_struct *fs points to information related to the current directory and
+the root directory for the associated process
+
+##### Superblock operations
+Super block operations are described by the struct super_operations. They:
+- manage statistic of the file system
+- create and manage i-nodes
+- flush to the device updated information on the state of the file system
+
+##### dentry_operations
+They specify non-default operations for manipulating d-entries. The table maintaining the
+associated function pointers. For the file system in RAM this structure is not used.
+
+##### Files
+The PCB has a member struct files_struct *files which points to the descriptor table.
+A file struct is allocated when a file is opened. The system call that allows a process to open a
+file is open(). The close() system call retrieves the file struct associated with the file, and 
+releases the file descriptor and calls filp_close flushing the data structures associated with 
+the file (struct file, dentry and i-node)
+
+
+
+
 
 ## /proc FS
+The /proc filesystem is an in-memory file system which provides information on:
+- active programs (processes)
+- the whole memory content
+- kernel-level settings (e.g. the currently mounted modules)
+
+Common files on proc are:
+- cpuinfo contains the information established by the kernel about the processor at boot
+   time, e.g., the type of processor, including variant and features.
+- kcore contains the entire RAM contents as seen by the kernel.
+- meminfo contains information about the memory usage, how much of the available
+   RAM and swap space are in use and how the kernel is using them.
+- version contains the kernel version information that lists the version number, when it
+   was compiled and who compiled it.
+
+Inside we have:
+- net/ is a directory containing network information.
+- self/ contains information about the current process.
+- pid/ contains information about process number pid.
+
+
+
+
 
 ## /sys FS
+/sys is an alternative way to make the kernel export information (or set it) 
+via common I/O operations.
+
+Very simple API, more clear structuring. The VFS objects are mapped using the following
+scheme:
+
+| **internal** | **external** |
+|--------------|--------------|
+| Kernel Objects | Directories |
+| Object Attributes | Regular Files |
+| Object Relationship | Symbolic Links |
+
+
+
+
 
 ## What are the Kobjects
+kobject is an object of type struct kobject. Kobjects have a name and a reference count
+(kref). A kobject also has a parent pointer (allowing objects to be arranged into hierarchies), a
+specific type, and, usually, a representation in the sysfs virtual filesystem.
+
+Kobjects are generally not interesting on their own; instead, they are usually embedded
+within some other structure which contains the stuff the code is really interested in
+(remember container_of).
+##### Kobjects architecture
+A **ktype** is the type of object that embeds a kobject. Every structure that embeds a kobject
+needs a corresponding ktype. The ktype controls what happens to the kobject when it is
+created and destroyed.
+
+A **kset** is a group of kobjects. These kobjects can be of the same ktype (classic kset) or belong
+to different ktypes (i.e. a subsystem). The kset is the basic container type for collections of
+kobjects.
+
+When you see a sysfs directory full of other directories, generally each of those directories
+corresponds to a kobject in the same kset.
+
+To create sysfs entries, kernel code must pass the object to kobject_add(), kobject_del() will 
+remove it from sysfs.
+
+
+
+
 
 ## Char vs Block devices
+The main difference from the char and the block devices is that a char device can be accessed only as 
+a stream of sequential data, one byte after another. Instead the block devices can be accessed as 
+chunk of fixed data that can be randomly accessed (not seq). A char deivices is like a serial port 
+instead a block devices is like an HDD. The write and the read from a block devices are handled
+by the driver of the dcevices. The char and the Block devices are mapped into the VFS (Virtual file system) 
+The VFS is an unified way to handle the FS. the main idea of the VFS is the Common File System, this means 
+that each physical implementation must translate its representation into the VFS's common model. 
+
+The common model consist of 4 main objects. 
+
+1. Superblock, that is the object that contains thee info and the dtriver of the FS
+2. Inode, is the objects that represent all the file, directory etc
+3. File, is the representation od the open Inode, so the interaction from the inode to a process
+4. Dentry, stores info anout the linking of a directory entru (its a special inode)
+
 
 ---
 **end s 08**
