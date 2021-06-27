@@ -1656,24 +1656,126 @@ the new process to be scheduled)
 ---
 
 ## Host vs Native Hypervisor
+There are two kinds of hypervisors: **Native Hypervisor** runs with full capabilities on bare metal. 
+It resembles a lightweight virtualization kernel operating on top of the hardware. While 
+**Hosted Hypervisor** it runs as an application, which accesses host services via system
+calls
+
+
+
+
 
 ## Software-based Virtualization
+In the software-based virtualization the guest application code runs directly on the processor, 
+while the guest privileged code is translated and the translated code runs on the processor.
+The translated code is slightly larger and usually runs more slowly than the native version. As a
+result, guest applications, which have a small privileged code component, run with speeds very close
+to native. Applications with a significant privileged code component, such as system calls, traps, or
+page table updates can run slower in the virtualized environment
+
+
+
+
 
 ## Ring De-Privileging
+A technique to let the guest kernel run at a privilege level that “simulates” 0
+Two main strategies:
+
+**0 / 1 / 3 Model:** most used approach
+Applications (running at ring 3) cannot alter the state of the guest operating system (running
+at ring 1). The guest operating system cannot access privileged instructions and data
+structures of the host operating system we guarantee the isolation of guest systems. Any
+exception must be trapped by the VMM (at ring 0) and must be properly handled (e.g. by
+reflecting it into ring 1 tasks).
+so:
+- VMM runs at ring 0
+- Kernel guest runs at ring 1 (not typically used by native kernels)
+- Applications still run at ring 3
+
+**0 / 3 / 3 Model:**
+- VMM runs at ring 0.
+- Kernel guest and applications run at ring 3.
+- too close to emulation, too high costs
+
+
+
+
 
 ## Paravirtualization
+Paravirtualization is not that different from Binary Translation. BT changes "critical" or
+"dangerous" code into harmless code on the fly; paravirtualization does the same thing, but in
+the source code. One advantage is that paravirtualization eliminates a lot of unnecessary 
+"traps" by the VMM (or Hypervisor), even more than BT.
 
 ## Hardware-assisted Virtualization (VT-x)
+In the hardware-assisted virt certain processors provide hardware assistance for CPU virtualization. When
+using this assistance, the guest can use a separate mode of execution called guest mode. The guest
+code, whether application code or privileged code, runs in the guest mode. On certain events, the
+processor exits out of guest mode and enters root mode. The hypervisor executes in the root mode,
+determines the reason for the exit, takes any required actions, and restarts the guest in guest mode.
+When you use hardware assistance for virtualization, there is no need to translate the code. As a
+result, system calls or trap-intensive workloads run very close to native speed. Some workloads, such
+as those involving updates to page tables, lead to a large number of exits from guest mode to root
+mode. Depending on the number of such exits and total time spent in exits, hardware-assisted CPU
+virtualization can speed up execution significantly
+##### VT-x
+Intel Vanderpool Technology, referred to as VT-x, represents Intel’s virtualization technology on
+the x86 platform. Its goal is simplify VMM software by closing virtualization holes by design.
+Eliminate need for software virtualization (i.e paravirtualization, binary translation). The CPU
+flag for VT-x capability is "vmx". "VMX" stands for Virtual Machine Extensions, which adds 13
+new instructions. These instructions permit entering
+and exiting a virtual execution mode where the guest OS perceives itself as running with full
+privilege (ring 0), but the host OS remains protected.
+In the Linux kernel the module that is in charge of enabling the support for VT-x (or AMD-V) is
+KVM, that makes the kernel able to work as an hypervisor
+
+
+
+
 
 ## Shadow Page Tables and Nested / Extended Page Tables (EPT)
+Granting the guest OS direct access to the MMU would mean loss of control by the
+virtualization manager, some of the work of the x86 MMU needs to be duplicated in software
+for the guest OS using a technique known as shadow page tables. This involves denying the
+guest OS any access to the actual page table entries by trapping access attempts and
+emulating them instead in software. However, this has different drawbacks:
+- maintaining consistency between guest page tables and shadow page tables leads to an overhead
+- loss of performance due to TLB flush on every “world-switch”
+- memory overhead due to shadow copying of guest page tables
 
-## Containers 
+The Extended Page-Table mechanism (EPT) is used to support the virtualization of physical
+memory. It translates the guest-physical addresses used in VMX non-root operation.
+Guest-physical addresses are translated by traversing a set of EPT paging structures to
+produce physical addresses that are used to access memory.
+
+
+
 
 ## Cgroups
+Control Groups provide a mechanism for aggregating/partitioning sets of tasks, and all their
+future children, into hierarchical groups with specialized behaviour.
+
+
+
+
 
 ## Namespaces
+namespaces limit the scope of kernel-level names and data structures at process granularity.
+
+
+
 
 ## Container Runtimes and Docker
+We already discussed all the facilities that the kernel offers for implementing isolation
+between processes. A container runtime is a set of tools and binaries that implements
+containers by using the underlying kernel facilities.
+
+The well-known Docker is a Container Engine, not a container runtime. It allows to manage:
+- Docker Containers that are started from images
+- Docker Images which are read-only images which contains the filesystem of a container.
+- Docker Registries which are repositories of Docker Images
+
+Docker uses as Container Runtimes containerd.
 
 ---
 **end s 12**
@@ -1681,10 +1783,45 @@ the new process to be scheduled)
 ---
 
 ## User Authentication
+Users can login by using passwords requested at boot, when tty + shell starts.
+The passwords’ database is stored within two distinct files:
+- /etc/passwd is accessible to every user
+- /etc/shadow is accessible only by root
+
+In Linux the username is only a placeholder for humans. What discriminates which user is
+running a program is the UID, and the GID which is the group ID (groups are groups of users).
+To each UID and GID are associated a set of capabilities.
+
+Any process is at any time instant associated with three different UIDs/GIDs:
+- **Real**: this tells who you are
+- **Effective**: this tells what you can actually do
+- **Saved**: this tells who you can become again
+
+
+
+
 
 ## Internet Security
+Based on the concept of Access Control List (ACL). Which are list of access rules based on
+addresses of enabled users which are explicitly specified. This approach is very useful in for
+services exposed on a network.
+
+
+
+
 
 ## Secure Operating Systems
+The basic security in an OS is the reuired authentication (if was set) in irder to access to the system. And also the 
+system of permission inside the OS, like rwx and are set for user group and others. Than for the part of process
+therea are some thecniques like ASLR (enabled by PIE), NX flag for the stack, canaries and RELRO tecniques. Than are
+present also dome HIDS (that are IDS but developed in order to see the endpoint of a network aka the machine). 
+And for the network security is based ion the concept of the ACL (access control list), wich are a list of access rule 
+based in address of user allowed. And there are also the implementation of namespace that can isolate some processes
+in order to create a safe environment.
+
+
+
+
 
 ---
 frth day
@@ -1702,3 +1839,10 @@ frth day
 ## Kernel Modules
 
 ## Hot Patching
+The developement of the Linux Kpathc system is user in industrial environment where the OS cannot be shutdown and so
+there is the need for a way to patch the system live (so with the OS running). The Kpatch system is based on ftrace.
+In order to apply the patch first is needed to load the new function in memory, then is needed to **link** the new 
+function into kernel and then patch the function using ftrace. Ftrace redirect the calling to the oldest function
+into the new function by placing in the landing point of the call if the deprecated fucntion a new call tho ftrace that
+will return to the new function (execute ) and than proceder with the flow of operation. Obviously this kind of operation
+can be done multiple times. 
