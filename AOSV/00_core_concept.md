@@ -1110,7 +1110,7 @@ sleep.
 
 ## RCU
 RCU is another synchronization technique designed to protect data structures that are mostly
-accessed for reading by several CPUs. RCU allows many readers and many writers to proceed
+accessed for reading by several CPUs. RCU allows many readers and one writers to proceed
 concurrently (an improvement over seqlocks which allows only one writer to proceed) and it is
 lock-free. The keys idea consist of limiting the scope of RCU:
 - only data structures that are dynamically allocated and referenced by means of pointer
