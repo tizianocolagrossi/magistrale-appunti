@@ -1388,16 +1388,164 @@ and add a new link to the desired runlevel
 ---
 
 ## Describe the PCB
+The process control block is a data structure where the kernel store all the information
+about a process. Also called process descriptor. Represent a clear picture of what a 
+process is doing, for instance, the priority, the state, the address space and so on.
+
+The struct task_struct object represents the Process Control Block within the Linux
+Kernel. It is one of the largest structures in the kernel.
+
+The most important member are:
+- volatile long **state**
+- struct mm_struct ***mm**
+- struct mm_struct ***active_mm**
+- pid_t **pid**
+- pid_t **tgid**
+- struct fs_struct ***fs**
+- struct files_struct ***files**
+- int prio; /* to implement nice() */
+- unsigned long policy /* for scheduling */
+
+##### state
+The state field of a process descriptor describe what is currently happening to the process.
+Possible states are always exclusive:
+- **TASK_RUNNING** the process is either executing on CPU or waiting to be executed
+- **TASK_INTERRUPTIBLE** the process is sleeping until some condition becomes true
+- **TASK_UNINTERRUPTIBLE** like TASK_INTERRUPTIBLE but except that raising a signal to the process will leave the state unchanged
+- **TASK_STOPPED** process has stopped (after signal SIGSTOP, SIGTSTP)
+- **TASK_TRACED** process execution has stopped by a debugger
+
+Then to the exit_state field we can have
+- **EXIT_ZOMBIE** process terminated but the parent did not issued wait to retrieve the data, so the kernel cannot discard it
+- **EXIT_DEAD** the parent issued wait
+##### mm member
+The field mm points to a mm_struct used to manage the memory map of the process:
+The virtual address of the page table (pgd member) and a pointer to a list of vm_area_struct 
+records (mmap field).
+
+Each record tracks a user-level virtual memory area which is valid for the process. active_mm is
+used to "steal" a mm when running in an anonymous process, and mm is set to NULL.
+##### PCB Allocation
+Processes are very dynamic entities whose lifetime ranges from a few milliseconds to 
+months. For this reason the kernel must be able to handle many processes at the same
+time and process descriptors are allocated in dynamic memory, rather than in the memory
+permanently assigned to the kernel. Therefore PCBs can be dynamically allocated upon
+request.
+
+For each process, Linux packs two different data structures in a single per-process
+memory area: thread_info and the Kernel Mode process stack.
+##### Accessing the PCB
+current always refers to the currently-scheduled process, it is therefore architecture-specific.
+It returns the memory address of its PCB (evaluates to a pointer to the corresponding
+task_struct).
+
+
+
+
 
 ## How a new process is created (fork and exec) (initial step of a program)
+To create a new process, a couple of fork() and exec*() calls should be issued. In general
+new process share everything with the parent so it would be inefficient to truly copy all the
+data. So we have **Copy-on-Write** allows both parent and child to read the same
+physical pages, whenever one tries to write on a physical page the kernel copies its
+content into a new physical page.
+
+Not every child need to share everything from the parent, for this reason right after a fork()
+we can issue an exec*().
+
+exec*() changes the program file that an existing process is running. It first wipes out the memory 
+state of the calling process, then goes to the filesystem to find the program file requested,
+copies this file into the program's memory and initializes register state, including the PC.
+It doesn't alter most of the other fields in the PCB.
+
+
+
+
 
 ## OOM killer 
+This module is activated (if enabled) when the system runs out of memory.
+There are three possible actions:
+- kill a random task (bad)
+- let the system crash (worse)
+- try to be smart at picking the process to kill
 
-## Process starting 
+Entry point of the system is out_of_memory(). It tries to select the "best" process checking for
+different conditions:
+- if a process has a pending SIGKILL or is exiting, this is automatically picked
+- Otherwise, it issues a call to select_bad_process() return a process to be killed
+##### oom_badness()
+A score of zero is given if:
+- the task is unkillable
+- the mm field is NULL
+- if the process is in the middle of a fork
+The score is then computed proportionally to the RAM, swap, and pagetable usage
+
+
+
+
 
 ## ELF format
+The ELF standard is intended to streamline software development by providing developers
+with a set of binary interface definitions that extend across multiple operating environments.
+The Executable and Linking Format was originally developed and published by UNIX System
+Laboratories (USL) as part of the Application Binary Interface (ABI).
+
+ELF defines the format of binary executables. There are four different categories:
+- **Relocatable**, .o must be processed by the linker before being run
+- **Executable**, all symbols are resolved, except for shared libraries
+- **Shared object**, a library which is shared by different programs
+- **Core file**
+
+ELF files have a twofold nature: **compilers**, assemblers and linkers handle them as a set of 
+**logical sections** while the **system loader** handles them as a set of **segments**
+
+##### relocatable 
+A relocatable file or a shared object is a collection of sections. Each section contains a single
+kind of information, such as executable code, read-only data, read/write data, relocation
+entries, or symbols. Each symbol’s address is defined in relation to the section which contains it.
+##### executable
+Usually, an executable file has only few segments: A read-only segment for code.
+A read-only segment for read-only data and a read/write segment for other data.
+
+
+
+
 
 ## Static relro vs Dynamic relro (PLT and GOT)
+##### Static
+In this process, the operating system adjusts the memory address of a process to reflect its 
+starting position in memory. Once a process is assigned a starting position in memory, it executes 
+within the space it has been allocated.  Once the static relocation process has completed, the 
+operating system can no longer relocate the process until it terminates.
+
+The Static Relocation works at linking time but you obviously do not want to include all the
+libraries that you use in your program in your executable file, this because eats up memory
+and almost all the programs use the same set of libraries (e.g. the stdlib). Symbols that are not
+included in the final executable file are resolved with the Dynamic Linking that is performed
+by the kernel when the program starts.
+
+##### Dynamic
+Initialization steps: Self initialization, Loading Shared Libraries, Resolving remaining relocations,
+Transfer control to the application.
+The most important data structures which are filled are: **Procedure Linkage Table (PLT)**, used to call 
+functions whose address isn't known at link time and **Global Offsets Table (GOT)**, similarly used to 
+resolve addresses of data/functions
+
+The first PLT entry is special. Other entries are identical, one for each function needing
+resolution.
+1. A jump to a location which is specified in a corresponding GOT entry
+2. Preparation of arguments for a resolver routine
+3. Call to the resolver routine, which resides in the first entry of the PLT
+The first PLT entry is a call to the resolver located in the dynamic loader itself.
+
+When func is called for the first time:
+1. PLT[n] is called, and jumps to the address pointed to it in GOT[n]
+2. This address points into PLT[n] itself, to the preparation of arguments for the resolver.
+3. The resolver is then called, by jumping to PLT[0]
+4. The resolver performs resolution of the actual address of func, places its actual address into GOT[n] and calls func.
+
+![](img/lazy_bind1.PNG)
+![](img/lazy_bind2.PNG)
 
 ---
 trd day
