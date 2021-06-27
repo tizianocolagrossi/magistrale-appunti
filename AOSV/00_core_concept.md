@@ -1553,12 +1553,102 @@ trd day
 **end s 10**
 
 ---
+## Priorities and Weights
+In Linux, process priority is dynamic. The scheduler keeps track of what processes are doing
+and adjusts their priorities periodically. In this way, processes that have been denied the use
+of CPU for a long time interval are boosted by dynamically increasing their priority (and vice
+versa).
+Unix demands for priority based scheduling. To each process is associated a “nice” number in
+[-20, 19]. The higher the nice, the lower the priority ,this tells how nice a process is towards others.
+
+There is also the notion of "real time" processes. Linux in the mainstream version support 
+Soft real time, there are boundaries, but don't make your life depend on it.
+
+In Linux, real time priorities are in [0, 99]. Here higher value means lower priority.
+Implemented according to the Real-Time. Extensions of POSIX.
+
+Both nice and rt priorities are mapped to a single value in [0, 139] in the kernel:
+- 0 to 99 are reserved to rt priorities
+- 100 to 139 for nice priorities (mapping exactly to [-20, 19])
+  
+There are several fields for representing the priority in the task_struct:
+- **static_prio (static)**: priority given “statically” by a user
+- **normal_priority (dynamic)**: based on static_prio and scheduling policy of a process
+- **prio (dynamic)**: it is the priority considered by the scheduler, it changes over the process execution
+- **rt_priority (static)**: the realtime priority for realtime tasks in [0, 99].
+
+The priority taken by account from the scheduler can be RT boosted by interactivity modifiers.
+Will be RT if the task got RT-boostes, uf not it returns to normal_prio.
+##### Nice levels
+When a CPU-bound task goes from nice 0 to nice 1 it will get ~10% less CPU time than another
+CPU-bound task that remain to nice 0. This effect is cumulative and relative.
+Two tasks running at nice 0 (weight 1024):
+→ Both get 50% of time: 1024/(1024+1024) = 0.5
+Task 1 is moved to nice -1 (priority boost):
+→ T1: 1277/(1024+1277) ≈ 0.55
+→ T2: 1024/(1024+1277) ≈ 0.45 (10% difference)
+Task 2 is then moved to nice 1 (priority drop):
+→ T1: 1277/(820+1277) ≈ 0.61
+→ T2: 820/(820+1277) ≈ 0.39 (22% difference)
+
+
+
+
+
+## Thundering Herd Effect
+Wait Queues changed many times in the history of the kernel. In the earlier version they
+suffered from the "Thundering Herd" performance problem. The thundering herd problem occurs 
+when a large number of processes or threads waiting for an event are awoken when that event 
+occurs, but only one process is able to handle the event. When the processes wake up, they 
+will each try to handle the event, but only one will win. All processes will compete for 
+resources, possibly freezing the computer, until the herd is calmed down again.
+
+For solving the Thundering Herd problem the kernel defines two kinds of sleeping processes:
+- **exclusive**, are selectively woken up by the kernel
+- **non-exclusive**, are always woken up by the kernel
+
+
+
+
 
 ## Describe the main Scheduler algorithm in the history of linux
+In the v1.2: circular queue for runnable task management that operated with a round-robin
+scheduling policy. This scheduler was efficient for adding and removing processes (with a
+lock to protect the structure).
+
+from the 2.4 and the 2.6 in the linux kernel has changed the cheduler algorithm. The main difference is that in the 
+2.4 version the schediler operate in O(N) instead in the 2.6 version the scheduler operate in O(1) (so constant time).
+This because has changed the main data structure and how the priority is calculated. In the O(N) was used a LL and the 
+scheduler in order to select the right task to schedule need to scan and calculate the priority of all the process in 
+the LL (for this we have O(N), so a linear algo), insead in the O(1) version of the scheduler the data structure
+used i a RB three and the node are ordered by its 'priority' even is the priority are no more used ad in the O(N).
+The priority are used to calcilate the **virtual runtime** so the task insithe the RB are ordered using the virtual
+priority (left lowest vruntime, right high runtime). And the scheduler schedule the lefter node in the tree. The
+evaluation of the vruntime is done in the descheduing procedure.
+
+
+
+
 
 ## What is a scheduler
+Linux achieves the effect of an apparent simultaneous execution of multiple processes by 
+switching from one process to another in a very short time frame.
+The scheduling policy is concerned with when to switch and which process to choose.
+
+Linux Scheduling is based on the time sharing technique: several processes run in “time
+multiplexing” because the CPU is divided into slices, one for each runnable process. Obviously
+one CPU can run only one process at a given instant, therefore when the currently running
+process is not terminated when its time slice or quantum expires, a process switch may take
+place.
+
+
+
+
 
 ## Context Switch
+firstly the callee-saved register are pushed in the stack, then the stack pointer is swapped
+in the end the callee-saved registers are popped from the stack (since they was pushed by 
+the new process to be scheduled)
 
 ---
 **end s 11**
