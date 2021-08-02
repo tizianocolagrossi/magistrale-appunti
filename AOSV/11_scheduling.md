@@ -570,3 +570,50 @@ CFS doesn’t use priorities directly but instead **uses them as a decay factor*
 
 
 # Context Switch
+
+Context switch starts with the function in kernel/sched/core.c
+
+```c 
+context_switch(struct rq *rq, struct task_struct *prev, struct task_struct *next, struct rq_flags *rf) 
+```
+
+The function does some checks on memory (*active_mm) and according to the situations
+performs some operation. Remember that a context switch can happen in the following cases.
+
+```c
+/*
+* kernel -> kernel   lazy + transfer active
+*   user -> kernel   lazy + mmgrab() active
+*
+* kernel ->   user   switch + mmdrop() active
+*   user ->   user   switch
+*/
+```
+
+Then the function calls switch_to().
+
+The switch_to() is architecture-specific and mainly executes the following two tasks:
+- TSS update
+- CPU control registers update
+
+```c
+#define switch_to(prev, next, last)					\
+do {									            \
+	((last) = __switch_to_asm((prev), (next)));		\
+} while (0)
+```
+
+### switch_to()
+
+As you can see:
+- firstly the callee-saved register are pushed in the stack
+- then the stack pointer is swapped
+- in the end the callee-saved registers are popped from the stack (since they was pushed by the new process to be scheduled)
+
+After these actions the control is passed to __switch_to that performs the switch of the FPU registers and of FS and GS registers.
+
+
+![](img/switch_asm.PNG)
+
+
+But where the instruction pointer is set?

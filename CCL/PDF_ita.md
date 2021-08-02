@@ -52,7 +52,7 @@ Emergono **relazioni** definite e misurate di dati **equivalenti al denaro conta
 *Non è secondaria l'importanza dell uso del concetto del numero che riesce a livellare qualunque entità in una fase di programmazione algoritmica continua dalla rete. I numeri trattano l'umano secondo l'ordine semplificato di quantita monetizzanti.*
 
 Ogni atto nell'economia dell'informazione della rete, compreso l'accesso, è presentato come atto personale. L'utente diventa destinatario di messaggi non sempre richiesti che hanno lo scopo di generare profitti ed orientare il consenso ed il pensiero, facendoli convergere in un unica direzione. (*grazie alla profilazione*).
-
+****
 Internet si estende, invade l'intimità, dissolve i desideri in una pluralità di consumi, perdura nella rappresentazione di un umanità addolcita padroneggiata dagli influencers. La persona è sempre più diretta verso verso una dimensione pubblica, rappresentata da un immagine che coincide come mai fino ad ora con quella privata.
 
 Cosi il concetto di interiorità della persona si trasforma gradualmente in un'appendice impersonale della dimensione dell esteriorità (social network, immagini etc...) che non è altro che la costellazione di dati della nuova economia informazionale.
