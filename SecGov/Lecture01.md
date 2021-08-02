@@ -86,3 +86,12 @@ Answer to these question helps in understanding the right level of formalisation
 - Are there any external considerations (for example contractual, legal, regulatory or 
 sector specific requirements)?
 
+In practical terms, the correct approach means identifying:
+-   the security decisions that need to be made
+-   the people who will make them
+-   the information required to make sensible and informed choices
+
+Positioning of Security Governance. Security is precess, people, relationship between people and netowrk infrastructures.
+![](/SecGov/img/positioning.png)
+
+
