@@ -94,4 +94,14 @@ In practical terms, the correct approach means identifying:
 Positioning of Security Governance. Security is precess, people, relationship between people and netowrk infrastructures.
 ![](/SecGov/img/positioning.png)
 
-
+## What you (hopefully) will learn during this course
+1. Models for (Information) Security Governance and “vertical” Security
+2. Cyber Security Best Practices/Guidelines/Frameworks and how to use them
+3. How to Assess and Manage your Risks
+   1. Understanding Threats, Vulnerabilities, Attack,
+   2. Evaluating their impact
+   3. Finding proper countermeasures
+4. How to model and understand threats
+5. How to manage an incident
+6. Legislation compliance and Insurance
+7. Research issues in Security Governance
