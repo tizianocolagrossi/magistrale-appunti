@@ -1,4 +1,4 @@
-# Lecture 02 (CYBER-SECURITY FRAMEWORKS AND BEST PRACTICES)
+# Lecture 03 (CYBER-SECURITY FRAMEWORKS AND BEST PRACTICES)
 
 In USA in 2014, President Obama defines the Cybersecurity Enhancement Act of 2014 (CEA) It updated the role of the National Institute of Standards and Technology (NIST) to include identifying and developing cybersecurity risk frameworks for voluntary use by critical infrastructure owners and operators
 
