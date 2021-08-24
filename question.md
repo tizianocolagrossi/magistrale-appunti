@@ -93,12 +93,142 @@ in detail, while ISO 27002 is more high-level and provides help to companies tha
 ISMS based on the experience of other companies.
 
 # With reference to the depth dimension of Von Solms’s ISG model, describe the main characteristics of the Directive vertical block
+An information security governance is needed for buisness. IT security governance is the system used 
+from organization to direct and control IT security. 
+
+One model to to implement a good ISG is the Von Solm model.
+In the first layer in depth of the model we have the Directive part.
+
+Security policy documents are needed by standards
+and best practice. In order to be compliant with the requirements its fundamental to define a mechanism 
+to create, manage and distribute policy realted documents.
+
+The architecture of Information security policies is composed by: the Board Directives (identify the 
+IT assets and provide a mandate to protect those assets), the Corporate Information Security Policy
+(high level documents that provide the basis for alla the lower level documents related to info sec aspects)
+, the Sub policies and Procedure (define how the sup policies should be implementes).
+
+The CISP (Corporate Information Security Policy) should be less than 4 pages usually and should
+be easy to read and be losely related to assets that can vary very often in order to be stable and
+not change often.
+
+The CISP should specify which is the owner of the policies and which are the people subjected to the 
+policy. 
+
 
 # With reference to the depth dimension of Von Solms’s ISG model, discuss the front dimension and its two core principles
+The front dimension of the Von Solm model for ISG represent the execution of the processes and action of the 
+Direct and Control loop in those processes.
+
+The core part is based on two core principles: 
+
+The first is that this Direct and Control loop covers all 3 level of management. 
+1. **Strategic Level** is the one of the Directors that define one or more **objective**.
+2. **Tactical Level** composed by manager, that define in which way the objectives should be reached,
+   so they define a set of **procedure** to follow
+3. **Operational Level** where things are actually done putting in place the procedures.
+
+The second core principles is that across those levels there are some action: Direct, Execute and Control.
+The Direct action start from the strategic level and goes down till the Operational Level, so in the Direct
+action after the obhective are find are trasposed into policies and procedures. The strategic level identify 
+the assets, their relevance and their required level of protection and they do this taking into account exteral factors.
+Then the objective are taken as input by the Tactical level thattrasform this objectives into a set of policies and procedures.
+Finally the Operational level take as input the policies and procedures and define how the things must be done in practices.
+
+Then the Procedures are **Executed** 
+
+After from the bottom to upper level there is the Control activity. And for this activity is important know that:
+“we can manage only what we can measure” so to properly control we need to measure and to do it correctly we need 
+to know which kind of information and data to collect.
+
+The Operational level extracts some measurement data from different entities and provides a
+technical report to the tactical level that will “translate” it into a Tactical Management report indicating
+the level of compliance of the approach.
+At the end the Strategic level has all the information required to understand if the objective that they
+generated was successful or if they need to change something and restart the Direct and Control
+loop.
 
 # With reference to the depth dimension of Von Solms’s ISG model, describe the main characteristics of the Awareness with particular emphasis on the SETA program
 
+We know that **all the levels are involved in the Information Security Governance process**, so, **every**
+information **user** of the company **must be trained** and aware about the policies, procedures and
+practices that we put in place.
+
+The SETA(Security Education Training and Awareness) is an extension of the knowledge that people
+already have to do their job and the extension comprehends the skills on how to do their job securely.
+
+The goals of the SETA are:
+1. improve the awareness of the importance and need to protect organizational information resources
+2. acquire the necessary skills and know how to do their jobs more securely
+3. create an understanding and insight into why it is important to protect organizational information assets
+
+The employees must be trained about aspects such as why information is such an important asset,
+and these training should typically address issues such as, user identification and authentication, so
+everything related to the password management ranging from how to choose a strong password up to
+how to store it(not on post-it left on the desk), legal usage of software, virus control, and so on.
+
 # With reference to the threat modelling, describe the asset-centric, the attack-centric and the software-centric approaches highlighting for each of the advantages and disadvantages
+Threat modeling is a structured approach to identifying, quantifying, and addressing threats.
+
+It allows system security staff to communicate the potential damage of security flaws and
+prioritize remediation efforts.
+
+The **asset-centric** tries to identify what can go wrong taking a double perspective, one focusing on
+what is important for the defender, and one for what is important for the attacker.
+Note that the things that are important for the attacker are usually tangible things, while the ones for
+the defender are not tangible(like the reputation of the company).
+
+So we should consider all the enabling steps to reach the goal, which are all the elements that the
+attacker may want, what you want to protect and that could be an instrument for reaching a higher
+target for the attacker(the attacker may perform some lateral movements to reach its goal).
+The steps to implement this type of threat modeling are first identify and list all the assets and then
+consider how an attacker can threaten them, the connect each item in the list with a computer system
+or a set of systems and at the end draw the system showing the assets and other components as well
+as interconnections until you came up with a concrete solution.
+
+PRO: if you want to support the risk by putting the emphasis on the business component from the
+asset side you should use this technique.
+CONS:
+
+The **attacker-centric** is a type of threat modeling that takes the point of view of the attacker(think as an
+attacker), so it first identifies which are all the possible attack techniques, analyse and review them to
+identify which is the set of possible attackers and how these attacks can be applied on our system.
+This procedure is performed by the analyst manually and typically it allows them to identify threats
+that try to exploit human vulnerabilities(not software ones).
+
+PRO: if you are trying to identify remediation plans or you are trying to provide more awareness you
+should use this one.
+Also, it is more useful when you need to come up with the human side of the system.
+CONS:
+
+The **software-centric** approach involves the design of the system and can be illustrated using software 
+architecture diagrams such as data flow diagrams (DFD), use case diagrams, or component diagrams.
+
+This method is commonly used to analyze networks and systems and has been adopted as the de-facto standard 
+among manual approaches to software threat modeling. 
+
+starts from the idea that from the point of view of the
+programmer, the software that you have is different from the ideal software that you want essentially.
+An ideal software should be defined by the set of requirements that generate it and the set of features
+that we put in place in order to cover those requirements.
+Practically speaking this does not happen, in fact, at the end we have a software that covers some of
+the requirements but then others are not covered.
+Also, the final software may have additional features that were not required but the developer thought
+that these would be useful - these are called hidden functionalities, and since they are not required
+are also usually not documented.
+Moreover there can be designing bugs that make some features not working properly.
+When we perform this type of modelling we have to keep in mind that the software is not just the
+application, but also the OS on which it is run and the network that it utilizes to communicate.
+So we need to focus on the application, but then look also at how the application is run on the
+OS(maybe there may be buffer overflow vulnerabilities) and how it uses the network to communicate.
+Ideally, this type of analysis should be done during the designing phase of the software, but in reality
+this is usually done in the maintenance phase.
+
+PRO: if you want to protect your system, so you are in the designing phase and you want to check
+that the security features are implemented and the system will not be subject to specific threats, then
+you'll need this technique.
+CONS:
+
 
 #  Describe the main phases of the Incident Management Process putting particular emphasis on the organizational structures and professional profiles involved
 
