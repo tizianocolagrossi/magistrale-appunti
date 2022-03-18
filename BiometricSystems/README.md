@@ -84,16 +84,221 @@ We mainly focus on False Acceptance when we have security related application. w
 
 
 # Spofing/Camuflage
+## What is spoofing?
+A spoofing attack is a situation in which one person or program successfully masquerades as another by falsifying data (IP address, e-mail address, etc.) thereby gaining an illegitimate advantage.
+
+Biometric spoofing is the act of fooling a biometric application, by using a copy or performing an imitation of the biometric trait that is used by that system in order to legitimately authenticate a user.
+
+## Differenza tra spoofing e camufaggio?
+We have to also distinguish Biometric Spoofing from Camouflage or Disguise. In the case of Camouflage the attack is carried out presenting an artifact biometric trait to the system to fool it pretending not to be oneself. So in that case we don’t want to be recognized. If we introduce extraneous elements on the face we may have that the detection process fails.
+
 ## Come si valuta un sistema di anti-spoofing? È possibile valutarlo insieme al riconoscimento? Come?
 ## Evaluate spoofing together with recognition?
-## What is spoofing?
-## Differenza tra spoofing e camufaggio?
+
+One possibility is to exploit the Spoof False Acceptance Rate (SFAR): the number of the spoof attacks that are falsely accepted.
+
+When we come to spoof detection, we've to add the Spoof False Acceptance Rate to compare it with the False Rejection Rate.
+
+In this case False Rejection doesn't refer to the miss-recognition of a sample, but to misclassification of the genuine sample as a spoofed attack.
+
+For the evaluation, we've to distinguish a Licit Scenario from a Spoof Scenario,
+because in the first one we have the possible errors that the system can make and so
+we've False Acceptance Rate (FAR) and False Rejection Rate (FRR) that can be also
+summarized in Half Total Error Rate (HTER) that is computed for each threshold. In
+particular, we will look for that specific operational point that is the Equal Error Rate
+(EER).
+
+**When we go to the Spoof Scenario**, we still have the False Rejection Rate because
+we still have possible genuine users that can be rejected due a classifier error;
+however, in this case, we can also consider a **cumulative Spoof False Acceptance Rate (SFAR)**.
+
+In the Licit Scenario, the False Acceptance Rate can be due by the so called zero
+effort attacks (a person claims an identity without taking any particular actions in
+order to resemble the genuine user). 
+
+On the other hand, in the Spoof Scenario, we
+have to consider not only the zero effort attempts, but also attempts that are voluntary
+carried out in order to try to reproduce the appearance of the attacked person.
+In some case we can fuse recognition and anti-spoofing in a single system with a
+single Accept-Reject response. So we can combine a Biometric Classifier with a
+Binary Classifier, because an Antispoofing Classifier is not but a system algorithm able
+to decide whether a probe is genuine or not.
+
+In the case of the Countermeasure we can also measure the False Living Rate (FLR)
+and the False Fake Rate (FFR), that in some sense substitute what we have defined
+as False Rejection Rate and Spoof False Acceptance Rate.
+
+The **False Living Rate** is the **percentage of spoofing attacks misclassified as real**, while the **False Fake Rate** is the **percentage of real access misclassified as fake**.
+
 ## Tutti i tratti biometrici sono soggetti a spoofing?
-## Liveness Detection per anti-spoofing
-## Tecniche che vengono utilizzate per alcuni tipi di Liveness Detection, Come si fa micro-texture analysis? operatore per la micro-texture ? Dove si trova moiré pattern?
-## What is spoofing? what is very simple way to challenge paper and video spoofing?
+Those who are based on appearance do. Gait, key typing, the way you sign, etc., no.
+
+## What is spoofing? How it is carried out? Which are the strategies?
+Biometric spoofing attack is the act of fooling a biometric application, by using a
+copy or performing an imitation of the biometric trait that is used by that system in
+order to legitimately authenticate a user. In order to successfully carry out a
+presentation attack, it is necessary to know which is the biometric trait or which are
+the biometric traits underline the authentication process.
+
+In Biometric Spoofing we consider different kinds of attack, where the attacker
+actively acts in order to acquire the appearance of the attacked person.
+A biometric system can be attacked in different points: in the transmission
+channel; in the feature extractor; in the comparator. It’s possible to inject data over of
+each of such channel in order to force the result that we want. It is also possible to
+attack the Database with templates that don't belong to enrolled people. Especially
+when there is an automatic update of the gallery, in order to address the change of
+appearance of a person, it is possible to "poison" the sub-gallery for that subject by
+injecting images.
+
+All of these kinds of attacks along the channels, the database and so on and so forth,
+can be considered as Indirect Attacks. Defending from these kinds of attacks is a
+matter of cybersecurity.
+
+
+Another kind of attacks are the Direct Attacks. In this case, our final aim is not to
+recognize the person, but rather to detect the attack so that we can proceed with a
+countermeasure.
+We can do a Classification of spoofing attacks: 2D spoofs attack and 3D spoofs
+attack.
+
+In the 2D Spoofs the attack is carried out by using a 2D surface like a photo or like a
+video that is played once we have somehow recorded the attacked person. Photo
+attacks can use either hard copy, hard copy with a eye whole, screen. An alternative
+for 2D spoof is to exploit Video Attacks. In that case we recorded the person that we
+want to attack using different screen resolutions and then present this video instead of
+our true face. This is also called "Replay Attack”.
+
+In the 3D Spoofs the attack requires that there is not a plain surface but a three
+dimensional surface and in general masks are used for this kind of attack (Mask
+attacks).
+
+For a human operator, it's trivial to detect such kind of spoof attack; especially when
+the image that is shown to the system does not occupy the overall screen.
+An automatic system is designed in order to identify region of interest containing face;
+since in this case the region of interest containing the face is present, there are all the
+things which automatic system cares about. Unless we extend the functionality of the
+system with an anti-spoofing procedure, it is quite easy to carry out this kind of
+attack.
+For each kind of attack there are different anti-spoofing techniques that are mostly
+based on liveness detection.
+
+ In general, what we try to do, a part from studying the
+reflection pattern of the surface and the microtexture, is to "challenge" the user in
+order to detect the kind of reaction of the face that we've in front.
+We've anti-spoofing techniques that work at Sensor-level (Hardware Based); in
+practice they exploit the intrinsic properties of a living body including the kind of
+reflectance that is producing and involuntary signals (for example micr movements of
+the eyes) that are completely absent in a photo or in a mask. An example of antispoofing technique that takes advantage of these kind of movements is Eye Blink. In
+fact, the eye blinking is a natural involuntary movement that can be detected in order
+to distinguish a real person from a photo.
+An the other hand, we can have a voluntary response from the so called “ChallengeResponse” strategy. In this case we can ask to a person that is presenting a probe
+to make a certain kind of expression or movement. If what we expected doesn’t
+happen on the face that is shown to the system, we can conclude that this is a spoof
+attack.
+Other kinds of anti-spoofing techniques are carried out at Feature Extractor level
+(Software based) and they can be either static or dynamic.
+An example of study static is the study of the microtexture of the acquired image; with
+dynamic we study the kind of dynamic features that a certain movement can produce
+when it is naturally carried out.
+We can have also a Score level fusion where we can either fuse anti-spoofing and
+recognition in a single module or carry out anti-spoofing in advance and proceed with
+the recognition only if the anti-spoofing returns a genuine response.
+
+
+## Anti-spoofing on the face
+One of the most intuitive approaches to 2D Print Attach is Liveness Detection. In
+practice, the essential difference between the live face and photograph is that a live
+face is a fully three dimensional object while a photograph could be considered as a
+two dimensional planar structure. This means that we can use structure from motion
+to derive kind of depth information to distinguish a live person from a still photo.
+The disadvantages of depth information are: it is hard to estimate depth information
+when head is still (we have to ask for a movement, otherwise it is very difficult to carry
+out a liveness detection in this trivial way) and the estimate is very sensitive to noise
+and lighting (if we’re in a dark environment, this may help the attacker to hide some
+feature change with the respect to a real face).
+It is possible to compute the optical flow (this is a technique that tries to extract the
+motion vector by comparing the position of each pixel in one frame and in the
+following one) on the input video to obtain the information of face motion for liveness
+judgment, but it is vulnerable to photo motion in depth and photo bending.
+A possible multimodal approach fuses face-voice against spoofing exploiting the lip
+movement during speech.
+Among the earliest approaches, it is possible to consider those relying on eye blinking
+analysis because it relies on the natural pattern that is produced on a regular basis in
+eye dynamic. Eyeblink is a physiological activity of rapid closing and opening of the
+eyelid and it’s a movement that cannot be avoid at all.
+An eyeblink activity can be represented by an image sequence consisting of images.
+The typical eye states are opening and closing. In addition, there is an ambiguous
+state when blinking from open state to close or from close state to open. It is possible
+to define a three-state set for eyes, Q = {α : open, γ : close, β : ambiguous}. A typical
+blink activity can be described as a state change pattern of α → β → γ → β → α.
+An other possibility is based on Micro-texture analysis. This is especially efficient
+when we have 2D Print attacks or Photo attacks because any kind of photographic
+paper or printing paper has a kind of micro-texture that can be not visible by eyes but
+can be detected by using texture features.
+Human faces and prints reflect light in different ways because a human face is a
+complex non rigid 3D object (so it reflects light in different directions) whereas a
+photograph is a planar rigid object (different specular reflections and shades). The
+surface properties of real faces and prints, e.g. pigments, are also different because
+natural pigments are different from ink pigments. These last ones contain some
+metallic components so this affects the way light is reflected. The work exploits multiscale local binary patterns (LBP). The strategy that is used in multi-scale local binary
+patterns is more or less the same but much more simpler to adopt than the bank of
+wavelets with different frequencies. Multi-scale local binary patterns are computed by
+using windows of different size. As a further advantage, the same texture features that
+are used for spoofing detection can also be used for face recognition. The vectors in
+the feature space are then fed to an SVM classifier which determines whether the
+micro-texture patterns characterize a live person or a fake image.
+Another important approach is the Captured-Recaptured approach. We must
+consider that all the distortions that are present when we capture an image affect the
+face image when it passes through the camera system. Such distortions are applied
+twice when we take the photo of a person and then when we print it. In practice,
+when we use a photo taken by a photo, like it may happen when using a photo taken
+on the internet, we have a much lower image quality compered to the capture of a real
+face image.
+Another approach is the Gaze Stability. There is an algorithm proposed by Ali et al.
+that is based on the assumption that the spatial and temporal coordination of the
+movements of eye, head and (possibly) hand involved in the task of following of a
+visual stimulus is significantly different when a genuine attempt is made compared
+with certain types of spoof attempts.
+In a challenge response strategy, when the system asks us or to the genuine
+subject to rotate the head, the kind of temporal coordination between the movement
+of the eyes, the movement of the head (if they are possibly involved) is different when
+if the person is looking at the screen through the holes in a mask.
+The task, or the so called "challenge", requires head/eye fixations on a simple target
+that appears on a screen in front of the user.
+In the case of a photograph spoofing attack, visually guided hand movements are
+needed to orientate the photo to point in the correct direction towards the challenge.
+So the temporal coordination between the eye fixations and the head rotation is
+somehow influenced by this hand movement that it is not present in a genuine
+presentation. The Optical Flow Correlation (motion correlation) takes into account
+the movement of the head of the user trying to authenticate and the movement of the
+background of the scene, because if they move together means that there is a
+spoofing attack, because face and background move together while they should not
+move together. Optical Flow doesn't work in two cases: one case in the case of
+masks, but also if we have a bended face image over the attacker face.
+Another possible approach is to use the Image Distortion Analysis. It is based on the
+kind of specular reflections that are produced by a printed paper surface or LCD
+screen (a smartphone screen for example) during capture. There is a kind of
+compound analysis that is carried out according to these different elements and then
+it is possible to concatenate the features extracted from each of this image distortion
+factors and then to train the ensemble classifier.
+Another way to effectively use the study of microtextures is related the Replay Video
+Attacks. When we carry out a Replay Video Attack, we show a video on another
+screen. In this case there is a special kind of pattern that is called moiré pattern
+aliasing that is caused by the overlay of two pixel patterns: one from the original
+video and the other one from the screen over which the video is shown.
+It is possible to detect this special pattern using Multi-scale LBP and DSFIT (this
+tries to detect the features with the highest energy in the image). In practice, whenever
+a kind of moiré pattern is present, we can conclude that we’re in presence of a replay
+spoof attack.
+
 ## How you can detect moiré pattern?
-## spoofing attack false acceptance rate cosa significa? cosa ci metto al denominatore? (numero di sample contraffatti)
+It is possible to detect this special pattern using Multi-scale LBP and DSFIT (this
+tries to detect the features with the highest energy in the image). In practice, whenever
+a kind of moiré pattern is present, we can conclude that we’re in presence of a replay
+spoof attack.
+
+## spoofing attack false acceptance rate cosa significa? cosa ci metto al denominatore? 
+Come similar to FAR but now in the denominator we have the number of samles spoofed.
 
 # Face 
 ## Training in face recognition, Quali sono le buone regole per il training?
