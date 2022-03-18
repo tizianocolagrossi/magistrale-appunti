@@ -42,17 +42,45 @@ Accelerometer in order to have also the orientation of the devices. For example 
 
 # Evaluation
 ## Che cosa si intende per detection and identification rate?
+**(In the Identification Open Set).**
+DIR(t,k). The DIR (detection and identification rate) represent the probability of a correct identification at rank k with a threshold t.  (the correct subject is returned at position k).
+The probability of false reject expressed as 1-DIR(at rank 1), so FRR(t) = 1 - DIR(t, 1). 
+
 ## In quanti modi posso effettuare un identificazione? come valuto i casi corretti di accettazione? anche li devo calcolare un rate, cosa c’è al denominatore del dir?
+We can perform identificationin open and closed set. The main difference is that in closed set we assume that each probe appartain to a person in the gallery, and so we cannot have Impostors in this kind of identification, while In open set we can see the impostors the people that not appartain to the gallery.
+
+**On the dominator we have cardinality of the set PG, so the set of probes belonging to the gallery.**
+
+
 ## False Rejection come me lo calcolo? Nella identificazione closed set?
-## Evaluation in Verification systems
-## EER metrics
-## How we can evaluate a recognition system? False Acceptance Rate? How i can choose accept or reject in evaluation?
-## Detection identification rate? in quali applicazioni si usa? (identificazione open set)
-## differenza identificazione open e closed set? cosa c’è al numeratore? e denominatore? (numero di accessi genuini)
+False rejection (FR) in the identification closed set is calsilated when the identity of the probe returned from the sistem is not the right one (is not strictly FR but kinda)
+
+## Evaluation in Verification systems and EER metrics
+In the Verification a person claims an identity and submits its sample as a probe; the
+system has one or more of its templates in the archive; matches this or those
+templates with the incoming template; before decide if that person is who he claimed
+to be, the system compare the similarity compared by the matching with the
+acceptance threshold (this threshold is decided in advance, when designing the
+system); if the similarity measure meets the acceptance threshold, then the claimed
+identity is accepted, otherwise it is rejected as an impostor.
+
+From the point of view of the identities, it is a one-to-one matches: we only match the incoming template with the single or the multiple templates in the gallery that belong to the claimed identity.
+
+The **most common measures to compare Verification Systems** are: **plot** the **curve** produced by **False Acceptance Rate** with the **curve** produced by the **False Rejection Rate**. 
+
+an important operating point that is called **Equal Error Rate** (ERR, it is given by
+that threshold where the FAR is more or less equal to the FRR)
+
+Receiving Operating Characteristic Curve (ROC) that plots a kind of general behavior of the
+system (it has FAR on the x axis and 1-FRR on the y axis; higher is the curve towards
+the left upper half of the quadrant of the coordinates, better is the system).
+
+The point provided by the threshold where FAR and FRR achieved a similar value is
+called Equal Error Rate (EER). The EER is not a threshold but it's the value that we
+achieved setting up a similarity threshold where the FAR is equal to the FRR.
+
 ## Perché preferiamo un basso False Acceptance Rate rispetto a un basso False Rejection Rate?
-## FR (False Negative) e GR (True Negative). I numeri assoluti FR e GR non bastano, perché?
-## Cos’è la ROC curve?
-## L’Identification open set è più difficile della verifica?
+We mainly focus on False Acceptance when we have security related application. while the False Rejection may only be disturbing and little bit frustrating for the user, the False Acceptance may be dangerous in many situation because, for example, it may allow the access to a terrorist or a criminal. If we raise alarms for a false rejection, we can create panic, so also FR is important. In general, FA is the most critical situation but the criticality depends on the kind of applications.
 
 
 # Spofing/Camuflage
