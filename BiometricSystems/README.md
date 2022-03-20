@@ -349,14 +349,36 @@ possible expressions of a specific subject.
 The morphable model is based on a data set of 3D faces. Morphing between faces
 requires full correspondence (alignment) between all of the faces.
 
-
-## possiamo usare dei modelli 3d per il volto, quali sono le strategie migliori per utilizzarli? Se voglio continuare ad avere in input modelli 2D ma nella gallery ho modelli 3D, come posso utilizzarli nel riconoscimento?
-
-
 ## Problem of 2D recognition, what can be solved with 3D recognition? what can't be solved by either of them?
-
-
-## Qual è la principale differenza tra PCA e LDA?
+Regarding the Pose variations, while 2D recognition can be affected by rotation,
+pitch and yaw variations in one pose, this is not true with 3D. When we carry out a
+recognition strategy based on 3D we actually don't use a 2D/flat image but we use a
+3D model and so we can test with different poses of this 3D model because it can be
+rotated and its pose can be also changed according to pitch and yaw so that we can
+try to have the 3D model assume the same pose represented in the 2D image.
+For a similar reason also Illumination problems can be considered as solved
+because, as in the same way, we can rotate the model and also synthetize different
+illuminations.
+While Expression still affects face recognition in 3D. If we think especially on
+exaggerate expressions that are the ones more difficult to capture even in 2D, they
+still create problems in 3D because they can cause a real modification with the
+respect to a neutral 3D model.
+Also Aging can affect 3D strategy. According to an increasing age, it's possible that
+some face issues relax. Since the volume of a certain anatomic part can increase with
+age, this affects 3D strategy too.
+Makeup doesn't affect 3D model at all because only considering the geometric
+relationships, the 3D volume determined by the face doesn't change.
+Plastic Surgery can affect 3D models according to the kind of weight and the
+extension of the intervention.
+Occlusion affects 3D as it affects 2D, because when we build the model for the probe
+and it wears a scarf or glasses or whatever, this model is poorly matched against the
+enrolled one.
+We can summarize the pros and cons of 3D strategies by saying that: in 3D we have
+much more information, the built models are much more robust to a number of
+distortions, there is the possibility to synthetize (approximate) 2D images from virtual
+3D poses and expressions computed from a 3D model (PROs); the cost of devices,
+computational cost of procedures, possible risk that some acquisition devices can
+present, for example the laser scanner is dangerous for the eye (CONs).
 
 
 # Iris
@@ -450,8 +472,6 @@ They are collected for example during investigations by using a special powder. 
 fingerprint that is usually complete (the enrolled fingerprint in the gallery) with a latent
 fingerprint that usually is a fraction, fragment of the complete fingerprint. So that there is
 the problem of the Alignment.
-
-
 
 ## Fingerprints Recognition? Lists some types of fingerprint shapes?
 
