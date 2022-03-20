@@ -188,10 +188,12 @@ order to detect the kind of reaction of the face that we've in front.
 We've anti-spoofing techniques that work at Sensor-level (Hardware Based); in
 practice they exploit the intrinsic properties of a living body including the kind of
 reflectance that is producing and involuntary signals (for example micr movements of
-the eyes) that are completely absent in a photo or in a mask. An example of antispoofing technique that takes advantage of these kind of movements is Eye Blink. In
+the eyes) that are completely absent in a photo or in a mask.
+ An example of antispoofing technique that takes advantage of these kind of movements is Eye Blink. In
 fact, the eye blinking is a natural involuntary movement that can be detected in order
 to distinguish a real person from a photo.
-An the other hand, we can have a voluntary response from the so called “ChallengeResponse” strategy. In this case we can ask to a person that is presenting a probe
+An the other hand, we can have a voluntary response from the so called “ChallengeResponse” strategy. 
+In this case we can ask to a person that is presenting a probe
 to make a certain kind of expression or movement. If what we expected doesn’t
 happen on the face that is shown to the system, we can conclude that this is a spoof
 attack.
@@ -211,17 +213,20 @@ practice, the essential difference between the live face and photograph is that 
 face is a fully three dimensional object while a photograph could be considered as a
 two dimensional planar structure. This means that we can use structure from motion
 to derive kind of depth information to distinguish a live person from a still photo.
+
 The disadvantages of depth information are: it is hard to estimate depth information
 when head is still (we have to ask for a movement, otherwise it is very difficult to carry
 out a liveness detection in this trivial way) and the estimate is very sensitive to noise
 and lighting (if we’re in a dark environment, this may help the attacker to hide some
 feature change with the respect to a real face).
+
 It is possible to compute the optical flow (this is a technique that tries to extract the
 motion vector by comparing the position of each pixel in one frame and in the
 following one) on the input video to obtain the information of face motion for liveness
 judgment, but it is vulnerable to photo motion in depth and photo bending.
 A possible multimodal approach fuses face-voice against spoofing exploiting the lip
 movement during speech.
+
 Among the earliest approaches, it is possible to consider those relying on eye blinking
 analysis because it relies on the natural pattern that is produced on a regular basis in
 eye dynamic. Eyeblink is a physiological activity of rapid closing and opening of the
@@ -231,6 +236,7 @@ The typical eye states are opening and closing. In addition, there is an ambiguo
 state when blinking from open state to close or from close state to open. It is possible
 to define a three-state set for eyes, Q = {α : open, γ : close, β : ambiguous}. A typical
 blink activity can be described as a state change pattern of α → β → γ → β → α.
+
 An other possibility is based on Micro-texture analysis. This is especially efficient
 when we have 2D Print attacks or Photo attacks because any kind of photographic
 paper or printing paper has a kind of micro-texture that can be not visible by eyes but
@@ -239,14 +245,16 @@ Human faces and prints reflect light in different ways because a human face is a
 complex non rigid 3D object (so it reflects light in different directions) whereas a
 photograph is a planar rigid object (different specular reflections and shades). The
 surface properties of real faces and prints, e.g. pigments, are also different because
-natural pigments are different from ink pigments. These last ones contain some
-metallic components so this affects the way light is reflected. The work exploits multiscale local binary patterns (LBP). The strategy that is used in multi-scale local binary
+natural pigments are different from ink pigments. 
+These last ones contain some metallic components so this affects the way light is reflected. 
+The work exploits multiscale local binary patterns (LBP). The strategy that is used in multi-scale local binary
 patterns is more or less the same but much more simpler to adopt than the bank of
 wavelets with different frequencies. Multi-scale local binary patterns are computed by
 using windows of different size. As a further advantage, the same texture features that
 are used for spoofing detection can also be used for face recognition. The vectors in
 the feature space are then fed to an SVM classifier which determines whether the
 micro-texture patterns characterize a live person or a fake image.
+
 Another important approach is the Captured-Recaptured approach. We must
 consider that all the distortions that are present when we capture an image affect the
 face image when it passes through the camera system. Such distortions are applied
@@ -254,6 +262,7 @@ twice when we take the photo of a person and then when we print it. In practice,
 when we use a photo taken by a photo, like it may happen when using a photo taken
 on the internet, we have a much lower image quality compered to the capture of a real
 face image.
+
 Another approach is the Gaze Stability. There is an algorithm proposed by Ali et al.
 that is based on the assumption that the spatial and temporal coordination of the
 movements of eye, head and (possibly) hand involved in the task of following of a
@@ -281,6 +290,7 @@ screen (a smartphone screen for example) during capture. There is a kind of
 compound analysis that is carried out according to these different elements and then
 it is possible to concatenate the features extracted from each of this image distortion
 factors and then to train the ensemble classifier.
+
 Another way to effectively use the study of microtextures is related the Replay Video
 Attacks. When we carry out a Replay Video Attack, we show a video on another
 screen. In this case there is a special kind of pattern that is called moiré pattern
@@ -302,29 +312,253 @@ Come similar to FAR but now in the denominator we have the number of samles spoo
 
 # Face 
 ## Training in face recognition, Quali sono le buone regole per il training?
+When we choose the training set, templates of **different quality** must be included in
+the training set, because it **must include as many as possible different conditions** that
+will be found in the testing set or in the real life.
+The generalizability of outcomes, that is the possibility to get the same kind of
+performance even with unknown data, depends on the choice of the training set.
+Dataset must considering distortions (**PIE: Pose, Illumination, Expression**; etc...) and
+having **good positive samples and good negative samples** (something that seems
+a face but it is not a face).
+
+We may train the algorithm over a different kinds of objects or even refine the
+behaviour of the existing one since we can even re-train the system starting from the
+last results published in the available models. If we're training the algorithm in order to
+detect faces, we must have a huge amount of faces over which the training can be
+carried out. If we're looking for mouth, then we will have a huge amount of images just
+centered on the mouth or cropped over the mouth.
+
+The Positive Examples help the system to learn which are the stereotypical elements
+that make up a face (in the case of face detection).
+The Negative Examples must be at least as many as the Positive ones; these are not
+samples that contain the object that we're looking for but they can fool the system. So
+they are samples that could be wrongly classified.
+We must stress the training of the system by having the system learn from the images
+that can fool it.
+
 ## Cosa è un Morphable Model?
-## Differenza un sistema di face detection basato su Adaboost e quelli basati su determinate caratteristiche del volto?
+Expression still affects face recognition in 3D. It's possible to exploit the so called
+**morphable model, that can be somehow distorted in order to reproduce any kind of expression**. 
+But the computational complexity increases in a dramatic way.
+The model is called morphable model because we **can change some relationship**
+**among polygons in the model** in order to create different appearances of the same
+face or also to create different faces. Shape and texture of the generic model are
+manipulated to adapt to the captured images.
+**Morphable models also allow to synthetize face expressions** approximating the
+possible expressions of a specific subject.
+The morphable model is based on a data set of 3D faces. Morphing between faces
+requires full correspondence (alignment) between all of the faces.
+
+
 ## possiamo usare dei modelli 3d per il volto, quali sono le strategie migliori per utilizzarli? Se voglio continuare ad avere in input modelli 2D ma nella gallery ho modelli 3D, come posso utilizzarli nel riconoscimento?
-## In che modo la posa influenza? (posizione, illuminazione) abbiamo dei metodi per valutare la posa del viso? (tramite i 3 assi) quale rotazione distorce in modo irreparabile? (abbassare la testa)
+
+
 ## Problem of 2D recognition, what can be solved with 3D recognition? what can't be solved by either of them?
+
+
 ## Qual è la principale differenza tra PCA e LDA?
 
 
 # Iris
 ## Rubber Sheet Model
+The Rubber Sheet Model takes into account the problem of axis and especially the
+problem of having a **pupil that is not perfectly centered within the iris**. Determining the
+right centre for the polar coordinates is of paramount important but pupil and iris are
+not perfectly concentric and **size of the pupil can change** due to illumination or
+pathological conditions (drunk or drugs).
+
+**Taking a fixed number of points on each radius that is contained between the pupil**
+**boundary and the iris boundary, it's possible to normalize the deformed distance:**
+when we have a larger region, the sampling will be less dense; we will have a more
+dense sampling in the narrower region. At the end, we will be able to obtain a
+representation that represents the ideal iris with the pupil perfectly centered.
+The model maps each iris point into polar coordinates where the center of the polar
+coordinates is the center of the pupil. The transformation is not a simple polar
+transformation because the new coordinates for each point are a linear combination
+of set of points that are respectively the coordinates of the pupil contour and the
+those of the external iris contour.
+
+The model compensates for pupil dilation and size variations by producing and
+invariant representation. **The model does not compensate for rotations**. 
+**However, during matching, in polar coordinates, this is done by translating the obtained iris template until alignment.**
+Once the procedure has extracted the bend containing the iris and once that bend
+has been normalized, then Daugman applies Gabor filters in polar coordinates in
+order to obtain the so called iris code.
+
 ## Quali sono i pro e contro nel riconoscimento dell’iride, tra la cattura delle immagini nella banda near inference in e con la luce visibile (luce naturale e infrarossi)?
-## Quali sono i problemi che possono sorgere nel riconoscimento dell'iride?
+**PRO**
+
+The iris is visible yet well protected, so as the resolution of capture equipment increases
+then also the ability to capture this stricter distance increases and so we have a good
+advantage of using this extremely distinguishes trait.
+
+It is a time invariant (after about 2 years age) and extremely distinguishing trait (right
+different from left and even twins have different irises).
+Its image can be acquired without direct contact, so it is well acceptable not like the
+retina fundus that requires to touch the eye surface with the capture device.
+It can be acquired in both near to infrared and visible wavelengths.
+
+**CONS**
+
+Iris’ surface is very limited: only about 3.64 cm2, so we need a very good capture device
+in order to obtain a good image of the iris. A “good” acquisition requires a distance of less
+than one meter to guarantee a sufficient resolution, depending on the input device.
+Possible problems are represented by: the small size; the high resolution required by the
+equipment; the limited depth of field so that we need to pay attention to the focus and out
+of focus problems; we need to align with optical axis unless we use some tricks like the
+so called "off-axis problem" (if the person is looking in another direction, the iris will not
+be exactly in the center of the sclera, but it will move towards the right or the left ends of
+the sclera); the specular reflections; the possible presence of glasses or contact lens.
+
+The two **main capture modalities are the Visible light and the Infrared light**.
+
+In Visible light we have the melanin that absorbs the visible light, so
+we can clearly see the different colors that may appear in the iris.
+The layers that make up the iris are well visible. But the image
+contains noisy information on texture.
+
+In Infrared light the melanin reflects most of the infrared light, so
+that we don't have color informations. The texture is more visible but
+it requires special equipment.
+
+In the visible band of light, the iris reveals a very rich, random,
+interwoven texture (the “trabecular meshwork”).
+Trabecular meshwork is basically due to muscles.
+In infrared illumination even dark brown eyes show a rich texture,
+that it could not be easy visible with Visible light.
+
 
 # Fingerprint
 ## Indice di Poincarè
-## What is the other biometric feature (beyond the iris) that has random traits?
-## Fingerprint Recognition
+A directional map is vector field (a region filled of vectors
+with different orientations). Our fingerprint is a curve immersed in this vector field and so,
+the Poincaré index, is defined as the total rotation of the vectors of this field once we
+travel along the curve.
+
+The index of Poincarè can be calculated as follows:
+- The index PG, C (i, j) is calculated by algebraically adding the differences in orientation
+between adjacent elements of C (curve).
+-  The sum of the differences of orientations requires to associate a direction to each
+orientation. One can randomly select the direction of the first element and assign the
+direction closest to that of the previous element to all subsequent elements.
+- It is shown that, for closed curves, the Poincare index assumes only one of the discrete
+values 0 °, ± 180 °, ± 360 °. In particular, regarding the singularities of fingerprints: 0 no singularity, +180 loop -180 delta +-360 whorl.
+
 ## Cosa sono le impronte latenti? primo problema tra registrare un'impronta latente e quella diretta?
+The latent fingerprint are the fingerprints that we leave on any suitable surface when we touch it.
+They are collected for example during investigations by using a special powder. In this case we’ve to compare a
+fingerprint that is usually complete (the enrolled fingerprint in the gallery) with a latent
+fingerprint that usually is a fraction, fragment of the complete fingerprint. So that there is
+the problem of the Alignment.
+
+
+
 ## Fingerprints Recognition? Lists some types of fingerprint shapes?
+
+A fingerprint recognition application follows the same workflow followed by experts in the
+analysis of fingerprints. They take into account several factors that can be also organized
+into a hierarchical tree of decision, so that first of all one looks at the accord in the
+configuration of the global pattern, so whenever the global pattern is available we first
+check that the fingerprints to match have a common typology of the global pattern. This
+also entails, in the case of the latent fingerprints, that we have a fragment large enough to
+possibly present the global pattern. In general the global pattern is quite wide enough to be also visible in latent fragments.
+Then we look for a qualitative accord, that implies that the corresponding minute details
+are identical. In the sense that, in a certain region, it's possible to find out a bifurcation,
+together with an endpoint and so on and so forth.
+There is also a quantitative factor because there are a minimum number of minutiae
+details that must match between the two prints.
+There must be also a deep level of correspondence of minute details because they must
+be identically interrelated, in the sense that it's not sufficient that in a certain region of the
+fingertip we found for example two bifurcation but for example they must be divided from
+each other by the same number of ridges.
+
+METHODOLOGICAL APPROACHES 
+
+There are different methodological approaches but they can be classified into three main
+classes:
+- matching based on **correlation**: it is possible to compute the correlation among two
+images, in this case two finger images, by superimposing those and then by computing
+of the correlation between the corresponding pixels.
+The first problem with this method is the Alignment. It could not be immediate to
+determine, especially in automatic procedure because the matching based on
+correlation must be iterated for different alignment, until the best one is found.
+This kind of computation is sensitive to non linear transformations for example those
+caused by the shift of the finger when the fingerprint is captured.
+These is also a high computational complexity. This is mostly used for global
+characteristics because in practice it is a complete matching that considers all the
+possible aspects, in particular the macro characteristics of the fingerprints.
+
+- matching based on **ridge features**: the extraction of minutiae in fingerprint images of
+low quality is problematic, therefore these methods use other features such as ridges
+orientation and local frequency, shape of ridges and texture, which are more reliable
+and easier to extract, but also less distinctive.
+This kind of method has a low discriminating power but it can be used as a first step
+in the flow in order to cut the search or to arrive more quickly to a decision.
+
+- matching based on **minutiae**: the minutiae are first extracted from the two fingerprints
+and stored as two sets of points in a two dimensional space. In this case we've the
+problem of the Orientation. To find out which is the best pair of the extracted minutiae,
+we must take into account that, due to temporary problems with sensors, we may also
+have pairs of images where in one or in the other there are some lack in minutiae.
+In general the method searches for the best alignment between the two sets (the one
+that maximized the number of corresponding pairs of minutiae). After this we can also
+go into deeper details by measuring the interrelation that is if they appear in a similar
+pattern relating to the ridges over which they appear, their orientation, the distance
+between the minutiae, and so on and so forth.
+
+Problems with fingerprint matching:
+- Scarce overlap, for example it's possible that a finger is not well centered on the
+sensor and so we may have a completely different framing. We've to consider only the
+common part, so we try to align the common parts of the two images.
+- Different skin conditions, for example a dry skin can hinder a correct capture of the
+fingerprint.
+- Non-linear distortion due to a different pression.
+- Too much movement and / or distortion.
+- Non-linear distortion of the skin because we’ve a three dimensional structure that can
+be modify by the elasticity of skin in relation with the pressure so that if we acquire the
+same fingerprint in two different sessions, if we apply a different pressure they may
+appear. Slightly different.
+- Variable Pressure and skin conditions.
+- Errors in the extraction of the features because feature extraction algorithms are
+imperfect and often introduce measure errors, particularly with footprints of low quality.
+
 ## Different level of Fingerprint recognition? (micro and macro features) There is 3 level, what is the third?
+- Features, loop delta whorl
+- Minutiae
+- ridge porus
+
 ## Cos’è una directional map?
+A directional map is
+vector field (a region filled of vectors with different orientations). Our fingerprint is a
+curve immersed in this vector field.
+
 ## Cos’è il crossing number? A cosa serve?
+It is used to detect minutiae.
+The crossing number is the number of changes in color that happen in the neighborhood
+of the pixel that is take into account in that moment.
+We compute for each pixel this crossing number in order to determine whether this pixel
+represents a minutiae or not. 
+
+but before proceding with the crossing number we need to do:
+- Binarization procedure in order to convert a gray level image into a binary image
+(histogram analysis is used but it is less trivial than supposed);
+- Thinning procedure that transforms any ridge that is thicker than 1 pixel to a 1 pixel
+thickness, so lines of 1 pixel.
+- So once we've black and white images with a thinning of ridge traces we can proceed
+to scanning such ridges in order to locate pixels that correspond to minutiae
+
 ## Qual è il metodo per valutare la distanza tra due minuzie?
+Ridge count, so the count of how many ridges are between two minutiae.
+
+The ridge count is an abstract measure of the distance
+between any two any points of a fingerprint. Given two
+points a and b of a fingerprint, the ridge count is the number
+of ridge lines intersected by the segment ab.
+
+This cannot be done for each pair of minutiae because
+endpoints are not reliable enough (they can be caused by an interruption of one ridge due
+to bad thresholding or whatever).
+
 
 # Ear
 
